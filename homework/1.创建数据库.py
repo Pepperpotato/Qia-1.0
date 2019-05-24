@@ -1,14 +1,14 @@
 import pymysql
-import settings
+import settings0
 
 def databases() :
-    conn = pymysql.Connect(**settings.parameters)
+    conn = pymysql.Connect(**settings0.parameters)
 
 
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
     sql = """
-    create database student02 default charset=utf8;
+    create database  bbs  default charset=utf8;
     """
 
 

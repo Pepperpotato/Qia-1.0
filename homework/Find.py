@@ -11,7 +11,7 @@ def find():
 
     username = input("请输入用户名：")
 
-    sql = "select username,password from user where username=%s"
+    sql = "select username,usertype,password,regtime,email from user where username=%s"
 
 
     res = cursor.execute(sql,[username])
@@ -26,7 +26,3 @@ def find():
 
     cursor.close()
     conn.close()
-import  time
-
-t7 = time.strftime("%Y-%m-%d")
-print(t7)
