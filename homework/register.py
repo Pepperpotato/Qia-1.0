@@ -1,6 +1,6 @@
 import pymysql
 import settings
-
+import time
 def register():
 
     conn = pymysql.Connect(**settings.parameters)
@@ -21,7 +21,7 @@ def register():
 
     password = input("请输入密码：")
 
-    regtime = input('请输入注册时间：')
+    regtime = time.strftime("%Y-%m-%d")
 
     email = input('请输入您的邮箱：')
 
@@ -30,7 +30,7 @@ def register():
     sql = """
     insert into user(username,usertype,password,regtime,email) values ('%s','%s',sha1('%s'),'%s','%s')
     """ % (username,usertype,password,regtime,email)
-    print(sql)
+
     try:
 
         res = cursor.execute(sql)
