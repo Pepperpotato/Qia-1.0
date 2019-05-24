@@ -1,5 +1,6 @@
 import pymysql
 import settings
+import register
 import time
 # 创建数据库
 # def Makedatabase():
@@ -41,6 +42,7 @@ def Maketable():
     cursor.close()
     conn.close()
 
+# register.register()
 # 注册
 def Register():
     conn = pymysql.Connect(**settings.parameters)
@@ -80,7 +82,7 @@ def Register():
         print(e)
         conn.rollback()
     finally:
-        # 5 关闭连接和游标
+
         cursor.close()
         conn.close()
 
@@ -89,10 +91,12 @@ def Find():
     conn = pymysql.Connect(**settings.parameters)
 
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-    # print(cursor)
 
-    # 3 执行sql
+
+
     username = input("请输入用户名：")
+    password = input('请输入您的密码：')
+
     # sql = "select username,password from user where username='%s'" % username
     sql = "select username,username,password,regtime ,email from user where username=%s"
 
@@ -108,10 +112,20 @@ def Find():
 
     cursor.close()
     conn.close()
+# Makedatabase()
+Maketable()
+
+
+while 1 :
+    print('***用户注册(1)***')
+    print('***用户登录(2)***')
+
 
 if __name__ == '__main__':
-    # Makedatabase()
-    Maketable()
-    Register()
-    Find()
+
+    do = input('请输入您的操作：')
+    if do == '1':
+        Register()
+    if do == '2':
+        Find()
 
