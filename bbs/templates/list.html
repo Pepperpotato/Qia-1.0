@@ -1,0 +1,158 @@
+{% extends 'index.html' %}
+{#<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"#}
+{#        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">#}
+{#<html xmlns="http://www.w3.org/1999/xhtml">#}
+
+<!--LIST start-->
+{% block content %}
+    <div id="wp" class="wp">
+        <div id="pt" class="bm cl">
+            <div class="z">
+                <a href="./" class="nvhm" title="内核源码 - 10分钟学院">内核源码 - 10分钟学院</a><em>&raquo;</em><a
+                    href="{{ url_for('bbs.index') }}">论坛</a><em>&raquo;</em><a
+                    {% for big_section in all_big_sections %}
+
+                        {% if current_category.parentid == big_section.id  %}
+                            href="{{ url_for('bbs.index',cid=big_section.id) }}">{{ big_section.classname }}</a><em>&raquo;</em><a
+                        {% endif %}
+
+                    {% endfor %}
+                    {% for small_section in small_sections %}
+                        {% if current_category.id==small_section.id %}
+                            href="{{ url_for('bbs.web_list',cid=small_section.id) }}">{{ small_section.classname }}</a>
+                        {% endif %}
+                    {% endfor %}
+            </div>
+        </div>
+        <div class="boardnav">
+            <div id="ct" class="wp cl" style="margin-left:145px">
+                <div id="sd_bdl" class="bdl" style="width:130px;margin-left:-145px">
+                    <div class="tbn" id="forumleftside"><h2 class="bdl_h">版块导航</h2>
+                        {% for big_section in  all_big_sections %}
+                            {% if  big_section.parentid == 0 %}
+                                <dl class="a" id="lf_1">
+                                    <dt><a href="javascript:;"
+                                           title="{{ big_section.classname }}">{{ big_section.classname }}</a></dt>
+                                    {% for small_section in small_sections %}
+                                        {% if small_section.parentid == big_section.id %}
+
+                                            <dd {% if current_category["id"] == small_section.id %}
+                                                class="bdl_a" {% endif %}>
+                                                <a href="{{ url_for('bbs.web_list',cid=small_section.id) }}"
+                                                   title="{{ small_section.classname }}">{{ small_section.classname }}</a>
+                                            </dd>
+                                        {% endif %}
+                                    {% endfor %}
+                                </dl>
+                            {% endif %}
+                        {% endfor %}
+
+                        <dl class="a" id="lf_10">
+                            <dt><a href="javascript:;" title=""></a></dt>
+                        </dl>
+                    </div>
+                </div>
+
+                <div class="mn">
+
+                    <div class="bm bml pbn">
+                        <div class="bm_h cl">
+                            <h1 class="xs2">
+                                <a href="{{ url_for('bbs.web_list',cid=current_category.id) }}">{{ current_category.classname }}</a>
+                                <span class="xs1 xw0 i">今日: <strong class="xi1">0</strong><span class="pipe">|</span>主题: <strong
+                                        class="xi1">13</strong></span></h1>
+
+                        </div>
+                        <div class="bm_c cl pbn">
+
+                            <div>
+                                版主: <span class="xi2">test001</span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div id="pgt" class="bm bw0 pgs cl">
+                        <span class="pgb y"><a href="{{ url_for('bbs.index') }}">返&nbsp;回</a></span>
+                        <a href="{{ url_for('bbs.addc',cid=current_category.id) }}" id="newspecial" title="发新帖"><img
+                                src="{{ url_for('static',filename='index/images/pn_post.png') }}" alt="发新帖"/></a></div>
+
+                    <div id="threadlist" class="tl bm bmw">
+                        <div class="th">
+                            <table cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <th colspan="2">
+                                        <div class="tf">
+                                            筛选:
+                                            <a href="{{ url_for('bbs.web_list',cid=0) }}" class="xi2">全部</a><span
+                                                class="pipe">|</span><a href="{{ url_for('bbs.web_list',cid=0) }}"
+                                                                        class="xi2">精华</a></div>
+                                    </th>
+                                    <td class="by">作者</td>
+                                    <td class="num">回复/查看</td>
+                                    <td class="by">最后发表</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="bm_c">
+                            <form method="post" autocomplete="off" name="moderate" id="moderate" action="">
+                                <table summary="forum_2" id="forum_2" cellspacing="0" cellpadding="0">
+                                    {% for list_content in list_contents %}
+                                        {% if list_content.classid == current_category.id %}
+                                            <tr>
+                                                <td class="icn">
+                                                    <a href="{{ url_for('bbs.detail',cid=list_content.id) }}"
+                                                       title="新窗口打开" target="_blank"><img
+                                                            src="{{ url_for('static',filename='index/images/folder_common.gif') }}"/></a>
+                                                </td>
+                                                <th class="common">
+                                                    <a href="{{ url_for('bbs.detail',cid=list_content.id) }}"
+                                                       class="xst"
+                                                       style="color:{{ list_content.style }}">{{ list_content.title }}</a>
+                                                    {% if list_content.rate !=0 %}
+                                                        - [售价 <span class="xw1">{{ list_content.rate }}</span> 金钱]
+                                                    {% endif %}
+                                                    {% if list_content.elite !=0 %}
+                                                        <img src="{{ url_for('static',filename='index/images/digest_1.gif') }}"
+                                                             align="absmiddle" alt="digest" title="精华帖"/>
+                                                    {% endif %}
+                                                </th>
+                                                <td class="by">
+                                                    <cite></cite>
+                                                    <em><span class="xi1">{{ list_content.addtime }}</span></em>
+                                                </td>
+                                                <td class="num"><a href="{{ url_for('bbs.detail',cid=list_content.id) }}"
+                                                                   class="xi2">{{ list_content.replycount }}</a><em>{{ list_content.hits }}</em>
+                                                </td>
+                                                <td class="by">
+                                                    <cite>admin</cite><em><span
+                                                        title="2019-06-10 19:35:46">1天前</span></em></td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                </table>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="bm bw0 pgs cl">
+                        <span class="pgb y"><a href="{{ url_for('bbs.index') }}">返&nbsp;回</a></span>
+                        <a href="{{ url_for('bbs.addc',cid=current_category.id) }}" id="newspecialtmp" title="发新帖"><img
+                                src="{{ url_for('static',filename='index/images/pn_post.png') }}" alt="发新帖"/></a></div>
+                    <div style="width:800px; margin:0 auto; padding:10px 0px; text-align:right">
+                        &nbsp;&nbsp;<input type="text"
+                                           onkeydown="javascript:if(event.keyCode==13){var page=(this.value>2)?2:this.value;location='/list.php?classid=5&page='+page+''}"
+                                           value="1" style="width:25px"><input type="button" value="GO"
+                                                                               onclick="javascript:var page=(this.previousSibling.value>2)?2:this.previousSibling.value;location='/list.php?classid=5&page='+page+''">&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;<a
+                            href='/list.php?classid=5&page=2'>下一页</a>&nbsp;&nbsp;&nbsp;&nbsp;<a
+                            href='/list.php?classid=5&page=2'>尾 页</a>&nbsp;&nbsp;&nbsp;&nbsp;共有<b>13</b>条记录&nbsp;&nbsp;&nbsp;&nbsp;每页显示<b>10</b>条，本页<b>1-10</b>条&nbsp;&nbsp;&nbsp;&nbsp;<b>1/2</b>页&nbsp;&nbsp;
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+
+</html>
+

@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+    <META content="text/html; charset=utf-8" http-equiv=Content-Type>
+    <META content=ie=7 http-equiv=x-ua-compatible>
+    <LINK rel=stylesheet type=text/css href="{{ url_for('static',filename='admin/admincp.css') }}">
+    <META name=GENERATOR content="MSHTML 8.00.6001.19120">
+</HEAD>
+<BODY>
+<SCRIPT type=text/JavaScript>
+    var admincpfilename = 'admin_index.html', IMGDIR = '/public/images', STYLEID = '1', VERHASH = 'pFT',
+        IN_ADMINCP = true, ISFRAME = 1, STATICURL = '/public/', SITEURL = '', JSPATH = '/public/js/';
+</SCRIPT>
+<SCRIPT type=text/javascript src="{{ url_for('static',filename='index/js/common.js') }}"></SCRIPT>
+<SCRIPT type=text/javascript src="{{ url_for('static',filename='index/js/admincp.js') }}"></SCRIPT>
+<SCRIPT type=text/javascript>
+    if (ISFRAME && !parent.document.getElementById('leftmenu')) {
+        redirect(admincpfilename + '?frames=yes&' + document.URL.substr(document.URL.indexOf(admincpfilename) + 10));
+    }
+</SCRIPT>
+
+<div id="append_parent"></div>
+<div class="container" id="cpcontainer">
+    <script type="text/JavaScript">parent.document.title = '10分钟学院 - 管理中心 - 用户管理 - 编辑用户';</script>
+    <div class="itemtitle"><h3>用户管理</h3></div>
+    <form name="cpform" method="post" autocomplete="off" action="" id="cpform">
+        <table class="tb tb2 ">
+            <tr>
+                <th colspan="15" class="partition">
+                    共有<strong> {{ users_count }} </strong>条用户记录
+                </th>
+            </tr>
+            <tr class="header">
+                <th></th>
+                <th>用户名</th>
+                <th>积分</th>
+                <th>注册时间</th>
+                <th>用户类型</th>
+                <th></th>
+            </tr>
+            {% for user_info in users_info %}
+                <tr class="hover">
+                    <td class="td25"><input type="checkbox" name="uidarray" value="{{ user_info.uid }}" class="checkbox"></td>
+                    <td><a href="#" target="_blank">{{ user_info.username }}</a></td>
+                    <td>{{ user_info.grade }}</td>
+                    <td>{{ user_info.regtime }}</td>
+                    {% if user_info.udertype ==1 %}
+                        <td><b>管理员</b></td>
+                    {% else %}
+                        <td><b>普通用户</b></td>
+                    {% endif %}
+                    <td>
+                        <a href="/admin/member_show/{{ user_info.uid }}#grade" class="act">积分</a>
+                        <a href="/admin/member_show/{{ user_info.uid }}" class="act">详情</a>
+                        {% if user_info.allowlogin==1 %}
+                            <a href="/admin/member/{{ user_info.uid }}/0" class="act">解锁</a>
+                        {% else %}
+                            <a href="/admin/member/{{ user_info.uid }}/1" class="act">锁定用户</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+
+            <tr>
+                <td colspan="15">
+                    <div class="fixsel">
+                        <input type="submit" class="btn" id="submit_submit" name="submit" title="按 Enter 键可删除"
+                               value="删除"/>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+</div>
+</BODY>
+</HTML>
