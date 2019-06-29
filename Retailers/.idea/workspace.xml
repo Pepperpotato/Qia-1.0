@@ -3,10 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="0cba75c2-041b-47ca-b84d-0280c5c0237f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/App/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/App/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/App/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/App/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/App/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/App/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Retailers.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -31,14 +34,16 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
+          <entry key="gitignore" value="1" />
           <entry key="html" value="3" />
-          <entry key="py" value="16" />
+          <entry key="py" value="17" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="HTML" value="3" />
-          <entry key="Python" value="16" />
+          <entry key="PLAIN_TEXT" value="1" />
+          <entry key="Python" value="17" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
@@ -55,7 +60,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/App/models.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="126">
@@ -67,6 +72,16 @@
               </folding>
             </state>
           </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/manage.py">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -147,26 +162,6 @@
               <item name="Retailers" type="b2602c69:ProjectViewProjectNode" />
               <item name="Retailers" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="Retailers" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Retailers" type="462c0819:PsiDirectoryNode" />
-              <item name="App" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Retailers" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Retailers" type="462c0819:PsiDirectoryNode" />
-              <item name="Retailers" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Retailers" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Retailers" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Retailers" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Retailers" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -239,6 +234,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="64" y="-11" width="1857" height="1092" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17342968" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -276,9 +272,6 @@
           <caret line="136" lean-forward="true" selection-start-line="136" selection-end-line="136" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/manage.py">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/App/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -351,6 +344,12 @@
           </folding>
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/manage.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
 </project>
