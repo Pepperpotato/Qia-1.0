@@ -165,33 +165,29 @@ def auth_code_(request):
 
 # 注册页面
 def register(request):
-    print(1111)
-
+    form = UserForm1()  # 空的表单,没有数据
     if request.method == 'POST':
-        print(request.POST)
-        email = request.POST.get('email')
-        if email:
-            password_1 = request.POST.get('password_1')
-            print(email,password_1)
-            return redirect("/goods/bill/")
-
-        phone = request.POST.get('phone')
-        auth_code=None
-        auth_code = request.POST.get('auth_code')
-        password = request.POST.get('password')
-        if phone:
-            if auth_code!=code:
-                data='对不起验证码输入错误'
-                print(data)
-                print(reverse("goods:bill"))
-                return redirect("/goods/bill/")
+        form = UserForm1(request.POST)
+        # email = request.POST.get('email')
+        # if email:
+        #     password_1 = request.POST.get('password_1')
+        #     print(email,password_1)
+        #     return redirect("/goods/bill/")
+        # phone = request.POST.get('phone')
+        # auth_code=None
+        # auth_code = request.POST.get('auth_code')
+        # password = request.POST.get('password')
+        # if phone:
+        #     if auth_code!=code:
+        #         data='对不起验证码输入错误'
+        #         print(data)
+        #         print(reverse("goods:bill"))
+        #         return redirect("/goods/bill/")
                 # return redirect('register', data=data)
                 # return render(request, 'shop/home/register.html', context={
                 #     'data': data,
                 # })
 
-
-    print(2222)
     return render(request,'shop/home/register.html',context={
-
+        'form':form
     })
