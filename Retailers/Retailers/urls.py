@@ -18,10 +18,14 @@ from django.contrib import admin
 
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
+<<<<<<< Updated upstream
 
 
     url(r'^admin/', include('User.urls', namespace='admin')),
 
     # url(r'^goods/', include('Goods.urls', namespace='goods')),
 
+=======
+    url(r'^order/', include('Order.urls', namespace='order'))
+>>>>>>> Stashed changes
 ]

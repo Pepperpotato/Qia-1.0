@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Goods',
-    'Order',
+    'Order.apps.OrderConfig',
     'User'
 
 ]
@@ -131,3 +131,10 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 
+#阿里云短信验证码配置
+SMSCONFIG = {
+    'ACCESS_KEY_ID':"LTAI87A9iBxVPguw",
+    'ACCESS_KEY_SECRET':"K7nOKnmiimuFgfRFTdEjuoXQMLFHoL",
+    'SignName':"辛姐小吃铺",
+    'TemplateCode':"SMS_169505312"
+}
