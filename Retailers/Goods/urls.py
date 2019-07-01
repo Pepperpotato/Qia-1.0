@@ -76,9 +76,10 @@ urlpatterns = [
     url(r'^wallet/$', views.wallet, name='wallet'),
     # 账户明细
     url(r'^walletlist/$', views.walletlist, name='walletlist'),
-
     # 登录页面
     url(r'^login/$', views.login, name='login'),
+    # 获取验证码
+    url(r'^auth_code_/$',views.auth_code_,name='auth_code_'),
     # 注册页面
-    url(r'register',views.register,name='register'),
+    url(r'^register/$',views.register,name='register'),
 ]

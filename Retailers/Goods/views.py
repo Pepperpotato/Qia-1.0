@@ -1,8 +1,15 @@
-from django.shortcuts import render
+from random import randint
+
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect
 
 # Create your views here.
 # 地址管理
+from django.urls import reverse
+
 from Goods.forms import UserForm1
+from Goods.sms import send_sms
+from Retailers.settings import SMSCONFIG
 
 
 def address(request):
@@ -146,20 +153,45 @@ def walletlist(request):
 # 登录页面
 def login(request):
     return render(request,'shop/home/login.html')
+code=None
+# 获取验证码
+def auth_code_(request):
+    if request.method=="POST":
+        phone = request.POST.get('phone')
+        global code
+        code = randint(100000, 999999)
+        request.session['code']=code
+        send_sms(phone, {'code': code}, **SMSCONFIG)
 
 # 注册页面
 def register(request):
-    form = UserForm1()
+    print(1111)
+
     if request.method == 'POST':
+        print(request.POST)
         email = request.POST.get('email')
         if email:
             password_1 = request.POST.get('password_1')
             print(email,password_1)
+            return redirect("/goods/bill/")
+
         phone = request.POST.get('phone')
+        auth_code=None
         auth_code = request.POST.get('auth_code')
         password = request.POST.get('password')
         if phone:
-            pass
+            if auth_code!=code:
+                data='对不起验证码输入错误'
+                print(data)
+                print(reverse("goods:bill"))
+                return redirect("/goods/bill/")
+                # return redirect('register', data=data)
+                # return render(request, 'shop/home/register.html', context={
+                #     'data': data,
+                # })
+
+
+    print(2222)
     return render(request,'shop/home/register.html',context={
-        'form':form,
+
     })
