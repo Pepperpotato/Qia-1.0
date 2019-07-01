@@ -159,3 +159,4 @@ class Pay_way(models.Model):
 
     class Meta:
         db_table = 'pay_way'
+
