@@ -3,9 +3,6 @@ from django.db import models
 # Create your models here.
 from datetime import datetime
 
-from django.db import models
-
-
 # Create your models here.
 
 
@@ -134,6 +131,8 @@ class Express_company(models.Model):
     express_name = models.CharField(max_length=10)  # 物流品牌名称
     express_price = models.IntegerField(default=8)  # 物流品牌价格
     express_phonenumber = models.CharField(max_length=20)   # 物流电话
+    express_info = models.CharField(max_length=200)     # 物流品牌介绍
+    express_photo = models.CharField(max_length=500)    # 物流品牌品牌图片路径
 
     class Meta:
         db_table = 'express_company'
@@ -149,3 +148,13 @@ class Express_info(models.Model):
 
     class Meta:
         db_table = 'express_info'
+
+
+# 支付方式表
+class Pay_way(models.Model):
+    pay_name = models.CharField(max_length=50)  # 支付方式名称
+    pay_info = models.CharField(max_length=200)     # 支付方式简介
+    pay_photo = models.CharField(max_length=500)    # 支付方式图片路径
+
+    class Meta:
+        db_table = 'pay_way'
