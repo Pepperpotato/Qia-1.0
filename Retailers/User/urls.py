@@ -1,3 +1,4 @@
+
 from django.conf.urls import url
 
 
@@ -23,3 +24,4 @@ urlpatterns = [
     # url(r'^pageviews/$', views.pageviews, name='pageviews'),
     # url(r'^sales/$', views.sales, name='sales')
 ]
+

@@ -43,7 +43,7 @@
 <header>
  <h1><img src="{% static 'admin/images/admin_logo.png' %}"/></h1>
  <ul class="rt_nav">
-  <li><a href="http://www.mycodes.net" target="_blank" class="website_icon">站点首页</a></li>
+  <li><a href="{% url 'order:home' %}" target="_blank" class="website_icon">站点首页</a></li>
   <li><a href="#" class="clear_icon">清除缓存</a></li>
   <li><a href="#" class="admin_icon">DeathGhost</a></li>
   <li><a href="#" class="set_icon">账号设置</a></li>

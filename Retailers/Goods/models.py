@@ -1,3 +1,4 @@
+
 from django.db import models
 
 # Create your models here.
@@ -102,3 +103,5 @@ class Productevaluation(models.Model):
 
     class Meta:
         db_table='productevaluation_nine'
+
+
