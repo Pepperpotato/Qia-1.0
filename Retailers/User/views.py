@@ -116,3 +116,5 @@ def pageviews(request):
 # 销售额统计
 def sales(request):
     return render(request, 'admin/sales.html')
+
+
