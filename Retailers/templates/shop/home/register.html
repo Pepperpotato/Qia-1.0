@@ -52,18 +52,21 @@
                                 <label for="passwordRepeat"><i class="am-icon-lock"></i></label>
                                 <input type="password" name="password_2" id="passwordRepeat" placeholder="确认密码">
                             </div>
-                        </form>
-                        <div class="login-links">
-                            <label for="reader-me">
-                                <input id="reader-me" type="checkbox"> 点击表示您同意商城《服务协议》
 
-                            </label>
-                        </div>
-                        <div class="am-cf">
-                            <input type="submit" name="" value="注册" class="am-btn am-btn-primary am-btn-sm am-fl"
-                                   id="reg">
-                        </div>
 
+
+                            <div class="login-links">
+{#                                <label for="reader-me">#}
+                                    <input id="reader-me" type="checkbox"> 点击表示您同意商城《服务协议》
+
+
+{#                                </label>#}
+                            </div>
+                            <div class="am-cf">
+                                <input type="submit" name="" value="注册" class="am-btn am-btn-primary am-btn-sm am-fl"
+                                       id="reg">
+                            </div>
+</form>
                     </div>
 
 
@@ -75,7 +78,7 @@
 
 
                         $('#reg').click(function (ev) {
-                            ev.preventDefault()
+
                             if (!$('#reader-me').is(':checked')) {
                                 alert("请选择阅读服务协议！");
                             } else {
@@ -91,7 +94,7 @@
                                         if (!passd2.match(/\D/)) {
                                             alert('对不起密码不能是纯数字！')
                                         } else {
-                                            $.post("{% url 'goods:register' %}", $('#form1').serialize())
+                                            {#$.post("{% url 'goods:register' %}", $('#form1').serialize())#}
                                         }
                                     }
                                 }
@@ -109,27 +112,38 @@
                             </div>
                             <div class="verification">
                                 <label for="code"><i class="am-icon-code-fork"></i></label>
-                                <input type="tel" name="auth_code" id="code" placeholder="请输入验证码">
+
+                                {% if request.session.code %}
+                                    <input type="tel" name="auth_code" id="code" placeholder="对不起验证码错误请重新输入">
+                                {% else %}
+                                    <input type="tel" name="auth_code" id="code" placeholder="{{ data }}请输入验证码">
+                                {% endif %}
+
+
+
+
+
                                 <a class="btn" href="javascript:void(0);" onclick="sendMobileCode();"
                                    id="sendMobileCode">
                                     <span id="dyMobileButton">获取</span></a>
                             </div>
                             <div class="user-pass">
                                 <label for="password"><i class="am-icon-lock"></i></label>
-                                <input type="password" name="password" id="password" placeholder="设置密码">
+                                <input type="password" name="password" id="passwordph" placeholder="设置密码">
                             </div>
                             <div class="user-pass">
                                 <label for="passwordRepeat"><i class="am-icon-lock"></i></label>
-                                <input type="password" name="passwordRepeat" id="passwordRepeat" placeholder="确认密码">
+                                <input type="password" name="passwordRepeat" id="passwordRepeatph" placeholder="确认密码">
                             </div>
                         </form>
                         <div class="login-links">
-                            <label for="reader-me">
-                                <input id="reader-me" type="checkbox"> 点击表示您同意商城《服务协议》
+                            <label for="reader-meph">
+                                <input id="reader-meph" type="checkbox"> 点击表示您同意商城《服务协议》
                             </label>
                         </div>
                         <div class="am-cf">
-                            <input type="submit" name="" value="注册" class="am-btn am-btn-primary am-btn-sm am-fl" id="regphone">
+                            <input type="submit" name="" value="注册" class="am-btn am-btn-primary am-btn-sm am-fl"
+                                   id="regphone">
                         </div>
 
                         <hr>
@@ -140,23 +154,23 @@
                             ev.preventDefault();
                             var phone = $('#phone').val();
                             if (!phone.match(/^1[3456789]\d{9}$/)) {
-                                    alert("对不起手机格式不正确请重新输入！");
-                                } else {
-                            $.post("{% url 'goods:register' %}", $('#form2').serialize())
+                                alert("对不起手机格式不正确请重新输入！");
+                            } else {
+                                $.post("{% url 'goods:auth_code_' %}", $('#form2').serialize())
                             }
                         });
 
                         $('#regphone').click(function (ev) {
                             ev.preventDefault();
-                            if (!$('#reader-me').is(':checked')) {
+                            if (!$('#reader-meph').is(':checked')) {
                                 alert("请选择阅读服务协议！");
                             } else {
                                 var phone = $('#phone').val();
                                 if (!phone.match(/^1[3456789]\d{9}$/)) {
                                     alert("对不起手机格式不正确请重新输入！");
                                 } else {
-                                    passd1 = $('#password').val();
-                                    passd2 = $('#passwordRepeat').val();
+                                    passd1 = $('#passwordph').val();
+                                    passd2 = $('#passwordRepeatph').val();
                                     if (!(passd1 == passd2)) {
                                         alert('对不起两次密码输入不一致请重新输入')
                                     } else {

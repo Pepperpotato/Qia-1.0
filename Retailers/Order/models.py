@@ -1,3 +1,4 @@
+
 # This is an auto-generated Django model module.
 # You'll have to do the following manually to clean this up:
 #   * Rearrange models' order
@@ -115,6 +116,7 @@ class Todayrecommend(models.Model):
 
     class Meta:
         db_table = 'today_recommend_thirtyone'
+
 
 
 
