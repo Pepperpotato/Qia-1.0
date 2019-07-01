@@ -23,5 +23,5 @@ urlpatterns = [
 
     url(r'^order/', include('Order.urls', namespace='order')),
 
-
+    url(r'^admin/', include('User.urls', namespace='admin'))
 ]
