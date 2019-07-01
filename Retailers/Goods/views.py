@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 # 地址管理
 from django.urls import reverse
 
-from Goods.forms import UserForm1
+# from Goods.forms import UserForm1
 from Goods.sms import send_sms
 from Retailers.settings import SMSCONFIG
 
