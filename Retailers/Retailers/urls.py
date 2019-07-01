@@ -25,7 +25,6 @@ urlpatterns = [
 
     url(r'^goods/', include('Goods.urls', namespace='goods')),
 
-
     url(r'^order/', include('Order.urls', namespace='order'))
 
 ]
