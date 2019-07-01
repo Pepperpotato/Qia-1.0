@@ -23,4 +23,5 @@ urlpatterns = [
 
     url(r'^order/', include('Order.urls', namespace='order')),
 
+
 ]
