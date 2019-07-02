@@ -36,14 +36,14 @@ class Goods(models.Model):
     discount = models.CharField(unique=True, max_length=50) #优惠方式
     picture = models.CharField(max_length=1000)  #图片
     attribute = models.CharField(max_length=50)   #商品属性
-    keyword = models.CharField(max_length=10)    #搜索关键字
+    keyword = models.CharField(max_length=128)    #搜索关键字
     weightprice = models.IntegerField()             # 权重价格
     historicalprices = models.IntegerField()      #历史价格
     inventory = models.IntegerField()            # 库存
     goodsstate = models.IntegerField(default=0)               #商品状态已上线0已下线1
     brandid = models.IntegerField()             #品牌id
     smallclassesid = models.IntegerField()         #小类别id
-
+    classid=models.ForeignKey(CommodityCategories,default=None)
     class Meta:
 
         db_table = 'goods_one'
@@ -79,19 +79,23 @@ class  coupons(models.Model):
 class Goodsdetails(models.Model):
     id = models.AutoField(primary_key=True)  # id
     Goodsid=models.IntegerField()  #商品id
-    productparameters=models.CharField(max_length=200) #产品参数
-    productclass=models.CharField(max_length=200) #产品类别
-    rawmaterial=models.CharField(max_length=100) #原料产地
-    origin=models.CharField(max_length=100) #产地
-    ingredients=models.CharField(max_length=100) #配料
-    productspecification=models.CharField(max_length=100) #产品规格
-    shelflife=models.CharField(max_length=50) #保质期
-    productstandardnumber=models.CharField(max_length=50) #产品标准号
-    productionlicensenumber=models.CharField(max_length=50) #生产许可证编号
+    productclass=models.CharField(max_length=216) #产品类别
+    rawmaterial=models.CharField(max_length=216) #原料产地
+    origin=models.CharField(max_length=216) #产地
+    ingredients=models.CharField(max_length=216) #配料
+    productspecification=models.CharField(max_length=216) #产品规格
+    shelflife=models.CharField(max_length=216) #保质期
+    productstandardnumber=models.CharField(max_length=216) #产品标准号
+    productionlicensenumber=models.CharField(max_length=216) #生产许可证编号
+    storeway=models.CharField(max_length=216) #储存方法
+    eatway=models.CharField(max_length=216) #食用方法
     picture1=models.CharField(max_length=128,null=True) #图片路径
     picture2=models.CharField(max_length=128,null=True) #图片路径
     picture3=models.CharField(max_length=128,null=True) #图片路径
     picture4=models.CharField(max_length=128,null=True) #图片路径
+    picture5=models.CharField(max_length=128,null=True) #图片路径
+    picture6=models.CharField(max_length=128,null=True) #图片路径
+    picture7=models.CharField(max_length=128,null=True) #图片路径
     class Meta:
         db_table = 'goodsdetails_seven'
 

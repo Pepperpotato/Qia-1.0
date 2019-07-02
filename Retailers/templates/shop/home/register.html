@@ -26,17 +26,19 @@
             <div class="am-tabs" id="doc-my-tabs">
                 <ul class="am-tabs-nav am-nav am-nav-tabs am-nav-justify">
                     <li class="am-active"><a href="">邮箱注册</a></li>
-                    <li><a href="">手机号注册</a></li>
+                    <li><a href="/goods/information">手机号注册</a></li>
                 </ul>
                 <div class="am-tabs-bd">
                     <div class="am-tab-panel am-active">
                         <form method="post" action="{% url 'goods:register' %}" id="form1">
                             {% csrf_token %}
-
+                            {{ form1.email.errors }}
                             <div class="user-email">
+
                                 <label for="email"><i class="am-icon-envelope-o"></i></label>
-                                {{ form1.email }}
-                                {{ form1.email.errors }}
+                                <input type="email" name="email" id="email" placeholder="请输入邮箱账号">
+                                {#                                {{ form1.email }}#}
+
                             </div>
 
                             {#                            <div class="user-email">#}
@@ -46,20 +48,22 @@
                             {#                            </div>#}
                             <div class="user-pass">
                                 <label for="password"><i class="am-icon-lock"></i></label>
-                                {#                                <input type="password" name="password_1" id="password" placeholder="设置密码">#}
-                                {{ form1.password_1 }}
+                                <input type="password" name="password_1" id="password" placeholder="设置密码">
+                                {#                                {{ form1.password_1 }}#}
                                 {#                                {{ form.password_1.errors }}#}
                             </div>
                             <div class="user-pass">
                                 <label for="passwordRepeat"><i class="am-icon-lock"></i></label>
-                                {#                                <input type="password" name="password_2" id="passwordRepeat" placeholder="确认密码">#}
-                                {{ form1.password_2 }}
+                                <input type="password" name="password_2" id="passwordRepeat" placeholder="确认密码">
+                                {#                                {{ form1.password_2 }}#}
                                 {{ form1.password_2.errors }}
                             </div>
                             <div class="login-links">
-                                <label for="reader-me">
-                                </label>
+                                {#                                <label for="reader-me">#}
+                                {#                                </label>#}
                                 <input id="reader-me" type="checkbox"> 点击表示您同意商城《服务协议》
+
+
                             </div>
                             <div class="am-cf">
                                 <input type="submit" name="" value="注册" class="am-btn am-btn-primary am-btn-sm am-fl"
@@ -104,22 +108,21 @@
                     <div class="am-tab-panel">
                         <form method="post" action="{% url 'goods:register' %}" id="form2">
                             {% csrf_token %}
+                            {{ data }}
+
                             <div class="user-phone">
                                 <label for="phone"><i class="am-icon-mobile-phone am-icon-md"></i></label>
                                 <input type="tel" name="phone" id="phone" placeholder="请输入手机号">
+
                             </div>
                             <div class="verification">
                                 <label for="code"><i class="am-icon-code-fork"></i></label>
 
-{#                                {% if request.session.code %}#}
-{#                                    <input type="tel" name="auth_code" id="code" placeholder="对不起验证码错误请重新输入">#}
-{#                                {% else %}#}
-                                    <input type="tel" name="auth_code" id="code" placeholder="请输入验证码">
-{#                                {% endif %}#}
-
-
-
-
+                                {#                                {% if request.session.code %}#}
+                                {#                                    <input type="tel" name="auth_code" id="code" placeholder="对不起验证码错误请重新输入">#}
+                                {#                                {% else %}#}
+                                <input type="tel" name="auth_code" id="code" placeholder="请输入验证码">
+                                {#                                {% endif %}#}
 
                                 <a class="btn" href="javascript:void(0);" onclick="sendMobileCode();"
                                    id="sendMobileCode">
@@ -127,30 +130,32 @@
                             </div>
                             <div class="user-pass">
                                 <label for="password"><i class="am-icon-lock"></i></label>
-                                {#                                <input type="password" name="passwordph" id="passwordph" placeholder="设置密码">#}
-                                {{ form2.passwordph }}
-                                {{ form2.passwordph.errors }}
+                                <input type="password" name="passwordph" id="passwordph" placeholder="设置密码">
+                                {#                                {{ form2.passwordph }}#}
+{#                                                                {{ form2.passwordph.errors }}#}
 
 
                             </div>
                             <div class="user-pass">
                                 <label for="passwordRepeat"><i class="am-icon-lock"></i></label>
-                                {#                                <input type="password" name="passwordRepeatph" id="passwordRepeatph" placeholder="确认密码">#}
-                                {{ form2.passwordRepeatph }}
-                                {{ form2.passwordRepeatph.errors }}
+                                <input type="password" name="passwordRepeatph" id="passwordRepeatph" placeholder="确认密码">
+                                {#                                {{ form2.passwordRepeatph }}#}
+{#                                {{ form2.passwordRepeatph.errors }}#}
 
                             </div>
-                        </form>
-                        <div class="login-links">
-                            <label for="reader-meph">
-                                <input id="reader-meph" type="checkbox"> 点击表示您同意商城《服务协议》
-                            </label>
-                        </div>
-                        <div class="am-cf">
-                            <input type="submit" name="" value="注册" class="am-btn am-btn-primary am-btn-sm am-fl"
-                                   id="regphone">
-                        </div>
 
+                            <div class="login-links">
+                                {#                            <label for="reader-meph">#}
+                                {#                                <input id="reader-meph" type="checkbox"> 点击表示您同意商城《服务协议》#}
+                                {#                            </label>#}
+
+                                <input id="reader-meph" type="checkbox"> 点击表示您同意商城《服务协议》
+                            </div>
+                            <div class="am-cf">
+                                <input type="submit" name="" value="注册" class="am-btn am-btn-primary am-btn-sm am-fl"
+                                       id="regphone">
+                            </div>
+                        </form>
                         <hr>
                     </div>
 
@@ -164,30 +169,6 @@
                                 $.post("{% url 'goods:auth_code_' %}", $('#form2').serialize())
                             }
                         });
-
-                        {#$('#regphone').click(function (ev) {#}
-                        {#    ev.preventDefault();#}
-                        {#    if (!$('#reader-meph').is(':checked')) {#}
-                        {#        alert("请选择阅读服务协议！");#}
-                        {#    } else {#}
-                        {#        var phone = $('#phone').val();#}
-                        {#        if (!phone.match(/^1[3456789]\d{9}$/)) {#}
-                        {#            alert("对不起手机格式不正确请重新输入！");#}
-                        {#        } else {#}
-                        {#            passd1 = $('#passwordph').val();#}
-                        {#            passd2 = $('#passwordRepeatph').val();#}
-                        {#            if (!(passd1 == passd2)) {#}
-                        {#                alert('对不起两次密码输入不一致请重新输入')#}
-                        {#            } else {#}
-                        {#                if (!passd2.match(/\D/)) {#}
-                        {#                    alert('对不起密码不能是纯数字！')#}
-                        {#                } else {#}
-                        {#                    $.post("{% url 'goods:register' %}", $('#form2').serialize())#}
-                        {#                }#}
-                        {#            }#}
-                        {#        }#}
-                        {#    }#}
-                        {# });#}
 
 
                         $(function () {
