@@ -11,7 +11,7 @@ from datetime import datetime
 class User(models.Model):
     uid = models.AutoField(primary_key=True)
     realname = models.CharField(max_length=20, null=True)   # 真名
-    username = models.CharField(max_length=20)    # 昵称
+    username = models.CharField(max_length=20)    # 用户名
     password = models.CharField(max_length=128)     # 密码
     pay_password = models.CharField(max_length=128)     # 支付密码
     user_type = models.IntegerField(default=0, null=True)   # 用户类型 0为普通用户 1为管理员
