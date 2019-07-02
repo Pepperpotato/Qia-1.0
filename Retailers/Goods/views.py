@@ -11,6 +11,7 @@ from django.urls import reverse
 from Goods.forms import UserForm1,UserForm2
 from Goods.sms import send_sms
 from Retailers.settings import SMSCONFIG
+from User.models import User
 
 
 def address(request):
@@ -171,15 +172,22 @@ def register(request):
     if request.method == 'POST':
         form1 = UserForm1(request.POST)
         if form1.is_valid():  # 验证通过
-            print(form1.cleaned_data)
+            # print(form1.cleaned_data)
             email = form1.cleaned_data.get('email')
             password_1 = form1.cleaned_data.get('password_1')
             password = hashlib.sha1(password_1.encode('utf8')).hexdigest()
+
             print(email,password)
             # 写入数据库
-            # Stuent.objects.create(**form.cleaned_data)
+            # User.objects.create(**form1.cleaned_data)
+            User.objects.create(email=email,password=password)
+            # 保存session数据
+            request.session['email']=email
             # 验证成功跳转到首页
-            return redirect(reverse('index'))
+            return redirect(reverse('goods:information'))
+
+
+
         # email = request.POST.get('email')
         # if email:
         #     password_1 = request.POST.get('password_1')

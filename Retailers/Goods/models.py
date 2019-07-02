@@ -88,6 +88,10 @@ class Goodsdetails(models.Model):
     shelflife=models.CharField(max_length=50) #保质期
     productstandardnumber=models.CharField(max_length=50) #产品标准号
     productionlicensenumber=models.CharField(max_length=50) #生产许可证编号
+    picture1=models.CharField(max_length=128,null=True) #图片路径
+    picture2=models.CharField(max_length=128,null=True) #图片路径
+    picture3=models.CharField(max_length=128,null=True) #图片路径
+    picture4=models.CharField(max_length=128,null=True) #图片路径
     class Meta:
         db_table = 'goodsdetails_seven'
 

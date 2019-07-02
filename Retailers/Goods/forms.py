@@ -36,12 +36,22 @@ class UserForm1(forms.Form):
     def clean(self):
         password_1 = self.cleaned_data.get("password_1")
         password_2 = self.cleaned_data.get("password_2")
-        print(password_1, password_2)
+        # print(password_1, password_2)
         if password_1 != password_2:
             raise ValidationError({'password_2':"两次密码不一致"})
         else:
             return self.cleaned_data
+        # 验证用户名是否存在
 
+    def clean_email(self):
+        email = self.changed_data.get('email')
+        res = User.objects.filter(email=email)
+        print(res)
+        print('*'*100)
+        if res:
+            raise ValidationError({'email': "对不起邮箱已存在"})
+        else:
+            return self.cleaned_data
 
 
 class UserForm2(forms.Form):
@@ -67,13 +77,16 @@ class UserForm2(forms.Form):
     def clean_phone(self):
         phone=self.changed_data.get('phone')
         res = User.objects.filter(phone=phone)
-
+        if res:
+            raise ValidationError({'phone': "对不起手机号已存在"})
+        else:
+            return self.cleaned_data
 
     # 验证两次密码不一致
     def clean(self):
         passwordph = self.cleaned_data.get("passwordph")
         passwordRepeatph = self.cleaned_data.get("passwordRepeatph")
-        print(passwordph, passwordRepeatph)
+        # print(passwordph, passwordRepeatph)
         if passwordph != passwordRepeatph:
             raise ValidationError({'passwordRepeatph': "两次密码不一致"})
         else:
