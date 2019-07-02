@@ -6,6 +6,9 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 # 验证单个字段
+from User.models import User
+
+
 def check_password(value):
     if re.match(r'\d+$', value):
         raise ValidationError("密码不能是纯数字")
@@ -35,9 +38,48 @@ class UserForm1(forms.Form):
         password_2 = self.cleaned_data.get("password_2")
         print(password_1, password_2)
         if password_1 != password_2:
-            raise ValidationError("两次密码不一致")
+            raise ValidationError({'password_2':"两次密码不一致"})
         else:
             return self.cleaned_data
+
+
+
+class UserForm2(forms.Form):
+    # phone=forms.CharField(label='手机号',)
+    email = forms.EmailField(label='邮箱', required=False, error_messages={
+        'invalid': '邮箱格式无效'
+    })
+    passwordph = forms.CharField(label='密码', validators=[check_password], min_length=6, max_length=128,
+                                 widget=forms.PasswordInput(),
+                                 error_messages={
+                                     'requirde': '必填',
+                                     'max_lenth': '最多128个字符',
+                                     'min_lenth': '最少6个字符',
+                                 })
+    passwordRepeatph = forms.CharField(label='确认密码', validators=[check_password], min_length=6, max_length=128,
+                                 widget=forms.PasswordInput(),
+                                 error_messages={
+                                     'requirde': '必填',
+                                     'max_lenth': '最多128个字符',
+                                     'min_lenth': '最少6个字符',
+                                 })
+    #验证用户名是否存在
+    def clean_phone(self):
+        phone=self.changed_data.get('phone')
+        res = User.objects.filter(phone=phone)
+
+
+    # 验证两次密码不一致
+    def clean(self):
+        passwordph = self.cleaned_data.get("passwordph")
+        passwordRepeatph = self.cleaned_data.get("passwordRepeatph")
+        print(passwordph, passwordRepeatph)
+        if passwordph != passwordRepeatph:
+            raise ValidationError({'passwordRepeatph': "两次密码不一致"})
+        else:
+            return self.cleaned_data
+
+
 
 
     # username= forms.CharField(label='用户名',max_length=20,min_length=3,error_messages={

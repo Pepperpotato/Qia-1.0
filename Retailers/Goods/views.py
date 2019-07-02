@@ -1,3 +1,4 @@
+import hashlib
 from random import randint
 
 from django.http import HttpResponseRedirect
@@ -7,7 +8,7 @@ from django.shortcuts import render, redirect
 # 地址管理
 from django.urls import reverse
 
-from Goods.forms import UserForm1
+from Goods.forms import UserForm1,UserForm2
 from Goods.sms import send_sms
 from Retailers.settings import SMSCONFIG
 
@@ -165,9 +166,20 @@ def auth_code_(request):
 
 # 注册页面
 def register(request):
-    form = UserForm1()  # 空的表单,没有数据
+    form1 = UserForm1()  # 空的表单,没有数据
+    form2 = UserForm2()
     if request.method == 'POST':
-        form = UserForm1(request.POST)
+        form1 = UserForm1(request.POST)
+        if form1.is_valid():  # 验证通过
+            print(form1.cleaned_data)
+            email = form1.cleaned_data.get('email')
+            password_1 = form1.cleaned_data.get('password_1')
+            password = hashlib.sha1(password_1.encode('utf8')).hexdigest()
+            print(email,password)
+            # 写入数据库
+            # Stuent.objects.create(**form.cleaned_data)
+            # 验证成功跳转到首页
+            return redirect(reverse('index'))
         # email = request.POST.get('email')
         # if email:
         #     password_1 = request.POST.get('password_1')
@@ -189,5 +201,6 @@ def register(request):
                 # })
 
     return render(request,'shop/home/register.html',context={
-        'form':form
+        'form1':form1,
+        'form2':form2,
     })
