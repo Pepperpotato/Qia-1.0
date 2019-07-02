@@ -165,16 +165,13 @@ def auth_code_(request):
     if request.method=="POST":
         phone = request.POST.get('phone')
         global code
-        code = randint(100000, 999999)
-        print(code)
+        code = str(randint(100000, 999999))
         request.session['code']=code
         send_sms(phone, {'code': code}, **SMSCONFIG)
 
 # 注册页面
 def register(request):
     form1 = UserForm1()  # 空的表单,没有数据
-
-
     if request.method == 'POST':
         email = request.POST.get('email')
         phone = request.POST.get('phone')
@@ -198,8 +195,8 @@ def register(request):
             passwordph = request.POST.get('passwordph')
             passwordRepeatph = request.POST.get('passwordRepeatph')
 
-            print(auth_code)
             if auth_code != code :
+
                 return render(request, 'shop/home/register.html', context={
                     'form1': form1,
                     'data': '对不起验证码输入错误',
@@ -214,64 +211,29 @@ def register(request):
                     'form1': form1,
                     'data': '对不起密码不能是纯数字',
                 })
-            res = User.objects.filter(phone=phone).exists()
+            if len(passwordph)==0:
+                return render(request, 'shop/home/register.html', context={
+                    'form1': form1,
+                    'data': '对不起密码不能为空',
+                })
+            res = User.objects.filter(phone_number=phone).exists()
             if res:
                 return render(request, 'shop/home/register.html', context={
                     'form1': form1,
                     'data': '对不起手机号已存在',
                 })
-
-
             password = hashlib.sha1(passwordRepeatph.encode('utf8')).hexdigest()
-            # print(email, password)
+            # print(phone, password)
             # 写入数据库
             # User.objects.create(**form1.cleaned_data)
-            User.objects.create(phone=phone, password=password)
-            # 保存session数据
+            User.objects.create(phone_number=phone, password=password)
+            # # 保存session数据
             request.session['phone'] = phone
-            # 验证成功跳转到首页
+            # # 验证成功跳转到首页
             return redirect(reverse('goods:information'))
 
 
     return render(request,'shop/home/register.html',context={
         'form1':form1,
-
-
     })
 
-# 手机号注册
-def registerph(request):
-    form1 = UserForm1()  # 空的表单,没有数据
-    form2 = UserForm2()
-    if request.method == 'POST':
-
-        form2 = UserForm2(request.POST)
-        auth_code=True
-        auth_code = request.POST.get('auth_code')
-        print(auth_code)
-        if auth_code!=code:
-            data = '对不起验证码输入错误'
-            return render(request, 'shop/home/register.html', context={
-                'form1': form1,
-                'form2': form2,
-                'data':data,
-            })
-
-        if form2.is_valid():  # 验证通过
-            # print(form1.cleaned_data)
-            phone = form2.cleaned_data.get('phone')
-
-            passwordRepeatph = form2.cleaned_data.get('passwordRepeatph')
-            password = hashlib.sha1(passwordRepeatph.encode('utf8')).hexdigest()
-            print(email, password)
-            # 写入数据库
-            # User.objects.create(**form1.cleaned_data)
-            User.objects.create(email=email, password=password)
-            # 保存session数据
-            request.session['email'] = email
-            # 验证成功跳转到首页
-            return redirect(reverse('goods:information'))
-    return render(request, 'shop/home/register.html', context={
-        'form1': form1,
-        'form2': form2,
-    })

@@ -83,8 +83,7 @@ urlpatterns = [
     url(r'^auth_code_/$',views.auth_code_,name='auth_code_'),
     # 注册页面
     url(r'^register/$',views.register,name='register'),
-    # 注册页面
-    url(r'^registerph/$',views.registerph,name='registerph'),
+
 ]
 
 
