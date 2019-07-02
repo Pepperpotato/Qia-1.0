@@ -1,63 +1,64 @@
+<!--
+Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+-->
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="utf-8"/>
-<title>后台登录</title>
-<meta name="author" content="DeathGhost" />
-<link rel="stylesheet" type="text/css" href="{% static 'admin/css/style.css' %}" />
-<style>
-body{height:100%;background:#16a085;overflow:hidden;}
-canvas{z-index:-1;position:absolute;}
-</style>
-<script src="{% static 'admin/js/jquery.js' %}"></script>
-<script src="{% static 'admin/js/verificationNumbers.js' %}"></script>
-<script src="{% static 'admin/js/Particleground.js' %}"></script>
-<script>
-$(document).ready(function() {
-  //粒子背景特效
-  $('body').particleground({
-    dotColor: '#5cbdaa',
-    lineColor: '#5cbdaa'
-  });
-  //验证码
-  createCode();
-  //测试提交，对接程序删除即可
-  $(".submit_btn").click(function(){
-	  location.href="index.html";
-	  });
-});
-</script>
+<title>Awesome Login Form Responsive Widget Template :: w3layouts</title>
+<!-- Meta tag Keywords -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="Awesome Login Form Responsive Widget,Login form widgets, Sign up Web forms , Login signup Responsive web form,Flat Pricing table,Flat Drop downs,Registration Forms,News letter Forms,Elements" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- Meta tag Keywords -->
+<!-- css files -->
+<link rel="stylesheet" href="{% static 'admin/login/css/style.css' %}" type="text/css" media="all" /> <!-- Style-CSS -->
+<link rel="stylesheet" href="{% static 'admin/login/css/font-awesome.css' %}"> <!-- Font-Awesome-Icons-CSS -->
+<!-- //css files -->
+<!-- web-fonts -->
+<link href="//fonts.googleapis.com/css?family=Philosopher:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,vietnamese" rel="stylesheet">
+<!-- //web-fonts -->
 </head>
 <body>
-<form action="{% url 'admin:login' %}" method="post">
-    {% csrf_token %}
-    <dl class="admin_login">
-     <dt>
-      <strong>站点后台管理系统</strong>
-      <em>Management System</em>
-     </dt>
-     <dd class="user_icon">
-      <input type="text" placeholder="账号" class="login_txtbx" name="username"/>
-     </dd>
-     <dd class="pwd_icon">
-      <input type="password" placeholder="密码" class="login_txtbx" name="password"/>
-     </dd>
-{#     <dd class="val_icon">#}
-{#      <div class="checkcode">#}
-{#        <input type="text" id="J_codetext" placeholder="验证码" maxlength="4" class="login_txtbx" name="vcode">#}
-{#        <canvas class="J_codeimg" id="myCanvas" onclick="createCode()">对不起，您的浏览器不支持canvas，请下载最新版浏览器!</canvas>#}
-{#      </div>#}
-{#      <input type="button" value="验证码核验" class="ver_btn" onClick="validate();">#}
-{#     </dd>#}
-     <dd>
-      <input type="submit" value="立即登录" class="submit_btn"/>
-     </dd>
-     <dd>
-      <p>© 2015-2016 DeathGhost 版权所有</p>
-      <p>陕B2-20080224-1</p>
-     </dd>
-    </dl>
-</form>
+<div data-vide-bg="{% static 'admin/video/social2.mp4' %}">
+	<div class="center-container">
+		<!--header-->
+		<div class="header-w3l">
+			<h1>辛姐的小吃铺后台登录系统</h1>
+		</div>
+		<!--//header-->
+		<!--main-->
+		<div class="main-content-agile">
+			<div class="wthree-pro">
+				<h2>Login Now</h2>
+			</div>
+			<div class="sub-main-w3">	
+				<form action="{% url 'admin:login' %}" method="post">
+                    {% csrf_token %}
+					<input placeholder="用户名" name="username" type="text" >
+					<span class="icon1"><i class="fa fa-user" aria-hidden="true"></i></span>
+					<input  placeholder="密码" name="password" type="password" >
+					<span class="icon2"><i class="fa fa-unlock" aria-hidden="true"></i></span>
+					<input type="submit" value="Login">
+				</form>
+			</div>
+		</div>
+		<!--//main-->
+		<!--footer-->
+		<div class="footer">
+			<p>&copy; 2017 Awesome Login Form. All rights reserved | Design by <a href="http://w3layouts.com">W3layouts</a></p>
+		</div>
+		<!--//footer-->
+	</div>
+</div>
+<!-- js -->
+<script type="text/javascript" src="{% static 'admin/login/js/jquery-2.1.4.min.js' %}"></script>
+<script src="{% static 'admin/login/js/jquery.vide.min.js' %}"></script>
+<!-- //js -->
 </body>
 </html>
