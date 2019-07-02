@@ -22,7 +22,8 @@ class CommodityCategories(models.Model):
     id = models.AutoField(primary_key=True)          #id
     parentid = models.IntegerField()           #父板块id
     categoryname = models.CharField(max_length=20)  #板块名称
-
+  # 图片
+    picture=models.CharField(max_length=128,blank=True,null=True)
     class Meta:
 
         db_table = 'commodity_categories_three'
