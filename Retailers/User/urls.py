@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^expresslist/$', views.expresslist, name='expresslist'),
     url(r'^delexpress/(\d)/$', views.delexpress, name='delexpress'),
     url(r'^paylist/$', views.paylist, name='paylist'),
+    url(r'^delpayway/(\d)/$', views.delpayway, name='delpayway'),
     url(r'^pageviews/$', views.pageviews, name='pageviews'),
     url(r'^sales/$', views.sales, name='sales')
 ]
