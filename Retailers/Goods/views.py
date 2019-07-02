@@ -1,5 +1,7 @@
 import hashlib
+import os
 import re
+from datetime import datetime
 from random import randint
 
 from django.http import HttpResponseRedirect
@@ -11,10 +13,11 @@ from django.urls import reverse
 
 from Goods.forms import UserForm1,UserForm2
 from Goods.sms import send_sms
+from Retailers import settings
 from Retailers.settings import SMSCONFIG
 from User.models import User
 
-
+# 地址管理
 def address(request):
     return render(request,'shop/person/address.html')
 
@@ -91,6 +94,115 @@ def index(request):
 
 # 个人资料
 def information(request):
+
+    email=request.session.get('email')
+    phone=request.session.get('phone')
+    email='331061658@qq.com'
+    if email:
+        # print(email)
+        user = User.objects.filter(email=email)[0]
+        if request.method == "POST":
+            # photo 是表单中文件上传的name
+            file = request.FILES.get('picture')
+            if file:
+
+                # 文件路径
+                path = os.path.join(settings.MEDIA_ROOT, file.name)
+
+                # 文件类型过滤
+                ext = os.path.splitext(file.name)
+                if len(ext) < 1 or not ext[1] in settings.ALLOWED_FILEEXTS:
+                    return redirect(reverse('upload'))
+
+                # 解决文件重名
+                if os.path.exists(path):
+                    # 日期目录
+                    dir = datetime.today().strftime("%Y/%m/%d")
+                    dir = os.path.join(settings.MEDIA_ROOT, dir)
+                    if not os.path.exists(dir):
+                        os.makedirs(dir)  # 递归创建目录
+
+                    # list.png
+                    file_name = ext[0] + datetime.today().strftime("%Y%m%d%H%M%S") + str(randint(1, 1000)) + ext[1] if len(
+                        ext) > 1 else ''
+                    path = os.path.join(dir, file_name)
+                    print(path)
+                    pathh=path.split('Retailers/static')
+                    print(pathh[1])
+                    user.user_photo=pathh[1]
+                    user.save()
+
+                # 创建新文件
+                with open(path, 'wb') as fp:
+                    # 如果文件超过2.5M,则分块读写
+                    if file.multiple_chunks():
+                        for block1 in file.chunks():
+                            fp.write(block1)
+                    else:
+                        fp.write(file.read())
+
+            username = request.POST.get('user-name')
+            realname = request.POST.get('realname')
+            sex = request.POST.get('radio10')
+            birthyear = request.POST.get('birthyear')
+            birthmonth = request.POST.get('birthmonth')
+            birthday = request.POST.get('birthday')
+            birthday = birthyear + birthmonth + birthday
+            phonee = request.POST.get('user-phone')
+            emaill = request.POST.get('user-email')
+            print(username, realname, sex, birthday, phonee, emaill)
+            if not User.objects.filter(username=username).exists() and username:
+                user.username=username
+                user.save()
+            if not User.objects.filter(realname=realname).exists() and realname :
+                user.realname=realname
+                user.save()
+            if not User.objects.filter(phone_number=phonee).exists() and phonee:
+                user.phone_number=phonee
+                user.save()
+            if not User.objects.filter(email=emaill).exists() and emaill:
+                user.email=emaill
+                user.save()
+            if sex:
+                user.sex=sex
+                user.save()
+            if birthday:
+                user.birthday=birthday
+                user.save()
+        return render(request, 'shop/person/information.html',context={
+            'user':user,
+        })
+    if phone:
+        user = User.objects.filter(phone_number=phone)[0]
+        if request.method == "POST":
+            username = request.POST.get('user-name')
+            realname = request.POST.get('realname')
+            sex = request.POST.get('radio10')
+            birthyear = request.POST.get('birthyear')
+            birthmonth = request.POST.get('birthmonth')
+            birthday = request.POST.get('birthday')
+            birthday = birthyear + birthmonth + birthday
+            phonee = request.POST.get('user-phone')
+            emaill = request.POST.get('user-email')
+            print(username, realname, sex, birthday, phonee, emaill)
+            if not User.objects.filter(username=username).exists():
+                user.username = username
+                user.save()
+            if not User.objects.filter(realname=realname).exists():
+                user.realname = realname
+                user.save()
+            if not User.objects.filter(phone_number=phonee).exists():
+                user.phone_number = phonee
+                user.save()
+            if not User.objects.filter(email=emaill).exists():
+                user.email = emaill
+                user.save()
+            user.sex = sex
+            user.birthday = birthday
+            user.save()
+        return render(request, 'shop/person/information.html', context={
+            'user': user,
+        })
     return render(request,'shop/person/information.html')
 
 # 物流信息
@@ -231,8 +343,6 @@ def register(request):
             request.session['phone'] = phone
             # # 验证成功跳转到首页
             return redirect(reverse('goods:information'))
-
-
     return render(request,'shop/home/register.html',context={
         'form1':form1,
     })
