@@ -11,14 +11,14 @@ from datetime import datetime
 class User(models.Model):
     uid = models.AutoField(primary_key=True)
     realname = models.CharField(max_length=20, null=True)   # 真名
-    username = models.CharField(max_length=20)    # 昵称
-    password = models.CharField(max_length=128)     # 密码
-    pay_password = models.CharField(max_length=128)     # 支付密码
+    username = models.CharField(max_length=20, null=True)    # 用户名
+    password = models.CharField(max_length=128, null=True)     # 密码
+    pay_password = models.CharField(max_length=128, null=True)     # 支付密码
     user_type = models.IntegerField(default=0, null=True)   # 用户类型 0为普通用户 1为管理员
-    certificate = models.CharField(max_length=20)   # 证件类型
-    certificate_id = models.CharField(max_length=20)    # 证件号码
-    phone_number = models.CharField(max_length=20)  # 手机号码
-    email = models.CharField(max_length=50)     # 邮箱
+    certificate = models.CharField(max_length=20, null=True)   # 证件类型
+    certificate_id = models.CharField(max_length=20, null=True)    # 证件号码
+    phone_number = models.CharField(max_length=20, null=True)  # 手机号码
+    email = models.CharField(max_length=50, null=True)     # 邮箱
     sex = models.CharField(choices=((1, "男"), (2, "女"), (0, "保密")), default=1, null=True, max_length=5)   # 性别
     shopping_grade = models.IntegerField(default=0, null=True)      # 购物积分
     reg_time = models.DateTimeField(default=datetime.now, null=True)   # 注册时间
