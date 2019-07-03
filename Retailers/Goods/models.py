@@ -24,7 +24,7 @@ class CommodityCategories(models.Model):
     categoryname = models.CharField(max_length=20)  #板块名称
   # 图片
     picture=models.CharField(max_length=128,blank=True,null=True)
-    goodsid = models.ForeignKey('self', blank=True, null=True, default=None)
+
     class Meta:
 
         db_table = 'commodity_categories_three'
@@ -32,9 +32,9 @@ class CommodityCategories(models.Model):
 
 # 商品表1
 class Goods(models.Model):
-    id = models.AutoField(primary_key=True)  #商品id
+    gid = models.AutoField(primary_key=True)  #商品id
     gname = models.CharField(unique=True, max_length=50) #商品名称
-    discount = models.CharField(unique=True, max_length=50) #优惠方式
+    discount = models.CharField( default=0,max_length=50) #优惠方式
     picture = models.CharField(max_length=1000)  #图片
     attribute = models.CharField(max_length=50)   #商品属性
     keyword = models.CharField(max_length=128)    #搜索关键字
@@ -44,12 +44,10 @@ class Goods(models.Model):
     goodsstate = models.IntegerField(default=0)               #商品状态已上线0已下线1
     brandid = models.IntegerField()             #品牌id
     smallclassesid = models.IntegerField()         #小类别id
-    classid=models.ForeignKey(CommodityCategories,default=None)
+    classid=models.ForeignKey(CommodityCategories,default=None ,db_column='id')
     class Meta:
 
         db_table = 'goods_one'
-
-
 
 
 #  商品类别表4（属性）

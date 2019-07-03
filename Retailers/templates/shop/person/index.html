@@ -31,7 +31,7 @@
                     <div class="m-info">
                         <em class="s-name">
 
-{{ session.username }}
+{{ user.username }}
 
 
 
@@ -63,13 +63,13 @@
                 </div>
                 <p class="m-coupon">
                     <a href="{% url 'goods:coupon' %}">
-                        <em class="m-num">2</em>
+                        <em class="m-num">{{ coupons }}</em>
                         <span class="m-title">优惠券</span>
                     </a>
                 </p>
                 <p class="m-wallet">
                     <a href="{% url 'goods:wallet' %}">
-                        <em class="m-num">0.00</em>
+                        <em class="m-num">{{ account.money }}</em>
                         <span class="m-title">账户余额</span>
                     </a>
                 </p>

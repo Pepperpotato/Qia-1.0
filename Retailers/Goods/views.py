@@ -90,7 +90,27 @@ def idcard(request):
 
 # 个人中心
 def index(request):
-    return render(request,'shop/person/index.html')
+    username = request.session.get('username')
+    # print(username)
+    user = User.objects.filter(username=username)[0]
+    # print(user.uid)
+    account=user.user_account
+    grade=user.user_grade
+    # print(grade.)
+    # print(account.useroffer_id,type(account.used_userofferid))
+    # 计算可用优惠券数量
+    coupons=0
+    for i in account.useroffer_id:
+        coupons+=1
+    for g in account.goodoffer_id:
+        coupons+=1
+    print(coupons)
+
+    return render(request,'shop/person/index.html',context={
+        'user':user,
+        'coupons':coupons,
+        'account':account,
+    })
 
 # 个人资料
 def information(request):
@@ -328,7 +348,8 @@ def login(request):
             if user_username:
                 # print('sss')
                 if user_username[0].password==password:
-
+                    request.session['phone']=user_username[0].phone_number
+                    request.session['email']=user_username[0].email
                     request.session['username']=user_username[0].username
                     return redirect(reverse('order:home'))
             #邮箱登录验证
@@ -337,6 +358,8 @@ def login(request):
             if user_email:
                 # print('youx')
                 if user_email[0].password==password:
+                    request.session['phone'] = user_email[0].phone_number
+                    request.session['email'] = user_email[0].email
                     request.session['username']=user_email[0].username
                     return redirect(reverse('order:home'))
             # 手机号登录验证
@@ -345,6 +368,8 @@ def login(request):
             if user_phone:
                 # print('手机')
                 if user_phone[0].password == password:
+                    request.session['phone'] = user_phone[0].phone_number
+                    request.session['email'] = user_phone[0].email
                     request.session['username']=user_phone[0].username
                     return redirect(reverse('order:home'))
 
