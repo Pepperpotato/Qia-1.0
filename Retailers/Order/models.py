@@ -8,7 +8,11 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from __future__ import unicode_literals
 
+import datetime
+
 from django.db import models
+
+from User.models import User
 
 
 class ConsultTwentyeight(models.Model):
@@ -22,13 +26,12 @@ class ConsultTwentyeight(models.Model):
 
 
 class OrderTwenty(models.Model):
-    uid = models.IntegerField()
+    uid = models.ForeignKey(User,default=None)
     ordertime = models.DateTimeField()
-    address = models.CharField(max_length=128)
+    addressid = models.IntegerField()
     expressbrand = models.CharField(max_length=128)
     paywayid = models.IntegerField()
     integral = models.IntegerField()
-    phone = models.CharField(max_length=128)
     orderstatus = models.IntegerField()
     getgoodstime = models.DateTimeField(blank=True, null=True)
 
@@ -119,5 +122,16 @@ class Todayrecommend(models.Model):
 
 
 
+class Mobilecount(models.Model):
+    view = models.PositiveIntegerField(default=0)
+    time = models.DateTimeField(auto_now_add=True)
 
-
+    def increase_view(self):
+        time = datetime.datetime.now().strftime('%Y-%m-%d')
+        res = Mobilecount.objects.filter(time_contains=time).values()
+        if res:
+            res[0].view += 1
+            res[0].save(update_fields=['view'])
+        else:
+            tmp = Mobilecount(view=1)
+            tmp.save()

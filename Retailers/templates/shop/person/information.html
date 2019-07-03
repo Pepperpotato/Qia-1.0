@@ -21,19 +21,23 @@
 							<div class="am-fl am-cf"><strong class="am-text-danger am-text-lg">个人资料</strong> / <small>Personal&nbsp;information</small></div>
 						</div>
 						<hr/>
-
+<form class="am-form am-form-horizontal" action="{% url 'goods:information' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
 						<!--头像 -->
 						<div class="user-infoPic">
 
 							<div class="filePic">
-								<input type="file" class="inputPic" allowexts="gif,jpeg,jpg,png,bmp" accept="image/*">
-								<img class="am-circle am-img-thumbnail" src="../images/getAvatar.do.jpg" alt="" />
+{#								<input type="file" class="inputPic" allowexts="gif,jpeg,jpg,png,bmp" accept="image/*" name="picture">#}
+								<input type="file" class="inputPic"  name="picture">
+{#								<input type="file" name="picture">#}
+{#								<img class="am-circle am-img-thumbnail" src="{% static  'shop/images/getAvatar.do.jpg' %}  " alt="" />#}
+								<img class="am-circle am-img-thumbnail" alt="" src='/static{{ user.user_photo }}'/>
 							</div>
 
 							<p class="am-form-help">头像</p>
 
 							<div class="info-m">
-								<div><b>用户名：<i>小叮当</i></b></div>
+								<div><b>用户名：<i>{{ user.username }}</i></b></div>
 								<div class="vip">
                                       <span></span><a href="#">会员专享</a>
 								</div>
@@ -42,12 +46,12 @@
 
 						<!--个人信息 -->
 						<div class="info-main">
-							<form class="am-form am-form-horizontal">
+
 
 								<div class="am-form-group">
 									<label for="user-name2" class="am-form-label">昵称</label>
 									<div class="am-form-content">
-										<input type="text" id="user-name2" placeholder="nickname">
+										<input type="text" name="user-name" id="user-name2" placeholder="{{ user.username }}">
                                           <small>昵称长度不能超过40个汉字</small>
 									</div>
 								</div>
@@ -55,7 +59,7 @@
 								<div class="am-form-group">
 									<label for="user-name" class="am-form-label">姓名</label>
 									<div class="am-form-content">
-										<input type="text" id="user-name2" placeholder="name">
+										<input type="text" name="realname" id="user-name2" placeholder="{{ user.realname }}">
 
 									</div>
 								</div>
@@ -64,13 +68,13 @@
 									<label class="am-form-label">性别</label>
 									<div class="am-form-content sex">
 										<label class="am-radio-inline">
-											<input type="radio" name="radio10" value="male" data-am-ucheck> 男
+											<input type="radio" name="radio10" value="0" data-am-ucheck> 男
 										</label>
 										<label class="am-radio-inline">
-											<input type="radio" name="radio10" value="female" data-am-ucheck> 女
+											<input type="radio" name="radio10" value="1" data-am-ucheck> 女
 										</label>
 										<label class="am-radio-inline">
-											<input type="radio" name="radio10" value="secret" data-am-ucheck> 保密
+											<input type="radio" name="radio10" value="2" data-am-ucheck> 保密
 										</label>
 									</div>
 								</div>
@@ -79,38 +83,112 @@
 									<label for="user-birth" class="am-form-label">生日</label>
 									<div class="am-form-content birth">
 										<div class="birth-select">
-											<select data-am-selected>
-												<option value="a">2015</option>
-												<option value="b">1987</option>
-											</select>
-											<em>年</em>
+                                            <select name="birthyear" id="birthyear" class="ps" onchange="showDate()">
+                                    <option value=""></option>
+                                </select><em>年</em>
+
+{#											<select data-am-selected onchange="showDate()"  id="birthyear">#}
+{#												<option value="" ></option>#}
+{##}
+{#											</select>#}
+{#											<em>年</em>#}
 										</div>
 										<div class="birth-select2">
-											<select data-am-selected>
-												<option value="a">12</option>
-												<option value="b">8</option>
-											</select>
-											<em>月</em></div>
+                                            <select name="birthmonth" id="birthmonth" class="ps" onchange="showDate()">
+                                    <option value=""></option>
+                                </select><em>月</em>
+{#											<select data-am-selected onchange="showDate()" id="birthmonth">#}
+{#												<option value="a"></option>#}
+{##}
+{#											</select>#}
+{#											<em>月</em>#}
+                                        </div>
 										<div class="birth-select2">
-											<select data-am-selected>
-												<option value="a">21</option>
-												<option value="b">23</option>
-											</select>
-											<em>日</em></div>
+                                            <select name="birthday" id="birthday" class="ps">
+                                    <option value=""></option>
+                                </select>
+{#											<select data-am-selected id="birthday">#}
+{#												<option value="a"></option>#}
+{##}
+{#											</select>#}
+
+                                            <em>日</em></div>
 									</div>
+
+                <script type="text/javascript">
+                                    //onclick获得改变前的值。onchange获取改变后的值。
+                                    var yearNode = document.getElementById("birthyear");
+                                    for (var year1 = 1980; year1 <= 2019; year1++) {
+                                        var option1 = document.createElement("option");
+                                        option1.innerHTML = year1;
+                                        option1.setAttribute("value", year1);
+                                        yearNode.appendChild(option1);
+                                    }
+                                    var monthNode = document.getElementById("birthmonth");
+                                    for (var month1 = 1; month1 <= 12; month1++) {
+                                        var option2 = document.createElement("option");
+                                        option2.setAttribute("value", month1);
+                                        option2.innerHTML = month1;
+                                        monthNode.appendChild(option2);
+                                    }
+                                    function calculateDate(ddValue) {
+                                        var dateNode = document.getElementById("birthday");
+                                        dateNode.options.length = 1;
+                                        for (var date1 = 1; date1 <= ddValue; date1++) {
+                                            var option3 = document.createElement("option");
+                                            option3.setAttribute("value", date1);
+                                            option3.innerHTML = date1;
+                                            dateNode.appendChild(option3);
+                                        }
+                                    }
+                                    //当年份或者月份改变的时候，就运行showDate()
+                                    function showDate() {
+                                        var mon = parseInt(document.getElementById("birthmonth").value);
+                                        var yea = parseInt(document.getElementById("birthyear").value);
+                                        switch (mon) {
+                                            case 1:
+                                            case 3:
+                                            case 5:
+                                            case 7:
+                                            case 8:
+                                            case 10:
+                                            case 12: {
+                                                calculateDate(31);
+                                            }
+                                                break;
+                                            case 4:
+                                            case 6:
+                                            case 9:
+                                            case 11: {
+                                                calculateDate(30);
+                                            }
+                                                break;
+                                            case 2: {
+                                                if ((0 == yea % 4 && 0 != yea % 100) || (0 == yea % 400)) {
+                                                    calculateDate(29);
+                                                } else {
+                                                    calculateDate(28);
+                                                }
+                                            }
+                                        }
+                                    }
+                                </script>
+
+
+
 
 								</div>
 								<div class="am-form-group">
 									<label for="user-phone" class="am-form-label">电话</label>
 									<div class="am-form-content">
-										<input id="user-phone" placeholder="telephonenumber" type="tel">
+										<input id="user-phone" placeholder="{{ user.phone_number }}" type="tel" name="user-phone">
 
 									</div>
 								</div>
 								<div class="am-form-group">
 									<label for="user-email" class="am-form-label">电子邮件</label>
 									<div class="am-form-content">
-										<input id="user-email" placeholder="Email" type="email">
+										<input id="user-email" placeholder="{{ user.email }}" type="email" name="user-email">
 
 									</div>
 								</div>
@@ -141,7 +219,10 @@
 									</div>
 								</div>
 								<div class="info-btn">
-									<div class="am-btn am-btn-danger">保存修改</div>
+									<div class="am-btn am-btn-danger">
+{#                                        <submit>保存修改</submit>#}
+                                        <input type="submit" value="保存修改" >
+                                    </div>
 								</div>
 
 							</form>
