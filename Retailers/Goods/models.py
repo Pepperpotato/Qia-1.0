@@ -47,7 +47,7 @@ class Goods(models.Model):
     classid=models.ForeignKey(CommodityCategories,default=None ,db_column='id')
     class Meta:
 
-        db_table = 'goods_one'
+        db_table = 'goodsone'
 
 
 #  商品类别表4（属性）
