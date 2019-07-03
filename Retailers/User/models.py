@@ -100,17 +100,18 @@ class User_notice(models.Model):
 
 # 用户账户信息表
 class User_account(models.Model):
-    uid = models.ForeignKey('User', models.CASCADE)     # 用户id
-    pay_password = models.CharField(max_length=128)     # 支付密码
-    bankcard_id = models.CharField(max_length=50)   # 银行卡号
-    money = models.IntegerField(default=0)      # 账户余额
+    # uid = models.ForeignKey('User', models.CASCADE)     # 用户id
+    pay_password = models.CharField(max_length=128, null=True)     # 支付密码
+    bankcard_id = models.CharField(max_length=50,default=0, null=True)   # 银行卡号
+    money = models.IntegerField(default=0, null=True)      # 账户余额
     alipay_number = models.CharField(max_length=20, null=True)  # 支付宝账号
     wechat_number = models.CharField(max_length=20, null=True)  # 微信账号
     useroffer_id = models.CharField(max_length=100, null=True)   # 用户优惠券id
     goodoffer_id = models.CharField(max_length=100, null=True)   # 商品优惠券id
     used_userofferid = models.CharField(max_length=100, null=True)  # 已使用用户优惠券id
     used_goodofferid = models.CharField(max_length=100, null=True)  # 已使用商品优惠券id
-    integral_id = models.IntegerField(null=True)    # 积分表id
+    integral_id = models.IntegerField(null=True, default=1)    # 积分表id
+    user = models.OneToOneField(to='User', on_delete=models.CASCADE, db_column='uid')  # 用户id
 
     class Meta:
         db_table = 'user_account'
