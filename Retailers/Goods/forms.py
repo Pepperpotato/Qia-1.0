@@ -96,34 +96,3 @@ class UserForm2(forms.Form):
 
 
 
-    # username= forms.CharField(label='用户名',max_length=20,min_length=3,error_messages={
-    #     'requirde':'必填',
-    #     'max_lenth':'最多30个字符',
-    #     'min_lenth':'最少3个字符',
-    # })
-    # sex = forms.ChoiceField(label='性别',choices=[(0,'女'),(1,'男'),(2,'保密')],widget=forms.RadioSelect,required=False )
-    # password_hash = forms.CharField(label='密码', min_length=6, max_length=128, widget=forms.PasswordInput(),
-    #                                 error_messages={
-    #                                     'requirde': '必填',
-    #                                     'max_lenth': '最多128个字符',
-    #                                     'min_lenth': '最少6个字符',
-    #                                 })
-    # confirm_password = forms.CharField(label='确认密码', min_length=6, max_length=128, widget=forms.PasswordInput(),
-    #                                    error_messages={
-    #                                        'requirde': '必填',
-    #                                        'max_lenth': '最多128个字符',
-    #                                        'min_lenth': '最少6个字符',
-    #                                    })
-    # address = forms.ChoiceField(label='家庭住址', choices=[(1, '北京'), (2, '上海'), (3, '广州'), (4, '深圳')])
-    # email = forms.EmailField(label='邮箱', required=False, error_messages={
-    #     'invalid': '邮箱格式无效'
-    # })
-    # phone = forms.CharField(label='电话', max_length=11, min_length=11, error_messages={
-    #     'max_lenth': '至多11位',
-    #     'min_lenth': '至少11位',
-    # })
-    # regtime = forms.DateTimeField(label='注册日期', input_formats='%Y-%m-%d', error_messages={
-    #     'invalid': '日期时间格式'
-    # })
-    # usertype = forms.ChoiceField(label='用户类型', choices=[(0, '普通用户'), (1, '管理员')])
-

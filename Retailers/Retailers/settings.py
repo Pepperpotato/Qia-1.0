@@ -139,3 +139,8 @@ SMSCONFIG = {
     'SignName':"辛姐小吃铺",
     'TemplateCode':"SMS_169505312"
 }
+
+#文件上传路径|
+MEDIA_ROOT = os.path.join(BASE_DIR,'static/upload')
+# 允许上传的文件后缀
+ALLOWED_FILEEXTS = ['.png','.jpeg','.jpg','.gif','.bmp']

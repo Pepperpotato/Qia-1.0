@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from django.urls import reverse
 
-from User.models import User, Express_company
+from User.models import User, Express_company, Pay_way
 
 
 def add(request):
@@ -79,7 +79,11 @@ def orderdetail(request):
 
 # 会员列表
 def userlist(request):
-    return render(request, 'admin/user_list.html')
+    all_user = User.objects.all()
+
+    return render(request, 'admin/user_list.html',context={
+        'all_user': all_user
+    })
 
 
 # 会员详情
@@ -119,7 +123,10 @@ def delexpress(request, id):
 
 # 支付列表
 def paylist(request):
-    return render(request, 'admin/pay_list.html')
+    payway = Pay_way.objects.all()
+    return render(request, 'admin/pay_list.html', context={
+        'payways': payway
+    })
 
 
 # 浏览量
@@ -131,4 +138,9 @@ def pageviews(request):
 def sales(request):
     return render(request, 'admin/sales.html')
 
+
+def delpayway(request, id):
+    payway = Pay_way.objects.filter(id=id)
+    payway.delete()
+    return redirect(reverse('admin:paylist'))
 

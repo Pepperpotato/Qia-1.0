@@ -23,6 +23,7 @@ class User(models.Model):
     shopping_grade = models.IntegerField(default=0, null=True)      # 购物积分
     reg_time = models.DateTimeField(default=datetime.now, null=True)   # 注册时间
     birthday = models.CharField(max_length=20, null=True)   # 生日
+    user_photo = models.CharField(max_length=100, null=True, default='/admin/upload/avatar_blank.gif')    # 用户头像
     user_status = models.IntegerField(default=0, null=True)     # 用户状态 0为正常,1为锁定
     vip_level = models.IntegerField(default=0, null=True)   # 会员等级
     safety_grade = models.IntegerField(default=0, null=True)     # 安全积分
