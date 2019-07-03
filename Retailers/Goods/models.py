@@ -24,6 +24,7 @@ class CommodityCategories(models.Model):
     categoryname = models.CharField(max_length=20)  #板块名称
   # 图片
     picture=models.CharField(max_length=128,blank=True,null=True)
+    goodsid = models.ForeignKey('self', blank=True, null=True, default=None)
     class Meta:
 
         db_table = 'commodity_categories_three'

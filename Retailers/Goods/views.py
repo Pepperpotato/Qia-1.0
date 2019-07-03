@@ -4,7 +4,7 @@ import re
 from datetime import datetime
 from random import randint
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -94,13 +94,16 @@ def index(request):
 
 # 个人资料
 def information(request):
-
     email=request.session.get('email')
     phone=request.session.get('phone')
-    email='331061658@qq.com'
+    print('*'*10)
+    print(email)
+    print(phone)
+
     if email:
-        # print(email)
+        print(email)
         user = User.objects.filter(email=email)[0]
+        print(user.username)
         if request.method == "POST":
             # photo 是表单中文件上传的name
             file = request.FILES.get('picture')
@@ -175,6 +178,51 @@ def information(request):
     if phone:
         user = User.objects.filter(phone_number=phone)[0]
         if request.method == "POST":
+
+            # photo 是表单中文件上传的name
+            file = request.FILES.get('picture')
+            if file:
+
+                # 文件路径
+                path = os.path.join(settings.MEDIA_ROOT, file.name)
+
+                # 文件类型过滤
+                ext = os.path.splitext(file.name)
+                if len(ext) < 1 or not ext[1] in settings.ALLOWED_FILEEXTS:
+                    return redirect(reverse('upload'))
+
+                # 解决文件重名
+                if os.path.exists(path):
+                    # 日期目录
+                    dir = datetime.today().strftime("%Y/%m/%d")
+                    dir = os.path.join(settings.MEDIA_ROOT, dir)
+                    if not os.path.exists(dir):
+                        os.makedirs(dir)  # 递归创建目录
+
+                    # list.png
+                    file_name = ext[0] + datetime.today().strftime("%Y%m%d%H%M%S") + str(randint(1, 1000)) + ext[
+                        1] if len(
+                        ext) > 1 else ''
+                    path = os.path.join(dir, file_name)
+                    print(path)
+                    pathh = path.split('Retailers/static')
+                    print(pathh[1])
+                    user.user_photo = pathh[1]
+                    user.save()
+
+                # 创建新文件
+                with open(path, 'wb') as fp:
+                    # 如果文件超过2.5M,则分块读写
+                    if file.multiple_chunks():
+                        for block1 in file.chunks():
+                            fp.write(block1)
+                    else:
+                        fp.write(file.read())
+
+
+
+
+
             username = request.POST.get('user-name')
             realname = request.POST.get('realname')
             sex = request.POST.get('radio10')
@@ -267,6 +315,40 @@ def walletlist(request):
 
 # 登录页面
 def login(request):
+    if request.method =="POST":
+        user=request.POST.get('user')
+        password=request.POST.get('password')
+        # print(user,password)
+        # if password:
+        #     password=hashlib.sha1(password.encode('utf8')).hexdigest()
+        if user:
+            #用户名登录验证
+            user_username=User.objects.filter(username=user)
+            # print(user_username)
+            if user_username:
+                # print('sss')
+                if user_username[0].password==password:
+
+                    request.session['username']=user_username[0].username
+                    return redirect(reverse('order:home'))
+            #邮箱登录验证
+            user_email=User.objects.filter(email=user)
+            # print(user_email)
+            if user_email:
+                # print('youx')
+                if user_email[0].password==password:
+                    request.session['username']=user_email[0].username
+                    return redirect(reverse('order:home'))
+            # 手机号登录验证
+            user_phone = User.objects.filter(phone_number=user)
+            # print(user_phone)
+            if user_phone:
+                # print('手机')
+                if user_phone[0].password == password:
+                    request.session['username']=user_phone[0].username
+                    return redirect(reverse('order:home'))
+
+
     return render(request,'shop/home/login.html')
 
 
@@ -347,3 +429,7 @@ def register(request):
         'form1':form1,
     })
 
+# 删除session
+def sc(request):
+    request.session.flush()
+    return HttpResponse('删除全部session')

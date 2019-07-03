@@ -29,7 +29,13 @@
                         <img src="{% static 'shop/images/getAvatar.do.jpg' %}">
                     </a>
                     <div class="m-info">
-                        <em class="s-name">小叮当</em>
+                        <em class="s-name">
+
+{{ session.username }}
+
+
+
+                        </em>
                         <div class="vip1"><a href="#"><span></span><em>会员专享</em></a></div>
                         <div class="safeText"><a href="{% url 'goods:safety' %}">账户安全:<em
                                 style="margin-left:20px ;">60</em>分</a>
