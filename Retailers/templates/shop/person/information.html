@@ -50,8 +50,20 @@
 
 								<div class="am-form-group">
 									<label for="user-name2" class="am-form-label">昵称</label>
-									<div class="am-form-content">
-										<input type="text" name="user-name" id="user-name2" placeholder="{{ user.username }}">
+									<div class="am-form-content"  >
+										<input type="text" name="user-name" id="user-name2" placeholder="{{ user.username }}"
+
+
+
+                                        {% if  user.username %}
+
+disabled="disabled"
+
+                                        {% endif %}
+
+
+
+                                        >
                                           <small>昵称长度不能超过40个汉字</small>
 									</div>
 								</div>
@@ -59,7 +71,16 @@
 								<div class="am-form-group">
 									<label for="user-name" class="am-form-label">姓名</label>
 									<div class="am-form-content">
-										<input type="text" name="realname" id="user-name2" placeholder="{{ user.realname }}">
+										<input type="text" name="realname" id="user-name2" placeholder="{{ user.realname }}"
+
+                                        {% if  user.realname %}
+
+disabled="disabled"
+
+                                        {% endif %}
+
+
+                                        >
 
 									</div>
 								</div>
@@ -181,14 +202,28 @@
 								<div class="am-form-group">
 									<label for="user-phone" class="am-form-label">电话</label>
 									<div class="am-form-content">
-										<input id="user-phone" placeholder="{{ user.phone_number }}" type="tel" name="user-phone">
+										<input id="user-phone" placeholder="{{ user.phone_number }}" type="tel" name="user-phone"
+
+                                       {% if user.phone_number %}
+                                       disabled="disabled"
+
+                                       {% endif %}
+
+                                        >
 
 									</div>
 								</div>
 								<div class="am-form-group">
 									<label for="user-email" class="am-form-label">电子邮件</label>
 									<div class="am-form-content">
-										<input id="user-email" placeholder="{{ user.email }}" type="email" name="user-email">
+										<input id="user-email" placeholder="{{ user.email }}" type="email" name="user-email"
+
+                                         {% if user.email %}
+                                       disabled="disabled"
+
+                                       {% endif %}
+
+                                        >
 
 									</div>
 								</div>
