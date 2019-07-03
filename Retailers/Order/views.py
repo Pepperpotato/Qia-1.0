@@ -1,7 +1,10 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template import loader
+from django.urls import reverse
+
 from Goods.models import CommodityCategories,CommodityBrand,Goods
+from .models import Mobilecount
 from django.db import connection
 # Create your views here.
 
@@ -12,16 +15,13 @@ def home(request):
     dlb = CommodityCategories.objects.filter(parentid=0) #寻找大类别
     xlb = CommodityCategories.objects.exclude(parentid=0) #寻找小类别
     store = CommodityBrand.objects.all()#寻找品牌
-    count = len(dlb)
-    print(count)
-    list = []
-    category = {}
-    for num in dlb:
-        cursor = connection.cursor()
-        cursor.execute("select * from Goods where smallclassesid in (select id from CommodityCategories where parentid ==(select id from CommodityCategories where parentid ==0 limit ))")
-        rows = cursor.fetchall()
-        print(rows)
-    # goods = Goods.objects.all()#
+    pub = xlb[0].goods_set.all()
+
     res = temp.render(context={'dlb':dlb,'xlb':xlb,'store':store})
     return HttpResponse(res)
     # return render(request,'shop/home/home3.html')
+
+
+def view(request):
+    Mobilecount.increase_view()
+    return  redirect(reverse("order:home") )
