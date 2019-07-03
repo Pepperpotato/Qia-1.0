@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from django.urls import reverse
 
-from User.models import User, Express_company, Pay_way
+from User.models import User, Express_company, Pay_way, User_account
 
 
 def add(request):
@@ -80,15 +80,28 @@ def orderdetail(request):
 # 会员列表
 def userlist(request):
     all_user = User.objects.all()
-
-    return render(request, 'admin/user_list.html',context={
-        'all_user': all_user
+    all_account = User_account.objects.all()
+    # account = User_account.objects.all()
+    # user_info = account.user
+    # print(user_info)
+    return render(request, 'admin/user_list.html', context={
+        'all_user': all_user,
+        'all_account': all_account
     })
 
 
+def deluser(request, uid):
+    deluser = User.objects.filter(uid=uid)
+    deluser.delete()
+    return redirect(reverse('admin:userlist'))
+
+
 # 会员详情
-def userdetail(request):
-    return render(request, 'admin/user_detail.html')
+def userdetail(request, uid):
+    current_user = User.objects.filter(uid=uid)
+    return render(request, 'admin/user_detail.html', context={
+        'current_user': current_user[0]
+    })
 
 
 # 会员等级
