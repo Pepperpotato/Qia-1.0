@@ -15,8 +15,7 @@ def home(request):
     dlb = CommodityCategories.objects.filter(parentid=0) #寻找大类别
     xlb = CommodityCategories.objects.exclude(parentid=0) #寻找小类别
     store = CommodityBrand.objects.all()#寻找品牌
-    pub = xlb[0].goods_set.all()
-
+    commodity =
     res = temp.render(context={'dlb':dlb,'xlb':xlb,'store':store})
     return HttpResponse(res)
     # return render(request,'shop/home/home3.html')
