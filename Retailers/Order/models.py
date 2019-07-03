@@ -126,12 +126,3 @@ class Mobilecount(models.Model):
     view = models.PositiveIntegerField(default=0)
     time = models.DateTimeField(auto_now_add=True)
 
-    def increase_view(self):
-        time = datetime.datetime.now().strftime('%Y-%m-%d')
-        res = Mobilecount.objects.filter(time_contains=time).values()
-        if res:
-            res[0].view += 1
-            res[0].save(update_fields=['view'])
-        else:
-            tmp = Mobilecount(view=1)
-            tmp.save()

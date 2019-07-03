@@ -22,6 +22,3 @@ def home(request):
     # return render(request,'shop/home/home3.html')
 
 
-def view(request):
-    Mobilecount.increase_view()
-    return  redirect(reverse("order:home") )
