@@ -28,34 +28,22 @@
         <th>配送方式</th>
         <th>操作</th>
        </tr>
-       <tr>
-        <td class="center">201602011207</td>
-        <td>DeathGhost</td>
-        <td>18300000000</td>
-        <td>
-         <address>陕西省西安市未央区幸福路222号</address>
-        </td>
-        <td class="center"><strong class="rmb_icon">59.00</strong></td>
-        <td class="center">申通快递</td>
-        <td class="center">
-         <a href="#" title="查看订单" class="link_icon" target="_blank">&#118;</a>
-         <a href="#" title="删除" class="link_icon">&#100;</a>
-        </td>
-       </tr>
-       <tr>
-        <td class="center">201602011207</td>
-        <td>DeathGhost</td>
-        <td>18300000000</td>
-        <td>
-         <address>陕西省西安市未央区幸福路222号</address>
-        </td>
-        <td class="center"><strong class="rmb_icon">59.00</strong></td>
-        <td class="center">圆通快递</td>
-        <td class="center">
-         <a href="#" title="查看订单" class="link_icon" target="_blank">&#118;</a>
-         <a href="#" title="删除" class="link_icon">&#100;</a>
-        </td>
-       </tr>
+       {% for res in res %}
+           <tr>
+            <td class="center">{{ res.id}}</td>
+            <td>{{ res.receiver }}</td>
+            <td>{{ res.phone_number }}</td>
+            <td>
+             <address>{{ res.location }}{{ res.detail_address }}</address>
+            </td>
+            <td class="center"><strong class="rmb_icon">59.00</strong></td>
+            <td class="center">申通快递</td>
+            <td class="center">
+             <a href="#" title="查看订单" class="link_icon" target="_blank">&#118;</a>
+             <a href="#" title="删除" class="link_icon">&#100;</a>
+            </td>
+           </tr>
+       {% endfor %}
       </table>
       <aside class="paging">
        <a>第一页</a>

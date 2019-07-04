@@ -3,7 +3,9 @@ from django.shortcuts import render, redirect
 from django.template import loader
 from django.urls import reverse
 
+
 from Goods.models import CommodityCategories, CommodityBrand, Goods
+
 from .models import Mobilecount
 from django.db import connection
 # Create your views here.

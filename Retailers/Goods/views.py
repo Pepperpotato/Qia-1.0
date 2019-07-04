@@ -94,9 +94,12 @@ def index(request):
     # print(username)
     user = User.objects.filter(username=username)[0]
     # print(user.uid)
+    # 用户余额
     account=user.user_account
-    grade=user.user_grade
-    # print(grade.)
+    # 用户最新积分
+    grade=user.user_grade_set.all()
+    grade=grade[len(grade)-1].changed_grade
+    # print(grade)
     # print(account.useroffer_id,type(account.used_userofferid))
     # 计算可用优惠券数量
     coupons=0
@@ -104,12 +107,19 @@ def index(request):
         coupons+=1
     for g in account.goodoffer_id:
         coupons+=1
-    print(coupons)
+    # print(coupons)
+
+
+
+    # 用户订单表
+    order=user.order_twenty
+    print(order)
 
     return render(request,'shop/person/index.html',context={
         'user':user,
         'coupons':coupons,
         'account':account,
+        'grade':grade,
     })
 
 # 个人资料

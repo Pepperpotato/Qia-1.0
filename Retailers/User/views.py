@@ -1,6 +1,7 @@
 
 import hashlib
 
+from django.db import connection
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
@@ -69,7 +70,14 @@ def productdetail(request):
 
 # 订单列表
 def orderlist(request):
-    return render(request, 'admin/order_list.html')
+    with connection.cursor() as cursor:
+        cursor.execute("select * from order_twenty o join user_address a on o.addressid=a.aid ")
+    columns = [col[0] for col in cursor.description]
+    res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+    print(res)
+    return render(request, 'admin/order_list.html', context={
+        'res': res
+    })
 
 
 # 订单详情
@@ -90,6 +98,7 @@ def userlist(request):
     })
 
 
+# 删除用户
 def deluser(request, uid):
     deluser = User.objects.filter(uid=uid)
     deluser.delete()

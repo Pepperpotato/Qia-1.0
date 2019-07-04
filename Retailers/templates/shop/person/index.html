@@ -75,7 +75,7 @@
                 </p>
                 <p class="m-bill">
                     <a href="{% url 'goods:pointnew' %}">
-                        <em class="m-num">10</em>
+                        <em class="m-num">{{ grade }}</em>
                         <span class="m-title">总积分</span>
                     </a>
                 </p>
@@ -113,9 +113,12 @@
         <div class="m-order">
             <div class="s-bar">
                 <i class="s-icon"></i>我的订单
-                <a class="i-load-more-item-shadow" href="order' %}">全部订单</a>
+                <a class="i-load-more-item-shadow" href="{% url 'goods:order' %}">全部订单</a>
             </div>
             <ul>
+
+
+
                 <li><a href="{% url 'goods:order' %}"><i><img
                         src="{% static 'shop/images/pay.png' %}"/></i><span>待付款</span></a>
                 </li>
@@ -128,6 +131,10 @@
                         class="m-num">3</em></span></a></li>
                 <li><a href="{% url 'goods:change' %}"><i><img src="{% static 'shop/images/refund.png' %}"/></i><span>退换货</span></a>
                 </li>
+
+
+
+
             </ul>
             <div class="orderContentBox">
                 <div class="orderContent">
