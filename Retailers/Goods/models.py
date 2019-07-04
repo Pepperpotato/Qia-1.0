@@ -88,9 +88,15 @@ class Goodsdetails(models.Model):
     productionlicensenumber=models.CharField(max_length=216) #生产许可证编号
     storeway=models.CharField(max_length=216) #储存方法
     eatway=models.CharField(max_length=216) #食用方法
-    picture1=models.CharField(max_length=128,null=True) #图片路径
-    picture2=models.CharField(max_length=128,null=True) #图片路径
-    picture3=models.CharField(max_length=128,null=True) #图片路径
+    picture1=models.CharField(max_length=128, null=True) #图片路径
+    spicture1 = models.CharField(max_length=128, null=True)
+    mpicture1 = models.CharField(max_length=128, null=True)
+    picture2=models.CharField(max_length=128, null=True) #图片路径
+    spicture2 = models.CharField(max_length=128, null=True)
+    mpicture2 = models.CharField(max_length=128, null=True)
+    picture3=models.CharField(max_length=128, null=True) #图片路径
+    spicture3 = models.CharField(max_length=128,null=True)
+    mpicture3 = models.CharField(max_length=128,null=True)
     picture4=models.CharField(max_length=128,null=True) #图片路径
     picture5=models.CharField(max_length=128,null=True) #图片路径
     picture6=models.CharField(max_length=128,null=True) #图片路径
