@@ -16,183 +16,208 @@
 
 {% block content %}
     <div class="wrap-left">
-    <div class="wrap-list">
-        <div class="m-user">
-            <!--个人信息 -->
+        <div class="wrap-list">
+            <div class="m-user">
+                <!--个人信息 -->
 
-            <div class="m-userinfo">
-                <a href="{% url 'goods:news' %}">
-                    <div class="tipsBox"><i class="am-icon-envelope"></i></div>
-                </a>
-                <div class="m-baseinfo">
-                    <a class="m-pic" href="{% url 'goods:information' %}">
-                        <img src="{% static 'shop/images/getAvatar.do.jpg' %}">
+                <div class="m-userinfo">
+                    <a href="{% url 'goods:news' %}">
+                        <div class="tipsBox"><i class="am-icon-envelope"></i></div>
                     </a>
-                    <div class="m-info">
-                        <em class="s-name">
+                    <div class="m-baseinfo">
+                        <a class="m-pic" href="{% url 'goods:information' %}">
+                            <img src="{% static 'shop/images/getAvatar.do.jpg' %}">
+                        </a>
+                        <div class="m-info">
+                            <em class="s-name">
 
-{{ user.username }}
+                                {{ user.username }}
 
 
-
-                        </em>
-                        <div class="vip1"><a href="#"><span></span><em>会员专享</em></a></div>
-                        <div class="safeText"><a href="{% url 'goods:safety' %}">账户安全:<em
-                                style="margin-left:20px ;">60</em>分</a>
-                            <div class="progressBar"><span style="left: -95px;" class="progress"></span></div>
-                        </div>
-                        <div class="m-address">
-                            <a href="{% url 'goods:address' %}" class="i-trigger">收货地址<i class="am-icon-angle-right"
-                                                                                         style="padding-left:5px ;"></i></a>
+                            </em>
+                            <div class="vip1"><a href="#"><span></span><em>会员专享</em></a></div>
+                            <div class="safeText"><a href="{% url 'goods:safety' %}">账户安全:<em
+                                    style="margin-left:20px ;">60</em>分</a>
+                                <div class="progressBar"><span style="left: -95px;" class="progress"></span></div>
+                            </div>
+                            <div class="m-address">
+                                <a href="{% url 'goods:address' %}" class="i-trigger">收货地址<i class="am-icon-angle-right"
+                                                                                             style="padding-left:5px ;"></i></a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="m-right">
-                    <div class="m-new">
-                        <a href="{% url 'goods:news' %}"><i class="am-icon-dropbox  am-icon-md"
-                                                            style="padding-right:5px ;"></i>消息盒子</a>
+                    <div class="m-right">
+                        <div class="m-new">
+                            <a href="{% url 'goods:news' %}"><i class="am-icon-dropbox  am-icon-md"
+                                                                style="padding-right:5px ;"></i>消息盒子</a>
+                        </div>
+
                     </div>
-
                 </div>
-            </div>
 
-            <!--个人资产-->
-            <div class="m-userproperty">
-                <div class="s-bar">
-                    <i class="s-icon"></i>个人资产
-                </div>
-                <p class="m-coupon">
-                    <a href="{% url 'goods:coupon' %}">
-                        <em class="m-num">{{ coupons }}</em>
-                        <span class="m-title">优惠券</span>
-                    </a>
-                </p>
-                <p class="m-wallet">
-                    <a href="{% url 'goods:wallet' %}">
-                        <em class="m-num">
-                            {% if not account.money %}
-                                0
+                <!--个人资产-->
+                <div class="m-userproperty">
+                    <div class="s-bar">
+                        <i class="s-icon"></i>个人资产
+                    </div>
+                    <p class="m-coupon">
+                        <a href="{% url 'goods:coupon' %}">
+                            <em class="m-num">{{ coupons }}</em>
+                            <span class="m-title">优惠券</span>
+                        </a>
+                    </p>
+                    <p class="m-wallet">
+                        <a href="{% url 'goods:wallet' %}">
+                            <em class="m-num">
+                                {% if not account.money %}
+                                    0
                                 {% else %}
-                                {{ account.money }}
+                                    {{ account.money }}
+                                {% endif %}
+
+
+                            </em>
+                            <span class="m-title">账户余额</span>
+                        </a>
+                    </p>
+                    <p class="m-bill">
+                        <a href="{% url 'goods:pointnew' %}">
+                            <em class="m-num">{{ grade }}</em>
+                            <span class="m-title">总积分</span>
+                        </a>
+                    </p>
+                </div>
+
+                <!--我的钱包-->
+                <div class="wallet">
+                    <div class="s-bar">
+                        <i class="s-icon"></i>商城钱包
+                    </div>
+                    <p class="m-big squareS">
+                        <a href="{% url 'order:home' %}">
+                            <i><img src="{% static 'shop/images/shopping.png' %}"/></i>
+                            <span class="m-title">能购物</span>
+                        </a>
+                    </p>
+                    <p class="m-big squareA">
+                        <a href="{% url 'goods:safety' %}">
+                            <i><img src="{% static 'shop/images/safe.png' %}"/></i>
+                            <span class="m-title">够安全</span>
+                        </a>
+                    </p>
+                    <p class="m-big squareL">
+                        <a href="{% url 'goods:cardlist' %}">
+                            <i><img src="{% static 'shop/images/profit.png' %}"/></i>
+                            <span class="m-title">很灵活</span>
+                        </a>
+                    </p>
+                </div>
+
+            </div>
+            <div class="box-container-bottom"></div>
+
+            <!--订单 -->
+            <div class="m-order">
+                <div class="s-bar">
+                    <i class="s-icon"></i>我的订单
+                    <a class="i-load-more-item-shadow" href="{% url 'goods:order' %}">全部订单</a>
+                </div>
+                <ul>
+
+
+                    <li><a href="{% url 'goods:order' %}"><i><img
+                            src="{% static 'shop/images/pay.png' %}"/></i><span>待付款</span></a>
+                    </li>
+                    <li><a href="{% url 'goods:order' %}"><i><img
+                            src="{% static 'shop/images/send.png' %}"/></i><span>待发货<em
+                            class="m-num">1</em></span></a></li>
+                    <li><a href="{% url 'goods:order' %}"><i><img
+                            src="{% static 'shop/images/receive.png' %}"/></i><span>待收货</span></a>
+                    </li>
+                    <li><a href="{% url 'goods:order' %}"><i><img
+                            src="{% static 'shop/images/comment.png' %}"/></i><span>待评价<em
+                            class="m-num">3</em></span></a></li>
+                    <li><a href="{% url 'goods:change' %}"><i><img
+                            src="{% static 'shop/images/refund.png' %}"/></i><span>退换货</span></a>
+                    </li>
+
+
+                </ul>
+                <div class="orderContentBox">
+                    <div class="orderContent">
+                        <div class="orderContentpic">
+                            <div class="imgBox">
+                                <a href="{% url 'goods:orderinfo' %}"><img
+                                        src="{% static 'shop/images/youzi.jpg' %}"></a>
+                            </div>
+                        </div>
+                        <div class="detailContent">
+                            <a href="{% url 'goods:orderinfo' %}" class="delivery">
+                                {% if  first.orderstatus  == 0 %}
+                                    没给钱
+                                {% elif first.orderstatus  == 1 %}
+                                    已付款
+                                {% elif first.orderstatus  == 2 %}
+                                    已发货
+                                {% elif first.orderstatus  == 3 %}
+                                    已收货
+                                {% elif first.orderstatus  == 4 %}
+                                    交易完成
+                                {% endif %}
+                            </a>
+                            <div class="orderID">
+                                <span class="time">{{ first.ordertime|date:'Y-m-d' }}</span>
+                                <span class="splitBorder">|</span>
+                                <span class="time">{{ first.ordertime |date:'H:i:s' }}</span>
+                            </div>
+                            <div class="orderID">
+                                <span class="num">共1件商品</span>
+                            </div>
+                        </div>
+                        <div class="state">
+                            {% if  first.orderstatus  == 0 %}
+                                没给钱
+                            {% elif first.orderstatus  == 1 %}
+                                已付款未发货
+                            {% elif first.orderstatus  == 2 %}
+                                已发货未收货
+                            {% elif first.orderstatus  == 3 %}
+                                已收货未评价
+                            {% elif first.orderstatus  == 4 %}
+                                交易完成
                             {% endif %}
 
-
-
-                        </em>
-                        <span class="m-title">账户余额</span>
-                    </a>
-                </p>
-                <p class="m-bill">
-                    <a href="{% url 'goods:pointnew' %}">
-                        <em class="m-num">{{ grade }}</em>
-                        <span class="m-title">总积分</span>
-                    </a>
-                </p>
-            </div>
-
-            <!--我的钱包-->
-            <div class="wallet">
-                <div class="s-bar">
-                    <i class="s-icon"></i>商城钱包
-                </div>
-                <p class="m-big squareS">
-                    <a href="{% url 'order:home' %}">
-                        <i><img src="{% static 'shop/images/shopping.png' %}"/></i>
-                        <span class="m-title">能购物</span>
-                    </a>
-                </p>
-                <p class="m-big squareA">
-                    <a href="{% url 'goods:safety' %}">
-                        <i><img src="{% static 'shop/images/safe.png' %}"/></i>
-                        <span class="m-title">够安全</span>
-                    </a>
-                </p>
-                <p class="m-big squareL">
-                    <a href="{% url 'goods:cardlist' %}">
-                        <i><img src="{% static 'shop/images/profit.png' %}"/></i>
-                        <span class="m-title">很灵活</span>
-                    </a>
-                </p>
-            </div>
-
-        </div>
-        <div class="box-container-bottom"></div>
-
-        <!--订单 -->
-        <div class="m-order">
-            <div class="s-bar">
-                <i class="s-icon"></i>我的订单
-                <a class="i-load-more-item-shadow" href="{% url 'goods:order' %}">全部订单</a>
-            </div>
-            <ul>
-
-
-
-                <li><a href="{% url 'goods:order' %}"><i><img
-                        src="{% static 'shop/images/pay.png' %}"/></i><span>待付款</span></a>
-                </li>
-                <li><a href="{% url 'goods:order' %}"><i><img
-                        src="{% static 'shop/images/send.png' %}"/></i><span>待发货<em
-                        class="m-num">1</em></span></a></li>
-                <li><a href="{% url 'goods:order' %}"><i><img src="{% static 'shop/images/receive.png' %}"/></i><span>待收货</span></a>
-                </li>
-                <li><a href="{% url 'goods:order' %}"><i><img src="{% static 'shop/images/comment.png' %}"/></i><span>待评价<em
-                        class="m-num">3</em></span></a></li>
-                <li><a href="{% url 'goods:change' %}"><i><img src="{% static 'shop/images/refund.png' %}"/></i><span>退换货</span></a>
-                </li>
-
-
-
-
-            </ul>
-            <div class="orderContentBox">
-                <div class="orderContent">
-                    <div class="orderContentpic">
-                        <div class="imgBox">
-                            <a href="{% url 'goods:orderinfo' %}"><img src="{% static 'shop/images/youzi.jpg' %}"></a>
                         </div>
+                        <div class="price"><span class="sym">¥</span>23.<span class="sym">80</span></div>
+
                     </div>
-                    <div class="detailContent">
-                        <a href="{% url 'goods:orderinfo' %}" class="delivery">签收</a>
-                        <div class="orderID">
-                            <span class="time">2016-03-09</span>
-                            <span class="splitBorder">|</span>
-                            <span class="time">21:52:47</span>
-                        </div>
-                        <div class="orderID">
-                            <span class="num">共1件商品</span>
-                        </div>
-                    </div>
-                    <div class="state">待评价</div>
-                    <div class="price"><span class="sym">¥</span>23.<span class="sym">80</span></div>
-
-                </div>
-                <a href="{% url 'goods:javascript:void(0);" class="btnPay">再次购买</a>
+                    <a href="javascript:void(0);" class="btnPay">再次购买</a>
                 </div>
 
-                <div class=" orderContentBox">
-                <div class="orderContent">
-                    <div class="orderContentpic">
-                        <div class="imgBox">
-                            <a href="{% url 'goods:orderinfo' %}"><img src="{% static 'shop/images/heart.jpg' %}"></a>
+                <div class="orderContentBox">
+                    <div class="orderContent">
+                        <div class="orderContentpic">
+                            <div class="imgBox">
+                                <a href="{% url 'goods:orderinfo' %}"><img
+                                        src="{% static 'shop/images/heart.jpg' %}"></a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="detailContent">
-                        <a href="{% url 'goods:orderinfo' %}" class="delivery">派件</a>
-                        <div class="orderID">
-                            <span class="time">2016-03-09</span>
-                            <span class="splitBorder">|</span>
-                            <span class="time">21:52:47</span>
+                        <div class="detailContent">
+                            <a href="{% url 'goods:orderinfo' %}" class="delivery">派件</a>
+                            <div class="orderID">
+                                <span class="time">2016-03-09</span>
+                                <span class="splitBorder">|</span>
+                                <span class="time">21:52:47</span>
+                            </div>
+                            <div class="orderID">
+                                <span class="num">共2件商品</span>
+                            </div>
                         </div>
-                        <div class="orderID">
-                            <span class="num">共2件商品</span>
-                        </div>
-                    </div>
-                    <div class="state">已发货</div>
-                    <div class="price"><span class="sym">¥</span>246.<span class="sym">50</span></div>
+                        <div class="state">已发货</div>
+                        <div class="price"><span class="sym">¥</span>246.<span class="sym">50</span></div>
 
-                </div>
-                <a href="{% url 'goods:javascript:void(0);" class="btnPay">再次购买</a>
+                    </div>
+                    <a href="javascript:void(0);" class="btnPay">再次购买</a>
                 </div>
             </div>
             <!--九宫格-->
@@ -227,9 +252,9 @@
                         </li>
                     </a>
                     <a href="{% static 'shop/home/home2' %}">
-										<li class=" am-u-sm-4"><i class="am-icon-clock-o am-icon-md"></i>
-                    <p>限时活动</p>
-                    </li>
+                        <li class=" am-u-sm-4"><i class="am-icon-clock-o am-icon-md"></i>
+                            <p>限时活动</p>
+                        </li>
                     </a>
 
                 </ul>
@@ -270,27 +295,27 @@
                         </div>
                     </div>
                 </div>
-{#                <div class="twoTabModel credit">#}
-{#                    <h5 class="squareTitle"><a href="#"><span class="splitBorder"></span>积分商城<i#}
-{#                            class="am-icon-angle-right"></i></a></h5>#}
-{#                    <div class="Box">#}
-{#                        <p class="countDown">#}
-{#                            <span class="hour">12</span>：<span class="minute">09</span>：<span#}
-{#                                class="second">02</span><em class="txtStart">即将开始</em>#}
-{#                        </p>#}
-{#                        <div class="am-slider am-slider-default am-slider-carousel"#}
-{#                             data-am-flexslider="{itemWidth:108, itemMargin:3, slideshow: false}">#}
-{#                            <ul class="am-slides">#}
-{#                                <li><a href="#"><img src="{% static 'shop/images/333.jpg' %}"/></a></li>#}
-{#                                <li><a href="#"><img src="{% static 'shop/images/222.jpg' %}"/></a></li>#}
-{#                                <li><a href="#"><img src="{% static 'shop/images/111.jpg' %}"/></a></li>#}
-{#                                <li><a href="#"><img src="{% static 'shop/images/333.jpg' %}"/></a></li>#}
-{#                                <li><a href="#"><img src="{% static 'shop/images/222.jpg' %}"/></a></li>#}
-{#                                <li><a href="#"><img src="{% static 'shop/images/111.jpg' %}"/></a></li>#}
-{#                            </ul>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
+                {#                <div class="twoTabModel credit">#}
+                {#                    <h5 class="squareTitle"><a href="#"><span class="splitBorder"></span>积分商城<i#}
+                {#                            class="am-icon-angle-right"></i></a></h5>#}
+                {#                    <div class="Box">#}
+                {#                        <p class="countDown">#}
+                {#                            <span class="hour">12</span>：<span class="minute">09</span>：<span#}
+                {#                                class="second">02</span><em class="txtStart">即将开始</em>#}
+                {#                        </p>#}
+                {#                        <div class="am-slider am-slider-default am-slider-carousel"#}
+                {#                             data-am-flexslider="{itemWidth:108, itemMargin:3, slideshow: false}">#}
+                {#                            <ul class="am-slides">#}
+                {#                                <li><a href="#"><img src="{% static 'shop/images/333.jpg' %}"/></a></li>#}
+                {#                                <li><a href="#"><img src="{% static 'shop/images/222.jpg' %}"/></a></li>#}
+                {#                                <li><a href="#"><img src="{% static 'shop/images/111.jpg' %}"/></a></li>#}
+                {#                                <li><a href="#"><img src="{% static 'shop/images/333.jpg' %}"/></a></li>#}
+                {#                                <li><a href="#"><img src="{% static 'shop/images/222.jpg' %}"/></a></li>#}
+                {#                                <li><a href="#"><img src="{% static 'shop/images/111.jpg' %}"/></a></li>#}
+                {#                            </ul>#}
+                {#                        </div>#}
+                {#                    </div>#}
+                {#                </div>#}
             </div>
 
         </div>
