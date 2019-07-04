@@ -16,8 +16,8 @@ from User.models import User
 
 
 class ConsultTwentyeight(models.Model):
-    questionsort = models.IntegerField()
-    details = models.CharField(max_length=256)
+    questionsort = models.IntegerField() #问题分类
+    details = models.CharField(max_length=256) #问题描述
 
     class Meta:
         db_table = 'consult_twentyeight'
@@ -27,13 +27,18 @@ class ConsultTwentyeight(models.Model):
 
 class OrderTwenty(models.Model):
     uid = models.ForeignKey(User,models.CASCADE)
-    ordertime = models.DateTimeField()
-    addressid = models.IntegerField()
-    expressbrandid = models.IntegerField(default=1)
-    paywayid = models.IntegerField()
-    integral = models.IntegerField()
-    orderstatus = models.IntegerField()
-    getgoodstime = models.DateTimeField(blank=True, null=True)
+    ordertime = models.DateTimeField()#下单时间
+    addressid = models.IntegerField()#收货地址id
+    expressbrandid = models.IntegerField(default=1)#物流品牌id
+    paywayid = models.IntegerField()#支付id
+    integral = models.IntegerField()#获得积分
+    orderstatus = models.IntegerField()#订单状态 0~4
+    # 0     没付钱
+    # 1   已付款未发货
+    # 2   已发货未收货
+    # 3   已收货未评价
+    # 4   评价了，交易完成
+    getgoodstime = models.DateTimeField(blank=True, null=True) #收货时间
 
     class Meta:
 
@@ -41,11 +46,11 @@ class OrderTwenty(models.Model):
 
 
 class OrderchildTwentyone(models.Model):
-    orderid = models.IntegerField()
-    goodid = models.IntegerField()
-    goodcount = models.IntegerField()
-    goodmoney = models.IntegerField()
-    goodmoneycount = models.IntegerField()
+    orderid = models.IntegerField() #订单id
+    goodid = models.IntegerField() #商品id
+    goodcount = models.IntegerField() #商品数量
+    goodmoney = models.IntegerField() #商品单价
+    goodmoneycount = models.IntegerField() #合计
 
     class Meta:
 
@@ -55,16 +60,16 @@ class OrderchildTwentyone(models.Model):
 
 
 class ReturnTwentytwo(models.Model):
-    orderid = models.IntegerField()
-    clientreturntime = models.DateTimeField()
-    retailersreturntime = models.DateTimeField(blank=True, null=True)
-    bankdotime = models.DateTimeField(blank=True, null=True)
-    returnoktime = models.DateTimeField(blank=True, null=True)
-    returntype = models.IntegerField(blank=True, null=True)
-    returnreason = models.CharField(max_length=128, blank=True, null=True)
-    returnmoney = models.IntegerField(blank=True, null=True)
-    returndetails = models.CharField(max_length=256, blank=True, null=True)
-    picturepath1 = models.CharField(max_length=256, blank=True, null=True)
+    orderid = models.IntegerField() #订单id
+    clientreturntime = models.DateTimeField() #买家退货时间
+    retailersreturntime = models.DateTimeField(blank=True, null=True) #卖家退款时间
+    bankdotime = models.DateTimeField(blank=True, null=True) #银行受理时间
+    returnoktime = models.DateTimeField(blank=True, null=True) #退款成功实践
+    returntype = models.IntegerField(blank=True, null=True) #退款类型
+    returnreason = models.CharField(max_length=128, blank=True, null=True) #退款原因
+    returnmoney = models.IntegerField(blank=True, null=True) #退款金额
+    returndetails = models.CharField(max_length=256, blank=True, null=True) #退款说明
+    picturepath1 = models.CharField(max_length=256, blank=True, null=True) #图片路径1/2/3
     picturepath2 = models.CharField(max_length=256, blank=True, null=True)
     picturepath3 = models.CharField(max_length=256, blank=True, null=True)
 
@@ -74,12 +79,12 @@ class ReturnTwentytwo(models.Model):
 
 
 class ShopcartTwentyfour(models.Model):
-    uid = models.IntegerField()
-    goodsid = models.IntegerField()
-    goodscount = models.IntegerField()
-    goodsprice = models.IntegerField()
-    goodsaddtime = models.DateTimeField()
-    discount = models.IntegerField()
+    uid = models.IntegerField() #用户id
+    goodsid = models.IntegerField() #商品id
+    goodscount = models.IntegerField() #加入购物车商品数量
+    goodsprice = models.IntegerField()#商品价格
+    goodsaddtime = models.DateTimeField()#加入购物车时间
+    discount = models.IntegerField()#优惠种类
 
     class Meta:
 
@@ -87,17 +92,17 @@ class ShopcartTwentyfour(models.Model):
 
 
 class StockTwentythree(models.Model):
-    remains = models.IntegerField()
-    importprice = models.IntegerField()
-    outportprice = models.IntegerField()
+    remains = models.IntegerField() #剩余数量
+    importprice = models.IntegerField() #进货价格
+    outportprice = models.IntegerField() #出售价格
 
     class Meta:
         db_table = 'stock_twentythree'
 
 
 class SuggestTwentynine(models.Model):
-    questionsort = models.IntegerField()
-    details = models.CharField(max_length=256)
+    questionsort = models.IntegerField() #问题分类
+    details = models.CharField(max_length=256) #问题描述
 
     class Meta:
 
@@ -107,15 +112,15 @@ class SuggestTwentynine(models.Model):
 
 
 class Activity(models.Model):
-    picture = models.CharField(max_length=128)
-    sort = models.IntegerField()
+    picture = models.CharField(max_length=128) #图片
+    sort = models.IntegerField() #0是轮播1是活动
 
     class Meta:
         db_table = 'activity_head_thirty'
 
 class Todayrecommend(models.Model):
     id = models.AutoField(primary_key=True)
-    goodsid = models.IntegerField(blank=True, null=True)
+    goodsid = models.IntegerField(blank=True, null=True) #商品id
 
     class Meta:
         db_table = 'today_recommend_thirtyone'
@@ -123,6 +128,6 @@ class Todayrecommend(models.Model):
 
 
 class Mobilecount(models.Model):
-    view = models.PositiveIntegerField(default=0)
-    time = models.DateTimeField(auto_now_add=True)
+    view = models.PositiveIntegerField(default=0) #次数
+    time = models.DateTimeField(auto_now_add=True) #日期
 
