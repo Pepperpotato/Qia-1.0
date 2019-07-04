@@ -9,19 +9,19 @@
       </div>
       <table class="table">
        <tr>
-        <td>收件人：DeathGhost</td>
-        <td>联系电话：18300000000</td>
-        <td>收件地址：陕西省西安市雁塔区丈八路2000集都市印象18栋2160室</td>
+        <td>收件人：{{ res.receiver }}</td>
+        <td>联系电话：{{ res.phone_number }}</td>
+        <td>收件地址：{{ res.location }}{{ res.detail_address }}</td>
         <td>付款时间：2016-02-01 13:56</td>
        </tr>
        <tr>
-        <td>下单时间：2016-02-01 13:56</td>
+        <td>下单时间：{{ res.ordertime }}</td>
         <td>付款时间：2016-02-01 13:56</td>
-        <td>确认时间：2016-02-01 13:56</td>
+        <td>确认时间：{{ res.getgoodstime }}</td>
         <td>评价时间时间：---</td>
        </tr>
        <tr>
-        <td>订单状态：<a>已付款，待发货</a></td>
+        <td>订单状态：<a>{{ res.orderstatus }}</a></td>
         <td colspan="3">订单备注：<mark>帮我检查好呀~谢谢~</mark></td>
         </tr>
       </table>

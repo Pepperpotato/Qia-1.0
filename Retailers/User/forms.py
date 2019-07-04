@@ -12,7 +12,7 @@ class ChangeForm(forms.Form):
         'required': '用户名不可为空',
         'min_length': '用户名不能少于三位'
     })
-    oldpassword = forms.CharField(min_length=6, required=False, error_messages={
+    oldpassword = forms.CharField(min_length=6, error_messages={
         'required': '密码不可为空',
         'min_length': '密码不能少于三位'
     })
@@ -40,6 +40,7 @@ class ChangeForm(forms.Form):
 
     def clean_oldpassword(self):
         db_password = User.objects.values('password').filter(username=self.cleaned_data.get('username'))
+        print(db_password)
         input_pasword = self.cleaned_data.get('oldpassword')
         print(1234567,input_pasword)
         input_pasword = hashlib.sha1(input_pasword.encode('utf8')).hexdigest()
