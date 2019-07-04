@@ -104,7 +104,7 @@ def index(request):
         grade=user.user_grade_set.all()
         # print(grade,'*'*100)
         grade=grade[len(grade)-1].changed_grade
-        print(grade)
+        # print(grade)
         # print(account.useroffer_id,type(account.used_userofferid))
         if account:
             # 计算可用优惠券数量
@@ -119,14 +119,24 @@ def index(request):
             # print(coupons)
 
         # 用户订单表
-        # order=user.order_twenty
-        # print(order)
+        orders=user.ordertwenty_set.all()
+        # print(orders)
+
+        if orders:
+            global first
+            first=orders[len(orders)-1]
+            # print(first.)
+            if len(orders)>1:
+                global second
+                second=orders[len(orders)-2]
 
         return render(request,'shop/person/index.html',context={
         'user':user,
         'coupons':coupons,
         'account':account,
         'grade':grade,
+        'first':first,
+        'second':second,
     })
     return render(request, 'shop/person/index.html')
 
@@ -425,6 +435,7 @@ def register(request):
                 User.objects.create(email=email,password=password)
                 # 获取新用户的uid
                 uid=User.objects.filter(email=email)[0].uid
+                print(uid)
                 #用户首次注册赠送100积分
                 User_grade.objects.create(change_source='首次注册系统赠送',change_number=100,changed_grade=100,growth_value=100,uid_id=uid)
                 # 用户账户信息表
