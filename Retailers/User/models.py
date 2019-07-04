@@ -102,7 +102,7 @@ class User_notice(models.Model):
 class User_account(models.Model):
     # uid = models.ForeignKey('User', models.CASCADE)     # 用户id
     pay_password = models.CharField(max_length=128, null=True)     # 支付密码
-    bankcard_id = models.CharField(max_length=50, default=0)   # 银行卡号
+    bankcard_id = models.CharField(max_length=50, default=0,null=True)   # 银行卡号
     money = models.IntegerField(default=0, null=True)      # 账户余额
     alipay_number = models.CharField(max_length=20, null=True)  # 支付宝账号
     wechat_number = models.CharField(max_length=20, null=True)  # 微信账号

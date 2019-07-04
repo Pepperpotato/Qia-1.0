@@ -34,7 +34,7 @@ class OrderTwenty(models.Model):
     integral = models.IntegerField()
     orderstatus = models.IntegerField()
     getgoodstime = models.DateTimeField(blank=True, null=True)
-
+    remarks= models.CharField(max_length=100,null=True, default='--')
     class Meta:
 
         db_table = 'order_twenty'
