@@ -3,15 +3,12 @@ from django.shortcuts import render, redirect
 from django.template import loader
 from django.urls import reverse
 
-
-from Goods.models import CommodityCategories, CommodityBrand, Goods
+from Goods.models import CommodityCategories, CommodityBrand, Goods, Goodsdetails
 
 from .models import Mobilecount
 from django.db import connection
 # Create your views here.
-
 from .models import *
-
 
 def home(request):
     temp = loader.get_template('shop/home/home3.html')
@@ -31,11 +28,18 @@ def home(request):
             a = Goods.objects.filter(smallclassesid=j['id'])
             if len(a):
                 for num in a:
-                    list.append(num.gid)
-        dic[i.id] = list
-        print(dic)
-
+                    list.append(num)
+        list.sort(reverse=True)
+        list1=list[:6]
+        dic[i.id] = list1
 
     res = temp.render(context={'dlb': dlb, 'xlb': xlb, 'store': store,'dic':dic})
     return HttpResponse(res)
     # return render(request,'shop/home/home3.html')
+
+
+def intro(request,dlbid,xlbid,goodid):
+    detail = Goodsdetails.objects.filter(Goodsid=goodid).first()
+    temp = loader.get_template('shop/home/introduction.html')
+    res = temp.render(context={'detail':detail})
+    return HttpResponse(res)
