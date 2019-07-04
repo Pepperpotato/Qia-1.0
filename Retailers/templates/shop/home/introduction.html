@@ -116,13 +116,13 @@
             <div class="flexslider">
                 <ul class="slides">
                     <li>
-                        <img src="/static/{{ detail.picture1 }}" title="pic"/>
+                        <img src="/static{{ detail.mpicture1 }}" title="pic"/>
                     </li>
                     <li>
-                        <img src="/static/{{ detail.picture2 }}"/>
+                        <img src="/static{{ detail.mpicture2 }}"/>
                     </li>
                     <li>
-                        <img src="/static/{{ detail.picture3 }}"/>
+                        <img src="/static{{ detail.mpicture3 }}"/>
                     </li>
                 </ul>
             </div>
@@ -147,14 +147,14 @@
                 </script>
 
                 <div class="tb-booth tb-pic tb-s310">
-                    <a href="/static/shop/images/01.jpg"><img src="/static/shop/images/01_mid.jpg" alt="细节展示放大镜特效" rel="/static/shop/images/01.jpg"
+                    <a href="/static{{ detail.picture1 }}"><img src="/static{{ detail.mpicture1 }}" alt="细节展示放大镜特效" rel="/static{{ detail.picture1 }}"
                                                     class="jqzoom"/></a>
                 </div>
                 <ul class="tb-thumb" id="thumblist">
                     <li class="tb-selected">
                         <div class="tb-pic tb-s40">
-                            <a href="#"><img src="/static/shop/images/01_small.jpg" mid="/static/shop/images/01_small.jpg"
-                                             big="/static/shop/images/01_small.jpg"></a>
+                            <a href="#"><img src="/static{{ detail.spicture1 }}" mid="/static{{ detail.mpicture1 }}"
+                                             big="/static{{ detail.picture1 }}"></a>
                         </div>
                     </li>
                     <li>
