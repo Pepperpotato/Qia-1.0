@@ -15,7 +15,8 @@ from Goods.forms import UserForm1,UserForm2
 from Goods.sms import send_sms
 from Retailers import settings
 from Retailers.settings import SMSCONFIG
-from User.models import User
+from User.models import User, User_grade, User_address, User_account
+
 
 # 地址管理
 def address(request):
@@ -52,7 +53,7 @@ def cardlist(request):
 def cardmethod(request):
     return render(request,'shop/person/cardmethod.html')
 
-# 脱货管理
+# 退货管理
 def change(request):
     return render(request,'shop/person/change.html')
 
@@ -67,7 +68,6 @@ def comment(request):
 # 发表评论
 def commentlist(request):
     return render(request,'shop/person/commentlist.html')
-
 # 商品咨询
 def consultation(request):
     return render(request,'shop/person/consultation.html')
@@ -92,35 +92,43 @@ def idcard(request):
 def index(request):
     username = request.session.get('username')
     # print(username)
-    user = User.objects.filter(username=username)[0]
-    # print(user.uid)
-    # 用户余额
-    account=user.user_account
-    # 用户最新积分
-    grade=user.user_grade_set.all()
-    grade=grade[len(grade)-1].changed_grade
-    # print(grade)
-    # print(account.useroffer_id,type(account.used_userofferid))
-    # 计算可用优惠券数量
-    coupons=0
-    for i in account.useroffer_id:
-        coupons+=1
-    for g in account.goodoffer_id:
-        coupons+=1
-    # print(coupons)
+    user = User.objects.filter(username=username)
+    if user:
+        user=user[0]
+        print(user.uid)
+        # print(user.uid)
+        # 用户余额
+        account=user.user_account
+        # print(account,'*'*100)
+        # 用户最新积分
+        grade=user.user_grade_set.all()
+        # print(grade,'*'*100)
+        grade=grade[len(grade)-1].changed_grade
+        print(grade)
+        # print(account.useroffer_id,type(account.used_userofferid))
+        if account:
+            # 计算可用优惠券数量
+            global coupons
+            coupons=0
+            if account.useroffer_id:
+                for i in account.useroffer_id:
+                    coupons+=1
+            if account.goodoffer_id:
+                for g in account.goodoffer_id:
+                    coupons+=1
+            # print(coupons)
 
+        # 用户订单表
+        # order=user.order_twenty
+        # print(order)
 
-
-    # 用户订单表
-    order=user.order_twenty
-    print(order)
-
-    return render(request,'shop/person/index.html',context={
+        return render(request,'shop/person/index.html',context={
         'user':user,
         'coupons':coupons,
         'account':account,
         'grade':grade,
     })
+    return render(request, 'shop/person/index.html')
 
 # 个人资料
 def information(request):
@@ -348,9 +356,9 @@ def login(request):
     if request.method =="POST":
         user=request.POST.get('user')
         password=request.POST.get('password')
-        # print(user,password)
-        # if password:
-        #     password=hashlib.sha1(password.encode('utf8')).hexdigest()
+        # print(user,type(user),password)
+        if password:
+            password=hashlib.sha1(password.encode('utf8')).hexdigest()
         if user:
             #用户名登录验证
             user_username=User.objects.filter(username=user)
@@ -415,6 +423,12 @@ def register(request):
                 # 写入数据库
                 # User.objects.create(**form1.cleaned_data)
                 User.objects.create(email=email,password=password)
+                # 获取新用户的uid
+                uid=User.objects.filter(email=email)[0].uid
+                #用户首次注册赠送100积分
+                User_grade.objects.create(change_source='首次注册系统赠送',change_number=100,changed_grade=100,growth_value=100,uid_id=uid)
+                # 用户账户信息表
+                User_account.objects.create(uid=uid)
                 # 保存session数据
                 request.session['email']=email
                 # 验证成功跳转到首页
@@ -456,6 +470,14 @@ def register(request):
             # 写入数据库
             # User.objects.create(**form1.cleaned_data)
             User.objects.create(phone_number=phone, password=password)
+            # 获取新用户的uid
+            uid = User.objects.filter(phone_number=phone)[0].uid
+            # 用户首次注册赠送100积分
+            User_grade.objects.create(change_source='首次注册系统赠送', change_number=100, changed_grade=100, growth_value=100,
+                                      uid_id=uid)
+
+            # 用户账户信息表
+            User_account.objects.create(uid=uid)
             # # 保存session数据
             request.session['phone'] = phone
             # # 验证成功跳转到首页

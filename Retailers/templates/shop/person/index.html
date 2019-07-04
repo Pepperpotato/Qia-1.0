@@ -69,7 +69,16 @@
                 </p>
                 <p class="m-wallet">
                     <a href="{% url 'goods:wallet' %}">
-                        <em class="m-num">{{ account.money }}</em>
+                        <em class="m-num">
+                            {% if not account.money %}
+                                0
+                                {% else %}
+                                {{ account.money }}
+                            {% endif %}
+
+
+
+                        </em>
                         <span class="m-title">账户余额</span>
                     </a>
                 </p>
@@ -87,19 +96,19 @@
                     <i class="s-icon"></i>商城钱包
                 </div>
                 <p class="m-big squareS">
-                    <a href="#">
+                    <a href="{% url 'order:home' %}">
                         <i><img src="{% static 'shop/images/shopping.png' %}"/></i>
                         <span class="m-title">能购物</span>
                     </a>
                 </p>
                 <p class="m-big squareA">
-                    <a href="#">
+                    <a href="{% url 'goods:safety' %}">
                         <i><img src="{% static 'shop/images/safe.png' %}"/></i>
                         <span class="m-title">够安全</span>
                     </a>
                 </p>
                 <p class="m-big squareL">
-                    <a href="#">
+                    <a href="{% url 'goods:cardlist' %}">
                         <i><img src="{% static 'shop/images/profit.png' %}"/></i>
                         <span class="m-title">很灵活</span>
                     </a>
