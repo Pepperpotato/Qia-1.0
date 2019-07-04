@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -7,19 +8,19 @@
 
 		<title>商品页面</title>
 
-		<link href="../AmazeUI-2.4.2/assets/css/admin.css" rel="stylesheet" type="text/css" />
-		<link href="../AmazeUI-2.4.2/assets/css/amazeui.css" rel="stylesheet" type="text/css" />
-		<link href="../basic/css/demo.css" rel="stylesheet" type="text/css" />
-		<link type="text/css" href="../css/optstyle.css" rel="stylesheet" />
-		<link type="text/css" href="../css/style.css" rel="stylesheet" />
+		<link href="{% static  '/shop/AmazeUI-2.4.2/assets/css/admin.css' %}" rel="stylesheet" type="text/css" />
+		<link href="{% static  '/shop/AmazeUI-2.4.2/assets/css/amazeui.css' %}" rel="stylesheet" type="text/css" />
+		<link href="{% static  '/shop/basic/css/demo.css' %}" rel="stylesheet" type="text/css" />
+		<link type="text/css" href="{% static  '/shop/css/optstyle.css' %}" rel="stylesheet" />
+		<link type="text/css" href="{% static  '/shop/css/style.css' %}" rel="stylesheet" />
 
-		<script type="text/javascript" src="../basic/js/jquery-1.7.min.js"></script>
-		<script type="text/javascript" src="../basic/js/quick_links.js"></script>
+		<script type="text/javascript" src="{% static  '/shop/basic/js/jquery-1.7.min.js' %}"></script>
+		<script type="text/javascript" src="{% static  '/shop/basic/js/quick_links.js' %}"></script>
 
-		<script type="text/javascript" src="../AmazeUI-2.4.2/assets/js/amazeui.js"></script>
-		<script type="text/javascript" src="../js/jquery.imagezoom.min.js"></script>
-		<script type="text/javascript" src="../js/jquery.flexslider.js"></script>
-		<script type="text/javascript" src="../js/list.js"></script>
+		<script type="text/javascript" src="{% static  '/shop/AmazeUI-2.4.2/assets/js/amazeui.js' %}"></script>
+		<script type="text/javascript" src="{% static  '/shop/js/jquery.imagezoom.min.js' %}"></script>
+		<script type="text/javascript" src="{% static  '/shop/js/jquery.flexslider.js' %}"></script>
+		<script type="text/javascript" src="{% static  '/shop/js/list.js' %}"></script>
 
 	</head>
 
@@ -31,17 +32,17 @@
 			<ul class="message-l">
 				<div class="topMessage">
 					<div class="menu-hd">
-						<a href="#" target="_top" class="h">亲，请登录</a>
-						<a href="#" target="_top">免费注册</a>
+						<a href="{% url "goods:login" %}" target="_top" class="h">亲，请登录</a>
+						<a href="{% url "goods:register" %}" target="_top">免费注册</a>
 					</div>
 				</div>
 			</ul>
 			<ul class="message-r">
 				<div class="topMessage home">
-					<div class="menu-hd"><a href="#" target="_top" class="h">商城首页</a></div>
+					<div class="menu-hd"><a href="{% url "order:home" %}" target="_top" class="h">商城首页</a></div>
 				</div>
 				<div class="topMessage my-shangcheng">
-					<div class="menu-hd MyShangcheng"><a href="#" target="_top"><i class="am-icon-user am-icon-fw"></i>个人中心</a></div>
+					<div class="menu-hd MyShangcheng"><a href="{% url 'goods:index' %}" target="_top"><i class="am-icon-user am-icon-fw"></i>个人中心</a></div>
 				</div>
 				<div class="topMessage mini-cart">
 					<div class="menu-hd"><a id="mc-menu-hd" href="#" target="_top"><i class="am-icon-shopping-cart  am-icon-fw"></i><span>购物车</span><strong id="J_MiniCartNum" class="h">0</strong></a></div>
@@ -54,9 +55,9 @@
 			<!--悬浮搜索框-->
 
 			<div class="nav white">
-				<div class="logo"><img src="../images/logo.png" /></div>
+				<div class="logo"><img src="{% static  '/shop/images/logo.png' %}" /></div>
 				<div class="logoBig">
-					<li><img src="../images/logobig.png" /></li>
+					<li><img src="{% static  '/shop/images/logobig.png' %}" /></li>
 				</div>
 				<div class="search-bar pr">
 					<a name="index_none_header_sysc" href="#"></a>
@@ -89,7 +90,7 @@
 						</div>
 			</div>
 				<ol class="am-breadcrumb am-breadcrumb-slash">
-					<li><a href="#">首页</a></li>
+					<li><a href="{% url 'order:home' %}">首页</a></li>
 					<li><a href="#">分类</a></li>
 					<li class="am-active">内容</li>
 				</ol>
@@ -109,13 +110,13 @@
 						<div class="flexslider">
 							<ul class="slides">
 								<li>
-									<img src="../images/01.jpg" title="pic" />
+									<img src="/static/{{ detail.picture1 }}" title="pic" />
 								</li>
 								<li>
-									<img src="../images/02.jpg" />
+									<img src="/static/{{ detail.picture2 }}" />
 								</li>
 								<li>
-									<img src="../images/03.jpg" />
+									<img src="/static/{{ detail.picture3 }}" />
 								</li>
 							</ul>
 						</div>
@@ -192,18 +193,20 @@
 								<dt>配送至</dt>
 								<div class="iteminfo_freprice">
 									<div class="am-form-content address">
-										<select data-am-selected>
+                                        <form action="{% url '' %}" method="post">
+										<select data-am-selected name="">
 											<option value="a">浙江省</option>
 											<option value="b">湖北省</option>
 										</select>
-										<select data-am-selected>
+										<select data-am-selected name="">
 											<option value="a">温州市</option>
 											<option value="b">武汉市</option>
 										</select>
-										<select data-am-selected>
+										<select data-am-selected name="">
 											<option value="a">瑞安区</option>
 											<option value="b">洪山区</option>
 										</select>
+                                        </form>
 									</div>
 									<div class="pay-logis">
 										快递<b class="sys_item_freprice">10</b>元
@@ -319,7 +322,7 @@
 
 						<div class="pay">
 							<div class="pay-opt">
-							<a href="home.html"><span class="am-icon-home am-icon-fw">首页</span></a>
+							<a href="{% url 'order:home' %}"><span class="am-icon-home am-icon-fw">首页</span></a>
 							<a><span class="am-icon-heart am-icon-fw">收藏</span></a>
 							
 							</div>

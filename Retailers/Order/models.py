@@ -26,7 +26,7 @@ class ConsultTwentyeight(models.Model):
 
 
 class OrderTwenty(models.Model):
-    uid = models.ForeignKey(User,default=None)
+    uid = models.ForeignKey(User,models.CASCADE)
     ordertime = models.DateTimeField()
     addressid = models.IntegerField()
     expressbrandid = models.IntegerField(default=1)
