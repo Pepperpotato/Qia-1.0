@@ -29,23 +29,24 @@
         <th>库存</th>
         <th>操作</th>
        </tr>
+       {% for good in all_goods %}
        <tr>
-        <td class="center"><img src="{% static 'admin/upload/goods01.jpg' %}" width="50" height="50"/></td>
-        <td>这里是产品名称</td>
-        <td class="center">A15902</td>
-        <td class="center"><strong class="rmb_icon">59.00</strong></td>
+        <td class="center"><img src="{% static good.picture %}" width="50" height="50"/></td>
+        <td>{{ good.gname }}</td>
+        <td class="center">{{ good.gid }}</td>
+        <td class="center"><strong class="rmb_icon">{{ good.weightprice }}</strong></td>
         <td class="center">包</td>
         <td class="center"><a title="是" class="link_icon">&#89;</a></td>
         <td class="center"><a title="否" class="link_icon">&#88;</a></td>
         <td class="center"><a title="是" class="link_icon">&#89;</td>
-        <td class="center">5559</td>
+        <td class="center">{{ good.inventory }}</td>
         <td class="center">
          <a href="http://www.mycodes.net" title="预览" class="link_icon" target="_blank">&#118;</a>
          <a href="{% url 'admin:productdetail' %}" title="编辑" class="link_icon">&#101;</a>
          <a href="#" title="删除" class="link_icon">&#100;</a>
         </td>
        </tr>
-
+        {% endfor %}
       </table>
       <aside class="paging">
        <a>第一页</a>

@@ -27,6 +27,7 @@ class ConsultTwentyeight(models.Model):
 
 class OrderTwenty(models.Model):
     uid = models.ForeignKey(User,models.CASCADE)
+
     ordertime = models.DateTimeField()#下单时间
     addressid = models.IntegerField()#收货地址id
     expressbrandid = models.IntegerField(default=1)#物流品牌id
@@ -39,6 +40,7 @@ class OrderTwenty(models.Model):
     # 3   已收货未评价
     # 4   评价了，交易完成
     getgoodstime = models.DateTimeField(blank=True, null=True) #收货时间
+    remarks= models.CharField(max_length=100,null=True, default='--') #购买备注
 
     class Meta:
 
