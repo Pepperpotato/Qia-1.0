@@ -104,8 +104,6 @@ class SuggestTwentynine(models.Model):
         db_table = 'suggest_twentynine'
 
 
-
-
 class Activity(models.Model):
     picture = models.CharField(max_length=128)
     sort = models.IntegerField()

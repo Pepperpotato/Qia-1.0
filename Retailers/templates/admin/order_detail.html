@@ -22,49 +22,26 @@
        </tr>
        <tr>
         <td>订单状态：<a>{{ res.orderstatus }}</a></td>
-        <td colspan="3">订单备注：<mark>帮我检查好呀~谢谢~</mark></td>
+        <td colspan="3">订单备注：<mark>{{ res.remarks }}</mark></td>
         </tr>
       </table>
       <table class="table">
+       {% for buy_something in buy_what %}
        <tr>
         <td class="center"><img src="upload/goods01.jpg" width="50" height="50"/></td>
         <td>这里是产品名称</td>
-        <td class="center">A15902</td>
-        <td class="center"><strong class="rmb_icon">59.00</strong></td>
+        <td class="center">商品货号：{{ buy_something.goodid }}</td>
+        <td class="center"><strong class="rmb_icon">单价：{{ buy_something.goodmoney }}</strong></td>
         <td class="center">
          <p>颜色：蓝色</p>
          <p>尺码：XXL码</p>
         </td>
-        <td class="center"><strong>1</strong></td>
-        <td class="center"><strong class="rmb_icon">59.00</strong></td>
+        <td class="center"><strong>数量：{{ buy_something.goodcount }}</strong></td>
+        <td class="center"><strong class="rmb_icon">总计：{{ buy_something.goodmoneycount }}</strong></td>
         <td class="center">包</td>
        </tr>
-       <tr>
-        <td class="center"><img src="upload/goods02.jpg" width="50" height="50"/></td>
-        <td>这里是产品名称</td>
-        <td class="center">A15902</td>
-        <td class="center"><strong class="rmb_icon">59.00</strong></td>
-        <td class="center">
-         <p>颜色：蓝色</p>
-         <p>尺码：XXL码</p>
-        </td>
-        <td class="center"><strong>2</strong></td>
-        <td class="center"><strong class="rmb_icon">118.00</strong></td>
-        <td class="center">包</td>
-       </tr>
-       <tr>
-        <td class="center"><img src="upload/goods03.jpg" width="50" height="50"/></td>
-        <td>这里是产品名称</td>
-        <td class="center">A15902</td>
-        <td class="center"><strong class="rmb_icon">59.00</strong></td>
-        <td class="center">
-         <p>颜色：蓝色</p>
-         <p>尺码：XXL码</p>
-        </td>
-        <td class="center"><strong>1</strong></td>
-        <td class="center"><strong class="rmb_icon">59.00</strong></td>
-        <td class="center">包</td>
-       </tr>
+       {% endfor %}
+
       </table>
       <aside class="mtb" style="text-align:right;">
        <label>管理员操作：</label>

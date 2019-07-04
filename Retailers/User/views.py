@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from Goods.models import Goods
-from Order.models import OrderTwenty
+from Order.models import OrderTwenty, OrderchildTwentyone
 from User.forms import ChangeForm
 from User.models import User, Express_company, Pay_way, User_account, User_grade
 
@@ -78,9 +78,10 @@ def productdetail(request):
 # 订单列表
 def orderlist(request):
     with connection.cursor() as cursor:
-        cursor.execute("select o.id,o.uid_id,a.receiver,a.phone_number,e.express_name,a.location,a.detail_address,t.goodmoneycount from order_twenty o join user_address a on o.addressid=a.aid join express_company e on e.id=o.expressbrandid join orderchild_twentyone t on o.id=t.orderid")
+        cursor.execute("select o.id,o.uid_id,a.receiver,a.phone_number,e.express_name,a.location,a.detail_address,o.orderstatus from order_twenty o join user_address a on o.addressid=a.aid join express_company e on e.id=o.expressbrandid")
     columns = [col[0] for col in cursor.description]
     res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+    print(res)
     return render(request, 'admin/order_list.html', context={
         'res': res
     })
@@ -95,13 +96,17 @@ def delorder(request, id):
 
 # 订单详情
 def orderdetail(request, uid):
+    # 当前用户的订单详情 uid为Order主表中的uid
     with connection.cursor() as cursor:
-        cursor.execute("select * from order_twenty o join user_address a on o.addressid=a.aid join express_company e on e.id=o.expressbrandid ")
+        cursor.execute("select * from order_twenty o join user_address a on o.addressid=a.aid join express_company e on e.id=o.expressbrandid join orderchild_twentyone t on o.id=t.orderid where o.uid_id=%s",[uid])
     columns = [col[0] for col in cursor.description]
     res = [dict(zip(columns, row)) for row in cursor.fetchall()]
     print(res)
+    buy_what = OrderchildTwentyone.objects.filter(orderid=res[0].get('id'))
+
     return render(request, 'admin/order_detail.html', context={
-        'res': res[0]
+        'res': res[0],
+        'buy_what': buy_what
     })
 
 
