@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from django.urls import reverse
 
-from Goods.models import Goods
+from Goods.models import Goods, CommodityBrand, CommodityCategories
 from Order.models import OrderTwenty, OrderchildTwentyone
 from User.forms import ChangeForm
 from User.models import User, Express_company, Pay_way, User_account, User_grade
@@ -35,10 +35,12 @@ def add(request):
 # 首页
 def index(request):
     admin = request.session.get('username')
+    print(admin)
     admin_info = User.objects.filter(username=admin)
 
     return render(request, 'admin/index.html', context={
-        'admin_info': admin_info
+        'admin_info': admin_info,
+        'admin': admin
     })
 
 
@@ -72,7 +74,23 @@ def productlist(request):
 
 # 商品详情
 def productdetail(request):
-    return render(request, 'admin/product_detail.html')
+    # 商品品牌
+    commodity_brand = CommodityBrand.objects.all()
+    commodity_categories = CommodityCategories.objects.all()
+
+    return render(request, 'admin/product_detail.html', context={
+        'commodity_brand': commodity_brand,
+        'commodity_categories': commodity_categories
+    })
+
+
+
+def addgood(request):
+    gname = request.POST.get('gname')
+    print(gname)
+
+    return redirect(reverse('admin:productdetail'))
+
 
 
 # 订单列表
@@ -81,7 +99,7 @@ def orderlist(request):
         cursor.execute("select o.id,o.uid_id,a.receiver,a.phone_number,e.express_name,a.location,a.detail_address,o.orderstatus from order_twenty o join user_address a on o.addressid=a.aid join express_company e on e.id=o.expressbrandid")
     columns = [col[0] for col in cursor.description]
     res = [dict(zip(columns, row)) for row in cursor.fetchall()]
-    print(res)
+
     return render(request, 'admin/order_list.html', context={
         'res': res
     })
@@ -95,14 +113,23 @@ def delorder(request, id):
 
 
 # 订单详情
-def orderdetail(request, uid):
-    # 当前用户的订单详情 uid为Order主表中的uid
+def orderdetail(request, id):
+    # 根据订单id获取用户id
+    uid = OrderTwenty.objects.values('uid').filter(id=id)
+    uid = uid[0]['uid']
+
     with connection.cursor() as cursor:
-        cursor.execute("select * from order_twenty o join user_address a on o.addressid=a.aid join express_company e on e.id=o.expressbrandid join orderchild_twentyone t on o.id=t.orderid where o.uid_id=%s",[uid])
+        cursor.execute("select * from order_twenty o join user_address a on o.addressid=a.aid join express_company e on e.id=o.expressbrandid join orderchild_twentyone t on o.id=t.orderid where o.id=%s", [id])
     columns = [col[0] for col in cursor.description]
     res = [dict(zip(columns, row)) for row in cursor.fetchall()]
     print(res)
-    buy_what = OrderchildTwentyone.objects.filter(orderid=res[0].get('id'))
+    # buy_what = OrderchildTwentyone.objects.filter(orderid=id)
+    # print(111111,buy_what)
+    with connection.cursor() as cursor:
+        cursor.execute("select * from orderchild_twentyone t join goodsone g on t.goodid=g.gid where t.orderid=%s", [id])
+    columns = [col[0] for col in cursor.description]
+    buy_what = [dict(zip(columns, row)) for row in cursor.fetchall()]
+    # print(222222,res1)
 
     return render(request, 'admin/order_detail.html', context={
         'res': res[0],
@@ -232,5 +259,4 @@ def delpayway(request, id):
     payway = Pay_way.objects.filter(id=id)
     payway.delete()
     return redirect(reverse('admin:paylist'))
-
 

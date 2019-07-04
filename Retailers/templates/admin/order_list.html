@@ -49,7 +49,7 @@
             {% endif %}
             <td class="center">{{ res.express_name }}</td>
             <td class="center">
-             <a href="{% url 'admin:orderdetail' res.uid_id %}" title="查看订单" class="link_icon" target="_blank">&#118;</a>
+             <a href="{% url 'admin:orderdetail' res.id %}" title="查看订单" class="link_icon" target="_blank">&#118;</a>
              <a href="{% url 'admin:delorder' res.id %}" title="删除" class="link_icon">&#100;</a>
             </td>
            </tr>
