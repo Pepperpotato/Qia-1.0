@@ -29,7 +29,7 @@ class OrderTwenty(models.Model):
     uid = models.ForeignKey(User,default=None)
     ordertime = models.DateTimeField()
     addressid = models.IntegerField()
-    expressbrand = models.CharField(max_length=128)
+    expressbrandid = models.IntegerField(default=1)
     paywayid = models.IntegerField()
     integral = models.IntegerField()
     orderstatus = models.IntegerField()
