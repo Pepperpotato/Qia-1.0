@@ -47,7 +47,6 @@ class Goods(models.Model):
     unit = models.CharField(max_length=20, default='件')
     classid=models.ForeignKey(CommodityCategories,default=None ,db_column='id')
     class Meta:
-
         db_table = 'goodsone'
 
 
@@ -60,7 +59,7 @@ class CommodityCategoriesTwo(models.Model):
 
 
     class Meta:
-
+        
         db_table = 'commodity_categories_two_four'
 
 
