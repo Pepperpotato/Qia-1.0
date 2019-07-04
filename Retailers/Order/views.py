@@ -43,3 +43,7 @@ def intro(request,dlbid,xlbid,goodid):
     temp = loader.get_template('shop/home/introduction.html')
     res = temp.render(context={'detail':detail})
     return HttpResponse(res)
+
+
+def verf(request):
+    return None
