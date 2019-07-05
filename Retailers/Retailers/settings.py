@@ -151,7 +151,7 @@ ALLOWED_FILEEXTS = ['.png','.jpeg','.jpg','.gif','.bmp']
 EXCLUDE_URL =  (
      '/goods/login/',
      '/goods/register/',
-    '/logout',
+    '/goods/auth_code_/',
 )
 
 
