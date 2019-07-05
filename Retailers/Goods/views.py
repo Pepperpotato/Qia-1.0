@@ -172,6 +172,7 @@ def index(request):
     })
     return render(request, 'shop/person/index.html')
 
+
 # 个人资料
 def information(request):
     email=request.session.get('email')
