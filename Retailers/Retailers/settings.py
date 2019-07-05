@@ -154,4 +154,5 @@ EXCLUDE_URL =  (
     '/goods/auth_code_/',
 )
 
-
+# 分页
+NUMOFPAGE = 5
