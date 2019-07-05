@@ -36,13 +36,12 @@ class Goods(models.Model):
     gname = models.CharField(unique=True, max_length=50) #商品名称
     discount = models.CharField( default=0,max_length=50) #优惠方式
     picture = models.CharField(max_length=1000)  #图片
-    attributeid = models.IntegerField(default=1)   #商品属性id
     keyword = models.CharField(max_length=128)    #搜索关键字
     goodsstate = models.IntegerField(default=0)               #商品状态已上线0已下线1
     brandid = models.IntegerField()             #品牌id
     smallclassesid = models.IntegerField()         #小类别id
-    unit = models.CharField(max_length=20, default='件')
     classid=models.ForeignKey(CommodityCategories,default=None ,db_column='id')
+
     class Meta:
         db_table = 'goodsone'
 
@@ -57,7 +56,8 @@ class CommodityCategoriesTwo(models.Model):
     price = models.IntegerField()  # 对应价格
     historicalprices = models.IntegerField()     # 历史价格
     inventory = models.IntegerField(default=0)   # 库存
-
+    unit = models.CharField(max_length=20, default='件')
+    gid = models.IntegerField()
     class Meta:
         db_table = 'commodity_categories_two_four'
 
