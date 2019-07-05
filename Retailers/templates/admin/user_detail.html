@@ -15,13 +15,15 @@
                         <span class="item_name" style="width:120px;">当前头像</span>
                         <img src="{% static current_user.user_photo %}" width="50" height="50"/>
                     </li>
-                    <li>
-                        <span class="item_name" style="width:120px;">上传头像：</span>
-                        <label class="uploadImg">
-                            <input type="file"/>
-                            <span>上传头像</span>
-                        </label>
-                    </li>
+{#                    <li>#}
+{#                        <span class="item_name" style="width:120px;">上传头像：</span>#}
+{#                        <label class="uploadImg">#}
+{#                            <input name="picture" type="file"/>#}
+{#                            <span>上传头像</span>#}
+{#                            <input name="picture" type="file" style="height:23px; width:300px;" />#}
+{##}
+{#                        </label>#}
+{#                    </li>#}
                     <li>
                         <span class="item_name" style="width:120px;">用户名：</span>
                         <input type="text" class="textbox textbox_225" value="{{ current_user.username }} " name="username" placeholder="会员账号..."/>
@@ -45,11 +47,15 @@
                         </li>
                     {% endif %}
                     <li>
-                        <span class="item_name" style="width:120px;">会员等级：</span>
+                        <span class="item_name" style="width:120px;">用户类型：</span>
                         <select name="usertype" class="select">
-                            <option value="2">用户类型</option>
+                            {% if current_user.user_type == 1 %}
                             <option value="0">普通用户</option>
+                            <option value="1" selected="selected">管理员</option>
+                            {% else %}
+                                <option value="0" selected="selected">普通用户</option>
                             <option value="1">管理员</option>
+                            {% endif %}
                         </select>
                     </li>
                     <li>

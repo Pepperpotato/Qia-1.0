@@ -19,14 +19,17 @@
         <div class="wrap-list">
             <div class="m-user">
                 <!--个人信息 -->
-
                 <div class="m-userinfo">
                     <a href="{% url 'goods:news' %}">
                         <div class="tipsBox"><i class="am-icon-envelope"></i></div>
                     </a>
                     <div class="m-baseinfo">
                         <a class="m-pic" href="{% url 'goods:information' %}">
+                            {% if  user %}
+                                <img src="/static/admin/upload/avatar_blank.gif">
+                            {% else %}
                             <img src="/static{{ user.user_photo }}">
+                            {% endif %}
                         </a>
                         <div class="m-info">
                             <em class="s-name">
