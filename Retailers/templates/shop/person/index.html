@@ -4,7 +4,6 @@
     <title>个人中心</title>
 {% endblock %}
 {% block head %}
-
     <link href="{% static 'shop/AmazeUI-2.4.2/assets/css/admin.css' %}" rel="stylesheet" type="text/css"/>
     <link href="{% static 'shop/AmazeUI-2.4.2/assets/css/amazeui.css' %}" rel="stylesheet" type="text/css"/>
     <link href="{% static 'shop/css/personal.css' %}" rel="stylesheet" type="text/css"/>
@@ -26,9 +25,9 @@
                     <div class="m-baseinfo">
                         <a class="m-pic" href="{% url 'goods:information' %}">
                             {% if  user %}
-                                <img src="/static/admin/upload/avatar_blank.gif">
+                                <img src="/static{{ user.user_photo }}">
                             {% else %}
-                            <img src="/static{{ user.user_photo }}">
+                            <img src="/static/admin/upload/avatar_blank.gif">
                             {% endif %}
                         </a>
                         <div class="m-info">
@@ -38,9 +37,14 @@
                             <div class="vip1"><a href="#"><span></span><em>会员专享</em></a></div>
                             <div class="safeText"><a href="{% url 'goods:safety' %}">账户安全:<em
                                     style="margin-left:20px ;">
-                                {{ safety }}
+                                {% if safety %}
+                                    {{ safety }}
+                                    {% else %}
+                                    0
+                                {% endif %}
+
                             </em>分</a>
-                                <div class="progressBar"><span style="left: -{{ articleyellow }}%;" class="progress"></span></div>
+                                <div class="progressBar"><span style="left:-{{ articleyellow }}%;" class="progress"></span></div>
                             </div>
                             <div class="m-address">
                                 <a href="{% url 'goods:address' %}" class="i-trigger">收货地址<i class="am-icon-angle-right"

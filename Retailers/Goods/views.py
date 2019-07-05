@@ -16,7 +16,8 @@ from Goods.sms import send_sms
 from Retailers import settings
 from Retailers.settings import SMSCONFIG
 from User.models import User, User_grade, User_address, User_account
-
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from django.core.mail import send_mail
 
 # 地址管理
 def address(request):
@@ -101,7 +102,7 @@ def index(request):
             # 用户最新积分
             grade = user.user_grade_set.all()
             # print(grade,'*'*100)
-            # grade = grade[len(grade) - 1].changed_grade
+            grade = grade[len(grade) - 1].changed_grade
             # print(grade)
             # 用户账户信息表
             account=user.user_account
@@ -171,6 +172,8 @@ def index(request):
     return render(request, 'shop/person/index.html',context={
         'coupons': 0,
         'grade': 0,
+        'user':0,
+        'articleyellow':100,
 
     })
 
@@ -240,6 +243,7 @@ def information(request):
             if not User.objects.filter(username=username).exists() and username:
                 user.username=username
                 user.save()
+                request.session['username']=username
             if not User.objects.filter(realname=realname).exists() and realname :
                 user.realname=realname
                 user.save()
@@ -319,6 +323,7 @@ def information(request):
             if not User.objects.filter(username=username).exists():
                 user.username = username
                 user.save()
+                request.session['username']=username
             if not User.objects.filter(realname=realname).exists():
                 user.realname = realname
                 user.save()
@@ -354,7 +359,16 @@ def orderinfo(request):
 
 # 修改密码
 def password(request):
-    return render(request,'shop/person/password.html')
+    username=request.session.get('username')
+    if request.method == "POST":
+        password=request.POST.get('password')
+        print(password)
+    if username:
+        user=User.objects.filter(username=username)[0]
+
+    return render(request,'shop/person/password.html',context={
+
+})
 
 # 我的积分
 def pointnew(request):
@@ -378,7 +392,49 @@ def refund(request):
 
 # 安全设置
 def safety(request):
-    return render(request,'shop/person/safety.html')
+    user=safety=articleyellow=None
+    username=request.session.get('username')
+    print(username)
+    if username:
+        user=User.objects.filter(username=username)[0]
+        # 用户账户信息表
+        account = user.user_account
+        # 计算用户安全分
+        safety = 0
+        if user.realname:
+            safety += 10
+        if user.pay_password:
+            safety += 10
+        if user.certificate:
+            safety += 10
+        if user.phone_number:
+            safety += 10
+        if user.email:
+            safety += 10
+        if user.question1:
+            safety += 10
+        if user.question2:
+            safety += 10
+        if account.pay_password:
+            safety += 10
+        if account.bankcard_id:
+            safety += 10
+        if account.alipay_number:
+            safety += 5
+        if account.wechat_number:
+            safety += 5
+        # 黄色安全条
+        articleyellow = 100 - safety
+        return render(request,'shop/person/safety.html',context={
+            'user':user,
+            'safety':safety,
+            'articleyellow':articleyellow,
+        })
+    return render(request, 'shop/person/safety.html', context={
+        'user': user,
+        'safety': safety,
+        'articleyellow': articleyellow,
+    })
 
 # 支付密码
 def setpay(request):
@@ -398,6 +454,7 @@ def walletlist(request):
 
 # 登录页面
 def login(request):
+    data=None
     if request.method =="POST":
         user=request.POST.get('user')
         password=request.POST.get('password')
@@ -410,34 +467,42 @@ def login(request):
             # print(user_username)
             if user_username:
                 # print('sss')
-                if user_username[0].password==password:
+                if user_username[0].password==password and user_username[0].user_status==0:
                     request.session['phone']=user_username[0].phone_number
                     request.session['email']=user_username[0].email
                     request.session['username']=user_username[0].username
                     return redirect(reverse('order:home'))
+                else:
+                    data='对不起登录失败'
             #邮箱登录验证
             user_email=User.objects.filter(email=user)
             # print(user_email)
             if user_email:
                 # print('youx')
-                if user_email[0].password==password:
+                if user_email[0].password==password and user_email[0].user_status==0:
                     request.session['phone'] = user_email[0].phone_number
                     request.session['email'] = user_email[0].email
                     request.session['username']=user_email[0].username
                     return redirect(reverse('order:home'))
+                else:
+                    data='对不起登录失败'
             # 手机号登录验证
             user_phone = User.objects.filter(phone_number=user)
             # print(user_phone)
             if user_phone:
                 # print('手机')
-                if user_phone[0].password == password:
+                if user_phone[0].password == password and user_phone[0].user_status==0:
                     request.session['phone'] = user_phone[0].phone_number
                     request.session['email'] = user_phone[0].email
                     request.session['username']=user_phone[0].username
                     return redirect(reverse('order:home'))
+                else:
+                    data='对不起登录失败'
 
 
-    return render(request,'shop/home/login.html')
+    return render(request,'shop/home/login.html',context={
+        'data':data,
+    })
 
 code=None
 # 获取验证码
@@ -480,8 +545,22 @@ def register(request):
                 User_account.objects.create(user_id=uid)
                 # 保存session数据
                 request.session['email']=email
+                # 发送激活邮件
+                subject = "辛姐小吃铺激活邮件"  # 邮件标题
+                message = ''  # 邮件正文
+                sender = settings.EMAIL_FROM  # 发件人
+                print(sender)
+                receiver = [email]  # 收件人
+                serializer = Serializer(settings.SECRET_KEY, 3600)  # 有效期1小时
+                info = {"confirm": uid}
+                token = serializer.dumps(info)
+                html_message = """
+                           <h1>  恭喜您成为辛姐小吃铺注册会员</h1><br/><h3>请您在1小时内点击以下链接进行账户激活</h3><a href="http://127.0.0.1:8000/user/active/%s">http://127.0.0.1:8000/user/active/%s</a>
+                """ % ( token, token)
+
+                send_mail(subject, message, settings.EMAIL_HOST_USER, receiver, html_message=html_message)
                 # 验证成功跳转到首页
-                return redirect(reverse('goods:information'))
+                return HttpResponse('注册成功,请前往邮箱进行账户激活')
         if phone:
             auth_code = request.POST.get('auth_code')
             passwordph = request.POST.get('passwordph')
@@ -539,3 +618,4 @@ def register(request):
 def sc(request):
     request.session.flush()
     return HttpResponse('删除全部session')
+    # return redirect(reverse('order:home'))
