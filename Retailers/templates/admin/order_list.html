@@ -2,70 +2,75 @@
 {% load static %}
 
 {% block content %}
-<section class="rt_wrap content mCustomScrollbar">
- <div class="rt_content">
-      <div class="page_title">
-       <h2 class="fl">订单列表示例</h2>
-       <a href="{% url 'admin:productdetail' %}" class="fr top_rt_btn add_icon">添加商品</a>
-      </div>
-      <section class="mtb">
-       <select class="select">
-        <option>订单状态</option>
-        <option>待付款</option>
-        <option>待发货</option>
-        <option>待评价</option>
-       </select>
-       <input type="text" class="textbox textbox_225" placeholder="输入订单编号或收件人姓名/电话..."/>
-       <input type="button" value="查询" class="group_btn"/>
-      </section>
-      <table class="table">
-       <tr>
-        <th>订单编号</th>
-        <th>收件人</th>
-        <th>联系电话</th>
-        <th>收件人地址</th>
-        <th>订单状态</th>
-        <th>配送方式</th>
-        <th>操作</th>
-       </tr>
-       {% for res in res %}
-           <tr>
-            <td class="center">{{ res.id}}</td>
-            <td>{{ res.receiver }}</td>
-            <td>{{ res.phone_number }}</td>
-            <td>
-             <address>{{ res.location }}{{ res.detail_address }}</address>
-            </td>
-            {% if res.orderstatus == 0 %}
-                <td class="center">买家未支付</td>
-            {% elif res.orderstatus == 1 %}
-                <td class="center">买家已付款，未发货</td>
-            {% elif res.orderstatus == 2 %}
-                <td class="center">已发货，买家未收货</td>
-            {% elif res.orderstatus == 3 %}
-                <td class="center">买家已收货，未评价</td>
-            {% elif res.orderstatus == 4 %}
-                <td class="center">买家已评价，交易完成</td>
-            {% endif %}
-            <td class="center">{{ res.express_name }}</td>
-            <td class="center">
-             <a href="{% url 'admin:orderdetail' res.id %}" title="查看订单" class="link_icon" target="_blank">&#118;</a>
-             <a href="{% url 'admin:delorder' res.id %}" title="删除" class="link_icon">&#100;</a>
-            </td>
-           </tr>
-       {% endfor %}
-      </table>
-      <aside class="paging">
-       <a>第一页</a>
-       <a>1</a>
-       <a>2</a>
-       <a>3</a>
-       <a>…</a>
-       <a>1004</a>
-       <a>最后一页</a>
-      </aside>
- </div>
-</section>
+    <section class="rt_wrap content mCustomScrollbar">
+        <div class="rt_content">
+            <div class="page_title">
+                <h2 class="fl">订单列表示例</h2>
+                <a href="{% url 'admin:productdetail' %}" class="fr top_rt_btn add_icon">添加商品</a>
+            </div>
+            <section class="mtb">
+                <form action="{% url 'admin:choiceorder' %}" method="post">
+                    {% csrf_token %}
+                    <select name="choice" class="select">
+                        <option value="all">所有订单</option>
+                        <option value="waitpay">待付款</option>
+                        <option value="waitsend">待发货</option>
+                        <option value="waitget">待收货</option>
+                        <option value="waitsay">待评价/已完成</option>
+                    </select>
+                    <input type="text" class="textbox textbox_225" placeholder="输入订单编号或收件人姓名/电话..."/>
+                    <input type="submit" value="查询" class="group_btn"/>
+                </form>
+            </section>
+            <table class="table">
+                <tr>
+                    <th>订单编号</th>
+                    <th>收件人</th>
+                    <th>联系电话</th>
+                    <th>收件人地址</th>
+                    <th>订单状态</th>
+                    <th>配送方式</th>
+                    <th>操作</th>
+                </tr>
+                {% for res in res %}
+                    <tr>
+                        <td class="center">{{ res.id }}</td>
+                        <td>{{ res.receiver }}</td>
+                        <td>{{ res.phone_number }}</td>
+                        <td>
+                            <address>{{ res.location }}{{ res.detail_address }}</address>
+                        </td>
+                        {% if res.orderstatus == 0 %}
+                            <td class="center">买家未支付</td>
+                        {% elif res.orderstatus == 1 %}
+                            <td class="center">买家已付款，未发货</td>
+                        {% elif res.orderstatus == 2 %}
+                            <td class="center">已发货，买家未收货</td>
+                        {% elif res.orderstatus == 3 %}
+                            <td class="center">买家已收货，未评价</td>
+                        {% elif res.orderstatus == 4 %}
+                            <td class="center">买家已评价，交易完成</td>
+                        {% endif %}
+                        <td class="center">{{ res.express_name }}</td>
+                        <td class="center">
+                            <a href="{% url 'admin:orderdetail' res.id %}" title="查看订单" class="link_icon"
+                               target="_blank">&#118;</a>
+                            <a href="{% url 'admin:delorder' res.id %}" title="删除" class="link_icon">&#100;</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <aside class="paging">
+                <a>第一页</a>
+                <a>1</a>
+                <a>2</a>
+                <a>3</a>
+                <a>…</a>
+                <a>1004</a>
+                <a>最后一页</a>
+            </aside>
+        </div>
+    </section>
 {% endblock content %}
 {% block foot %}
 {% endblock foot %}
