@@ -5,265 +5,289 @@
 {% endblock %}
 {% block head %}
 
-        <link href="{% static 'shop/AmazeUI-2.4.2/assets/css/admin.css' %}" rel="stylesheet" type="text/css"/>
-        <link href="{% static 'shop/AmazeUI-2.4.2/assets/css/amazeui.css' %}" rel="stylesheet" type="text/css"/>
-        <link href="{% static 'shop/css/personal.css' %}" rel="stylesheet" type="text/css"/>
-        <link href="{% static 'shop/css/infstyle.css' %}" rel="stylesheet" type="text/css"/>
-        <script src="{% static 'shop/AmazeUI-2.4.2/assets/js/jquery.min.js' %}" type="text/javascript"></script>
-        <script src="{% static 'shop/AmazeUI-2.4.2/assets/js/amazeui.js' %}" type="text/javascript"></script>
+    <link href="{% static 'shop/AmazeUI-2.4.2/assets/css/admin.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'shop/AmazeUI-2.4.2/assets/css/amazeui.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'shop/css/personal.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'shop/css/infstyle.css' %}" rel="stylesheet" type="text/css"/>
+    <script src="{% static 'shop/AmazeUI-2.4.2/assets/js/jquery.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'shop/AmazeUI-2.4.2/assets/js/amazeui.js' %}" type="text/javascript"></script>
 
 {% endblock %}
 
 {% block content %}
-<div class="user-info">
-						<!--标题 -->
-						<div class="am-cf am-padding">
-							<div class="am-fl am-cf"><strong class="am-text-danger am-text-lg">个人资料</strong> / <small>Personal&nbsp;information</small></div>
-						</div>
-						<hr/>
-<form class="am-form am-form-horizontal" action="{% url 'goods:information' %}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-						<!--头像 -->
-						<div class="user-infoPic">
+    <div class="user-info">
+        <!--标题 -->
+        <div class="am-cf am-padding">
+            <div class="am-fl am-cf"><strong class="am-text-danger am-text-lg">个人资料</strong> /
+                <small>Personal&nbsp;information</small>
+            </div>
+        </div>
+        <hr/>
+        <form class="am-form am-form-horizontal" action="{% url 'goods:information' %}" method="post"
+              enctype="multipart/form-data">
+            {% csrf_token %}
+            <!--头像 -->
+            <div class="user-infoPic">
 
-							<div class="filePic">
-{#								<input type="file" class="inputPic" allowexts="gif,jpeg,jpg,png,bmp" accept="image/*" name="picture">#}
-								<input type="file" class="inputPic"  name="picture">
-{#								<input type="file" name="picture">#}
-{#								<img class="am-circle am-img-thumbnail" src="{% static  'shop/images/getAvatar.do.jpg' %}  " alt="" />#}
-								<img class="am-circle am-img-thumbnail" alt="" src='/static{{ user.user_photo }}'/>
-							</div>
+                <div class="filePic">
+                    {#								<input type="file" class="inputPic" allowexts="gif,jpeg,jpg,png,bmp" accept="image/*" name="picture">#}
+                    <input type="file" class="inputPic" name="picture">
+                    {#								<input type="file" name="picture">#}
+                    {#								<img class="am-circle am-img-thumbnail" src="{% static  'shop/images/getAvatar.do.jpg' %}  " alt="" />#}
+                    <img class="am-circle am-img-thumbnail" alt="" src='/static{{ user.user_photo }}'/>
+                </div>
 
-							<p class="am-form-help">头像</p>
+                <p class="am-form-help">头像</p>
 
-							<div class="info-m">
-								<div><b>用户名：<i>{{ user.username }}</i></b></div>
-								<div class="vip">
-                                      <span></span><a href="#">会员专享</a>
-								</div>
-							</div>
-						</div>
+                <div class="info-m">
+                    <div><b>用户名：<i>{{ user.username }}</i></b></div>
+                    <div class="vip">
+                        <span></span><a href="#">会员专享</a>
+                    </div>
+                </div>
+            </div>
 
-						<!--个人信息 -->
-						<div class="info-main">
-
-
-								<div class="am-form-group">
-									<label for="user-name2" class="am-form-label">昵称</label>
-									<div class="am-form-content"  >
-										<input type="text" name="user-name" id="user-name2" placeholder="{{ user.username }}"
+            <!--个人信息 -->
+            <div class="info-main">
 
 
-
-                                        {% if  user.username %}
-
-disabled="disabled"
-
-                                        {% endif %}
+                <div class="am-form-group">
+                    <label for="user-name2" class="am-form-label">昵称</label>
+                    <div class="am-form-content">
+                        <input type="text" name="user-name" id="user-name2" placeholder="{{ user.username }}"
 
 
 
-                                        >
-                                          <small>昵称长度不能超过40个汉字</small>
-									</div>
-								</div>
+                                {% if  user.username %}
 
-								<div class="am-form-group">
-									<label for="user-name" class="am-form-label">姓名</label>
-									<div class="am-form-content">
-										<input type="text" name="realname" id="user-name2" placeholder="{{ user.realname }}"
+                               disabled="disabled"
 
-                                        {% if  user.realname %}
-
-disabled="disabled"
-
-                                        {% endif %}
+                                {% endif %}
 
 
-                                        >
 
-									</div>
-								</div>
+                        >
+                        <small>昵称长度不能超过40个汉字</small>
+                    </div>
+                </div>
 
-								<div class="am-form-group">
-									<label class="am-form-label">性别</label>
-									<div class="am-form-content sex">
-										<label class="am-radio-inline">
-											<input type="radio" name="radio10" value="0" data-am-ucheck> 男
-										</label>
-										<label class="am-radio-inline">
-											<input type="radio" name="radio10" value="1" data-am-ucheck> 女
-										</label>
-										<label class="am-radio-inline">
-											<input type="radio" name="radio10" value="2" data-am-ucheck> 保密
-										</label>
-									</div>
-								</div>
+                <div class="am-form-group">
+                    <label for="user-name" class="am-form-label">姓名</label>
+                    <div class="am-form-content">
+                        <input type="text" name="realname" id="user-name2" placeholder="{{ user.realname }}"
 
-								<div class="am-form-group">
-									<label for="user-birth" class="am-form-label">生日</label>
-									<div class="am-form-content birth">
-										<div class="birth-select">
-                                            <select name="birthyear" id="birthyear" class="ps" onchange="showDate()">
-                                    <option value=""></option>
-                                </select><em>年</em>
+                                {% if  user.realname %}
 
-{#											<select data-am-selected onchange="showDate()"  id="birthyear">#}
-{#												<option value="" ></option>#}
-{##}
-{#											</select>#}
-{#											<em>年</em>#}
-										</div>
-										<div class="birth-select2">
-                                            <select name="birthmonth" id="birthmonth" class="ps" onchange="showDate()">
-                                    <option value=""></option>
-                                </select><em>月</em>
-{#											<select data-am-selected onchange="showDate()" id="birthmonth">#}
-{#												<option value="a"></option>#}
-{##}
-{#											</select>#}
-{#											<em>月</em>#}
-                                        </div>
-										<div class="birth-select2">
-                                            <select name="birthday" id="birthday" class="ps">
-                                    <option value=""></option>
-                                </select>
-{#											<select data-am-selected id="birthday">#}
-{#												<option value="a"></option>#}
-{##}
-{#											</select>#}
+                               disabled="disabled"
 
-                                            <em>日</em></div>
-									</div>
+                                {% endif %}
 
-                <script type="text/javascript">
-                                    //onclick获得改变前的值。onchange获取改变后的值。
-                                    var yearNode = document.getElementById("birthyear");
-                                    for (var year1 = 1980; year1 <= 2019; year1++) {
-                                        var option1 = document.createElement("option");
-                                        option1.innerHTML = year1;
-                                        option1.setAttribute("value", year1);
-                                        yearNode.appendChild(option1);
+
+                        >
+
+                    </div>
+                </div>
+
+                <div class="am-form-group">
+                    <label class="am-form-label">性别</label>
+                    <div class="am-form-content sex">
+                        <label class="am-radio-inline">
+                            <input type="radio" name="radio10" value="0" data-am-ucheck> 男
+                        </label>
+                        <label class="am-radio-inline">
+                            <input type="radio" name="radio10" value="1" data-am-ucheck> 女
+                        </label>
+                        <label class="am-radio-inline">
+                            <input type="radio" name="radio10" value="2" data-am-ucheck> 保密
+                        </label>
+                    </div>
+                </div>
+
+                <div class="am-form-group">
+                    <label for="user-birth" class="am-form-label">生日</label>
+                    <div class="am-form-content birth">
+                        <div class="birth-select">
+                            <select name="birthyear" id="birthyear" class="ps" onchange="showDate()">
+                                <option value=""></option>
+                            </select><em>年</em>
+
+                            {#											<select data-am-selected onchange="showDate()"  id="birthyear">#}
+                            {#												<option value="" ></option>#}
+                            {##}
+                            {#											</select>#}
+                            {#											<em>年</em>#}
+                        </div>
+                        <div class="birth-select2">
+                            <select name="birthmonth" id="birthmonth" class="ps" onchange="showDate()">
+                                <option value=""></option>
+                            </select><em>月</em>
+                            {#											<select data-am-selected onchange="showDate()" id="birthmonth">#}
+                            {#												<option value="a"></option>#}
+                            {##}
+                            {#											</select>#}
+                            {#											<em>月</em>#}
+                        </div>
+                        <div class="birth-select2">
+                            <select name="birthday" id="birthday" class="ps">
+                                <option value=""></option>
+                            </select>
+                            {#											<select data-am-selected id="birthday">#}
+                            {#												<option value="a"></option>#}
+                            {##}
+                            {#											</select>#}
+
+                            <em>日</em></div>
+                    </div>
+
+                    <script type="text/javascript">
+                        //onclick获得改变前的值。onchange获取改变后的值。
+                        var yearNode = document.getElementById("birthyear");
+                        for (var year1 = 1980; year1 <= 2019; year1++) {
+                            var option1 = document.createElement("option");
+                            option1.innerHTML = year1;
+                            option1.setAttribute("value", year1);
+                            yearNode.appendChild(option1);
+                        }
+                        var monthNode = document.getElementById("birthmonth");
+                        for (var month1 = 1; month1 <= 12; month1++) {
+                            var option2 = document.createElement("option");
+                            option2.setAttribute("value", month1);
+                            option2.innerHTML = month1;
+                            monthNode.appendChild(option2);
+                        }
+
+                        function calculateDate(ddValue) {
+                            var dateNode = document.getElementById("birthday");
+                            dateNode.options.length = 1;
+                            for (var date1 = 1; date1 <= ddValue; date1++) {
+                                var option3 = document.createElement("option");
+                                option3.setAttribute("value", date1);
+                                option3.innerHTML = date1;
+                                dateNode.appendChild(option3);
+                            }
+                        }
+
+                        //当年份或者月份改变的时候，就运行showDate()
+                        function showDate() {
+                            var mon = parseInt(document.getElementById("birthmonth").value);
+                            var yea = parseInt(document.getElementById("birthyear").value);
+                            switch (mon) {
+                                case 1:
+                                case 3:
+                                case 5:
+                                case 7:
+                                case 8:
+                                case 10:
+                                case 12: {
+                                    calculateDate(31);
+                                }
+                                    break;
+                                case 4:
+                                case 6:
+                                case 9:
+                                case 11: {
+                                    calculateDate(30);
+                                }
+                                    break;
+                                case 2: {
+                                    if ((0 == yea % 4 && 0 != yea % 100) || (0 == yea % 400)) {
+                                        calculateDate(29);
+                                    } else {
+                                        calculateDate(28);
                                     }
-                                    var monthNode = document.getElementById("birthmonth");
-                                    for (var month1 = 1; month1 <= 12; month1++) {
-                                        var option2 = document.createElement("option");
-                                        option2.setAttribute("value", month1);
-                                        option2.innerHTML = month1;
-                                        monthNode.appendChild(option2);
-                                    }
-                                    function calculateDate(ddValue) {
-                                        var dateNode = document.getElementById("birthday");
-                                        dateNode.options.length = 1;
-                                        for (var date1 = 1; date1 <= ddValue; date1++) {
-                                            var option3 = document.createElement("option");
-                                            option3.setAttribute("value", date1);
-                                            option3.innerHTML = date1;
-                                            dateNode.appendChild(option3);
-                                        }
-                                    }
-                                    //当年份或者月份改变的时候，就运行showDate()
-                                    function showDate() {
-                                        var mon = parseInt(document.getElementById("birthmonth").value);
-                                        var yea = parseInt(document.getElementById("birthyear").value);
-                                        switch (mon) {
-                                            case 1:
-                                            case 3:
-                                            case 5:
-                                            case 7:
-                                            case 8:
-                                            case 10:
-                                            case 12: {
-                                                calculateDate(31);
-                                            }
-                                                break;
-                                            case 4:
-                                            case 6:
-                                            case 9:
-                                            case 11: {
-                                                calculateDate(30);
-                                            }
-                                                break;
-                                            case 2: {
-                                                if ((0 == yea % 4 && 0 != yea % 100) || (0 == yea % 400)) {
-                                                    calculateDate(29);
-                                                } else {
-                                                    calculateDate(28);
-                                                }
-                                            }
-                                        }
-                                    }
-                                </script>
+                                }
+                            }
+                        }
+                    </script>
 
 
+                </div>
+                <div class="am-form-group">
+                    <label for="user-phone" class="am-form-label">电话</label>
+                    <div class="am-form-content">
+                        <input id="user-phone" placeholder="{{ user.phone_number }}" type="tel" name="user-phone"
 
+                                {% if user.phone_number %}
+                               disabled="disabled"
 
-								</div>
-								<div class="am-form-group">
-									<label for="user-phone" class="am-form-label">电话</label>
-									<div class="am-form-content">
-										<input id="user-phone" placeholder="{{ user.phone_number }}" type="tel" name="user-phone"
+                                {% endif %}
 
-                                       {% if user.phone_number %}
-                                       disabled="disabled"
+                        >
 
-                                       {% endif %}
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="user-email" class="am-form-label">电子邮件</label>
+                    <div class="am-form-content">
+                        <input id="user-email" placeholder="{{ user.email }}" type="email" name="user-email"
 
-                                        >
+                                {% if user.email %}
+                               disabled="disabled"
 
-									</div>
-								</div>
-								<div class="am-form-group">
-									<label for="user-email" class="am-form-label">电子邮件</label>
-									<div class="am-form-content">
-										<input id="user-email" placeholder="{{ user.email }}" type="email" name="user-email"
+                                {% endif %}
 
-                                         {% if user.email %}
-                                       disabled="disabled"
+                        >
 
-                                       {% endif %}
+                    </div>
+                </div>
+                <div class="am-form-group address">
+                    <label for="user-address" class="am-form-label">收货地址</label>
+                    <div class="am-form-content address">
+                        <a href="address.html">
+                            <p class="new-mu_l2cw">
+                                <span class="province">湖北</span>省
+                                <span class="city">武汉</span>市
+                                <span class="dist">洪山</span>区
+                                <span class="street">雄楚大道666号(中南财经政法大学)</span>
+                                <span class="am-icon-angle-right"></span>
+                            </p>
+                        </a>
 
-                                        >
+                    </div>
+                </div>
+                <div class="am-form-group safety">
+                    <label for="user-safety" class="am-form-label">账号安全</label>
+                    <div class="am-form-content safety">
+                        <a href="safety.html">
 
-									</div>
-								</div>
-								<div class="am-form-group address">
-									<label for="user-address" class="am-form-label">收货地址</label>
-									<div class="am-form-content address">
-										<a href="address.html">
-											<p class="new-mu_l2cw">
-												<span class="province">湖北</span>省
-												<span class="city">武汉</span>市
-												<span class="dist">洪山</span>区
-												<span class="street">雄楚大道666号(中南财经政法大学)</span>
-												<span class="am-icon-angle-right"></span>
-											</p>
-										</a>
+                            <span class="am-icon-angle-right"></span>
 
-									</div>
-								</div>
-								<div class="am-form-group safety">
-									<label for="user-safety" class="am-form-label">账号安全</label>
-									<div class="am-form-content safety">
-										<a href="safety.html">
+                        </a>
 
-											<span class="am-icon-angle-right"></span>
+                    </div>
+                </div>
+                <div class="info-btn">
 
-										</a>
+                    {#									<div class="am-btn am-btn-danger">#}
 
-									</div>
-								</div>
-								<div class="info-btn">
-									<div class="am-btn am-btn-danger">
-{#                                        <submit>保存修改</submit>#}
-                                        <input type="submit" value="保存修改" >
-                                    </div>
-								</div>
+                    <input type="submit" name="Submit22" value="保存修改" style="
+    width: 270px; /* 宽度 */
+	height: 40px; /* 高度 */
+	border-width: 0px; /* 边框宽度 */
+	border-radius: 3px; /* 边框半径 */
+	background: #dd514c; /* 背景颜色 */
+	cursor: pointer; /* 鼠标移入按钮范围时出现手势 */
+	outline: none; /* 不显示轮廓线 */
+	font-family: Microsoft YaHei; /* 设置字体 */
+	color: white; /* 字体颜色 */
+	font-size: 17px; /* 字体大小 */
+	text-align:center
 
-							</form>
-						</div>
+" id="login-button">
+                    {#                                    </div>#}
+                </div>
 
-					</div>
+        </form>
+    </div>
+
+    </div>
+
+    <style type="text/css">
+#login-button:hover { /* 鼠标移入按钮范围时改变颜色 */
+	background: #5599FF;
+}
+</style>
+
 
 {% endblock %}
 
