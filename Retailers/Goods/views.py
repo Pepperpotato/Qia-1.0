@@ -97,18 +97,18 @@ def index(request):
         user=user[0]
         print(user.uid)
         # print(user.uid)
-        # 用户余额
+        # 用户最新积分
+        grade = user.user_grade_set.all()
+        # print(grade,'*'*100)
+        grade = grade[len(grade) - 1].changed_grade
+        # print(grade)
+        # 用户账户信息表
         account=user.user_account
         # print(account,'*'*100)
-        # 用户最新积分
-        grade=user.user_grade_set.all()
-        # print(grade,'*'*100)
-        grade=grade[len(grade)-1].changed_grade
-        # print(grade)
         # print(account.useroffer_id,type(account.used_userofferid))
+        coupons=0
         if account:
             # 计算可用优惠券数量
-            global coupons
             coupons=0
             if account.useroffer_id:
                 for i in account.useroffer_id:
@@ -117,18 +117,48 @@ def index(request):
                 for g in account.goodoffer_id:
                     coupons+=1
             # print(coupons)
+        # 计算用户安全分
+        safety = 0
+        if user.realname:
+            safety+=10
+        if user.pay_password:
+            safety+=10
+        if user.certificate:
+            safety+=10
+        if user.phone_number:
+            safety+=10
+        if user.email:
+            safety+=10
+        if user.question1:
+            safety+=10
+        if user.question2:
+            safety+=10
+        if account.pay_password:
+            safety+=10
+        if account.bankcard_id:
+            safety+=10
+        if account.alipay_number:
+            safety+=5
+        if account.wechat_number:
+            safety+=5
+        # 黄色安全条
+        articleyellow=100-safety
 
         # 用户订单表
         orders=user.ordertwenty_set.all()
         # print(orders)
-
+        first=second=None
         if orders:
-            global first
+            # 最新订单记录
             first=orders[len(orders)-1]
             # print(first.)
             if len(orders)>1:
-                global second
+                # 第二新订单记录
                 second=orders[len(orders)-2]
+        # # 商品优惠卷查询
+        # goodscoupons=coupons
+
+
 
         return render(request,'shop/person/index.html',context={
         'user':user,
@@ -137,6 +167,8 @@ def index(request):
         'grade':grade,
         'first':first,
         'second':second,
+        'safety':safety,
+        'articleyellow':articleyellow,
     })
     return render(request, 'shop/person/index.html')
 
@@ -404,15 +436,18 @@ def login(request):
 
     return render(request,'shop/home/login.html')
 
-
-
 code=None
 # 获取验证码
 def auth_code_(request):
     if request.method=="POST":
         phone = request.POST.get('phone')
+        res = User.objects.filter(phone_number=phone).exists()
+        if res:
+            return
+        # print(phone)
         global code
         code = str(randint(100000, 999999))
+        # print(code)
         request.session['code']=code
         send_sms(phone, {'code': code}, **SMSCONFIG)
 
@@ -435,7 +470,7 @@ def register(request):
                 User.objects.create(email=email,password=password)
                 # 获取新用户的uid
                 uid=User.objects.filter(email=email)[0].uid
-                print(uid)
+                # print(uid)
                 #用户首次注册赠送100积分
                 User_grade.objects.create(change_source='首次注册系统赠送',change_number=100,changed_grade=100,growth_value=100,uid_id=uid)
                 # 用户账户信息表
@@ -448,9 +483,14 @@ def register(request):
             auth_code = request.POST.get('auth_code')
             passwordph = request.POST.get('passwordph')
             passwordRepeatph = request.POST.get('passwordRepeatph')
-
+            # print(phone)
+            res = User.objects.filter(phone_number=phone).exists()
+            if res:
+                return render(request, 'shop/home/register.html', context={
+                    'form1': form1,
+                    'data': '对不起手机号已存在',
+                })
             if auth_code != code :
-
                 return render(request, 'shop/home/register.html', context={
                     'form1': form1,
                     'data': '对不起验证码输入错误',
@@ -470,12 +510,7 @@ def register(request):
                     'form1': form1,
                     'data': '对不起密码不能为空',
                 })
-            res = User.objects.filter(phone_number=phone).exists()
-            if res:
-                return render(request, 'shop/home/register.html', context={
-                    'form1': form1,
-                    'data': '对不起手机号已存在',
-                })
+
             password = hashlib.sha1(passwordRepeatph.encode('utf8')).hexdigest()
             # print(phone, password)
             # 写入数据库

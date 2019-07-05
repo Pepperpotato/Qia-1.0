@@ -26,19 +26,18 @@
                     </a>
                     <div class="m-baseinfo">
                         <a class="m-pic" href="{% url 'goods:information' %}">
-                            <img src="{% static 'shop/images/getAvatar.do.jpg' %}">
+                            <img src="/static{{ user.user_photo }}">
                         </a>
                         <div class="m-info">
                             <em class="s-name">
-
                                 {{ user.username }}
-
-
                             </em>
                             <div class="vip1"><a href="#"><span></span><em>会员专享</em></a></div>
                             <div class="safeText"><a href="{% url 'goods:safety' %}">账户安全:<em
-                                    style="margin-left:20px ;">60</em>分</a>
-                                <div class="progressBar"><span style="left: -95px;" class="progress"></span></div>
+                                    style="margin-left:20px ;">
+                                {{ safety }}
+                            </em>分</a>
+                                <div class="progressBar"><span style="left: -{{ articleyellow }}%;" class="progress"></span></div>
                             </div>
                             <div class="m-address">
                                 <a href="{% url 'goods:address' %}" class="i-trigger">收货地址<i class="am-icon-angle-right"
@@ -123,8 +122,6 @@
                     <a class="i-load-more-item-shadow" href="{% url 'goods:order' %}">全部订单</a>
                 </div>
                 <ul>
-
-
                     <li><a href="{% url 'goods:order' %}"><i><img
                             src="{% static 'shop/images/pay.png' %}"/></i><span>待付款</span></a>
                     </li>
@@ -143,82 +140,117 @@
 
 
                 </ul>
-                <div class="orderContentBox">
-                    <div class="orderContent">
-                        <div class="orderContentpic">
-                            <div class="imgBox">
-                                <a href="{% url 'goods:orderinfo' %}"><img
-                                        src="{% static 'shop/images/youzi.jpg' %}"></a>
+                {% if first %}
+
+
+                    <div class="orderContentBox">
+                        <div class="orderContent">
+                            <div class="orderContentpic">
+                                <div class="imgBox">
+                                    <a href="{% url 'goods:orderinfo' %}"><img
+                                            src="{% static 'shop/images/youzi.jpg' %}"></a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="detailContent">
-                            <a href="{% url 'goods:orderinfo' %}" class="delivery">
+                            <div class="detailContent">
+                                <a href="{% url 'goods:orderinfo' %}" class="delivery">
+                                    {% if  first.orderstatus  == 0 %}
+                                        没给钱
+                                    {% elif first.orderstatus  == 1 %}
+                                        已付款
+                                    {% elif first.orderstatus  == 2 %}
+                                        已发货
+                                    {% elif first.orderstatus  == 3 %}
+                                        已收货
+                                    {% elif first.orderstatus  == 4 %}
+                                        交易完成
+                                    {% endif %}
+                                </a>
+                                <div class="orderID">
+                                    <span class="time">{{ first.ordertime|date:'Y-m-d' }}</span>
+                                    <span class="splitBorder">|</span>
+                                    <span class="time">{{ first.ordertime |date:'H:i:s' }}</span>
+                                </div>
+                                <div class="orderID">
+                                    <span class="num">共1件商品</span>
+                                </div>
+                            </div>
+                            <div class="state">
                                 {% if  first.orderstatus  == 0 %}
                                     没给钱
                                 {% elif first.orderstatus  == 1 %}
-                                    已付款
+                                    未发货
                                 {% elif first.orderstatus  == 2 %}
-                                    已发货
+                                    未收货
                                 {% elif first.orderstatus  == 3 %}
-                                    已收货
+                                    未评价
                                 {% elif first.orderstatus  == 4 %}
                                     交易完成
                                 {% endif %}
-                            </a>
-                            <div class="orderID">
-                                <span class="time">{{ first.ordertime|date:'Y-m-d' }}</span>
-                                <span class="splitBorder">|</span>
-                                <span class="time">{{ first.ordertime |date:'H:i:s' }}</span>
+
                             </div>
-                            <div class="orderID">
-                                <span class="num">共1件商品</span>
-                            </div>
-                        </div>
-                        <div class="state">
-                            {% if  first.orderstatus  == 0 %}
-                                没给钱
-                            {% elif first.orderstatus  == 1 %}
-                                已付款未发货
-                            {% elif first.orderstatus  == 2 %}
-                                已发货未收货
-                            {% elif first.orderstatus  == 3 %}
-                                已收货未评价
-                            {% elif first.orderstatus  == 4 %}
-                                交易完成
-                            {% endif %}
+                            <div class="price"><span class="sym">¥</span>23.<span class="sym">80</span></div>
 
                         </div>
-                        <div class="price"><span class="sym">¥</span>23.<span class="sym">80</span></div>
-
+                        <a href="javascript:void(0);" class="btnPay">再次购买</a>
                     </div>
-                    <a href="javascript:void(0);" class="btnPay">再次购买</a>
-                </div>
+                {% endif %}
+                {% if second %}
 
-                <div class="orderContentBox">
-                    <div class="orderContent">
-                        <div class="orderContentpic">
-                            <div class="imgBox">
-                                <a href="{% url 'goods:orderinfo' %}"><img
-                                        src="{% static 'shop/images/heart.jpg' %}"></a>
-                            </div>
-                        </div>
-                        <div class="detailContent">
-                            <a href="{% url 'goods:orderinfo' %}" class="delivery">派件</a>
-                            <div class="orderID">
-                                <span class="time">2016-03-09</span>
-                                <span class="splitBorder">|</span>
-                                <span class="time">21:52:47</span>
-                            </div>
-                            <div class="orderID">
-                                <span class="num">共2件商品</span>
-                            </div>
-                        </div>
-                        <div class="state">已发货</div>
-                        <div class="price"><span class="sym">¥</span>246.<span class="sym">50</span></div>
 
+                    <div class="orderContentBox">
+                        <div class="orderContent">
+                            <div class="orderContentpic">
+                                <div class="imgBox">
+                                    <a href="{% url 'goods:orderinfo' %}"><img
+                                            src="{% static 'shop/images/heart.jpg' %}"></a>
+                                </div>
+                            </div>
+                            <div class="detailContent">
+                                <a href="{% url 'goods:orderinfo' %}" class="delivery">
+                                    {% if  second.orderstatus  == 0 %}
+                                        没给钱
+                                    {% elif second.orderstatus  == 1 %}
+                                        已付款
+                                    {% elif second.orderstatus  == 2 %}
+                                        已发货
+                                    {% elif second.orderstatus  == 3 %}
+                                        已收货
+                                    {% elif second.orderstatus  == 4 %}
+                                        交易完成
+                                    {% endif %}
+
+
+                                </a>
+                                <div class="orderID">
+                                    <span class="time">{{ second.ordertime|date:'Y-m-d' }}</span>
+                                    <span class="splitBorder">|</span>
+                                    <span class="time">{{ second.ordertime |date:'H:i:s' }}</span>
+                                </div>
+                                <div class="orderID">
+                                    <span class="num">共2件商品</span>
+                                </div>
+                            </div>
+                            <div class="state">
+                                {% if  first.orderstatus  == 0 %}
+                                    没给钱
+                                {% elif first.orderstatus  == 1 %}
+                                    未发货
+                                {% elif first.orderstatus  == 2 %}
+                                    未收货
+                                {% elif first.orderstatus  == 3 %}
+                                    未评价
+                                {% elif first.orderstatus  == 4 %}
+                                    交易完成
+                                {% endif %}
+
+
+                            </div>
+                            <div class="price"><span class="sym">¥</span>246.<span class="sym">50</span></div>
+
+                        </div>
+                        <a href="javascript:void(0);" class="btnPay">再次购买</a>
                     </div>
-                    <a href="javascript:void(0);" class="btnPay">再次购买</a>
-                </div>
+                {% endif %}
             </div>
             <!--九宫格-->
             <div class=" user-squaredIcon">
@@ -271,6 +303,7 @@
 
             <!--优惠券积分-->
             <div class="twoTab">
+
                 <div class="twoTabModel Coupon">
                     <h5 class="squareTitle"><a href="#"><span class="splitBorder"></span>优惠券<i
                             class="am-icon-angle-right"></i></a></h5>
@@ -283,6 +316,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="twoTabModel Coupon">
                     <h5 class="squareTitle"><a href="#"><span class="splitBorder"></span>优惠券<i
                             class="am-icon-angle-right"></i></a></h5>
