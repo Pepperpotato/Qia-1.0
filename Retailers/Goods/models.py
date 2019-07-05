@@ -11,6 +11,7 @@ from django.utils import timezone
 class CommodityBrand(models.Model):
     id = models.AutoField(primary_key=True)  #id
     brandname = models.CharField(max_length=20)  #品牌名称
+    weightprice = models.IntegerField(default=0)
 
     class Meta:
 

@@ -116,13 +116,13 @@
             <div class="flexslider">
                 <ul class="slides">
                     <li>
-                        <img src="/static/{{ detail.picture1 }}" title="pic"/>
+                        <img src="/static{{ detail.mpicture1 }}" title="pic"/>
                     </li>
                     <li>
-                        <img src="/static/{{ detail.picture2 }}"/>
+                        <img src="/static{{ detail.mpicture2 }}"/>
                     </li>
                     <li>
-                        <img src="/static/{{ detail.picture3 }}"/>
+                        <img src="/static{{ detail.mpicture3 }}"/>
                     </li>
                 </ul>
             </div>
@@ -147,26 +147,26 @@
                 </script>
 
                 <div class="tb-booth tb-pic tb-s310">
-                    <a href="/static/shop/images/01.jpg"><img src="/static/shop/images/01_mid.jpg" alt="细节展示放大镜特效" rel="/static/shop/images/01.jpg"
+                    <a href="/static{{ detail.picture1 }}"><img src="/static{{ detail.mpicture1 }}" alt="细节展示放大镜特效" rel="/static{{ detail.picture1}}"
                                                     class="jqzoom"/></a>
                 </div>
                 <ul class="tb-thumb" id="thumblist">
-                    <li class="tb-selected">
+                    <li >
                         <div class="tb-pic tb-s40">
-                            <a href="#"><img src="/static/shop/images/01_small.jpg" mid="/static/shop/images/01_small.jpg"
-                                             big="/static/shop/images/01_small.jpg"></a>
+                            <a href="#"><img src="/static{{ detail.spicture1 }}" mid="/static{{ detail.mpicture1 }}"
+                                             big="/static{{ detail.picture1 }}"></a>
                         </div>
                     </li>
                     <li>
                         <div class="tb-pic tb-s40">
-                            <a href="#"><img src="../images/02_small.jpg" mid="../images/02_mid.jpg"
-                                             big="../images/02.jpg"></a>
+                            <a href="#"><img src="/static{{ detail.spicture2 }}" mid="/static{{ detail.mpicture2 }}"
+                                             big="/static{{ detail.picture2 }}"></a>
                         </div>
                     </li>
                     <li>
                         <div class="tb-pic tb-s40">
-                            <a href="#"><img src="../images/03_small.jpg" mid="../images/03_mid.jpg"
-                                             big="../images/03.jpg"></a>
+                            <a href="#"><img src="/static{{ detail.spicture3 }}" mid="/static{{ detail.mpicture3 }}"
+                                             big="/static{{ detail.picture3 }}"></a>
                         </div>
                     </li>
                 </ul>
@@ -253,7 +253,7 @@
                 {#											<a href="javascript:;" title="关闭" class="close">×</a>#}
                 {#										</div>#}
                 {#										<div class="theme-popbod dform">#}
-                <form class="theme-signin" name="loginform" action="" method="post">
+                <form class="theme-signin" name="loginform" action="#" method="get">
                     <dl class="iteminfo_parameter freight">
                         <dt>配送至</dt>
                         <div class="iteminfo_freprice">
@@ -344,10 +344,10 @@
             </div>
             <div class="clear"></div>
 
-            <div class="btn-op">
-                <div class="btn am-btn am-btn-warning">确认</div>
-                <div class="btn close am-btn am-btn-warning">取消</div>
-            </div>
+{#            <div class="btn-op">#}
+{#                <div class="btn am-btn am-btn-warning">确认</div>#}
+{#                <div class="btn close am-btn am-btn-warning">取消</div>#}
+{#            </div>#}
         </div>
         <div class="theme-signin-right">
             <div class="img-info">
@@ -366,7 +366,7 @@
     </div>
     <li>
         <div class="clearfix tb-btn tb-btn-buy theme-login">
-            <a id="LikBuy" title="点此按钮到下一步确认购买信息" href="#">立即购买</a>
+            <a id="LikBuy" title="点此按钮到下一步确认购买信息" href=""> 立即购买 </a>
         </div>
     </li>
     <li>
@@ -578,13 +578,13 @@
                             <h4>商品细节</h4>
                         </div>
                         <div class="twlistNews">
-                            <img src="../images/tw1.jpg"/>
-                            <img src="../images/tw2.jpg"/>
-                            <img src="../images/tw3.jpg"/>
-                            <img src="../images/tw4.jpg"/>
-                            <img src="../images/tw5.jpg"/>
-                            <img src="../images/tw6.jpg"/>
-                            <img src="../images/tw7.jpg"/>
+                            <img src="/static{{ detail.picture1 }}  "/>
+                            <img src="/static{{ detail.picture2 }}  "/>
+                            <img src="/static{{ detail.picture3 }}  "/>
+                            <img src="/static{{ detail.picture4 }}  "/>
+                            <img src="/static{{ detail.picture5 }}"/>
+                            <img src="/static{{ detail.picture6 }}"/>
+                            <img src="/static{{ detail.picture7}}"/>
                         </div>
                     </div>
                     <div class="clear"></div>

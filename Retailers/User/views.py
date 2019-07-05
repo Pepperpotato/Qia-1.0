@@ -1,5 +1,8 @@
 
 import hashlib
+import os
+from datetime import datetime
+from random import randint
 
 from django.db import connection
 from django.http import HttpResponse
@@ -9,7 +12,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from Goods.models import Goods, CommodityBrand, CommodityCategories
-from Order.models import OrderTwenty, OrderchildTwentyone
+from Order.models import OrderTwenty, OrderchildTwentyone, Mobilecount
+from Retailers import settings
 from User.forms import ChangeForm
 from User.models import User, Express_company, Pay_way, User_account, User_grade
 
@@ -27,7 +31,7 @@ def add(request):
     user.certificate_id = '000000000000000000'
     user.phone_number = '00000000000'
     user.email = '0000@126.com'
-    user.save()
+    # user.save()
 
     return HttpResponse('增加数据')
 
@@ -50,7 +54,7 @@ def login(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         password = hashlib.sha1(password.encode('utf8')).hexdigest()
-        if User.objects.filter(username=username) and User.objects.values('password').filter(username=username)[0].get('password') == password:
+        if User.objects.filter(username=username) and User.objects.values('password').filter(username=username)[0].get('password') == password and User.objects.values('user_type').filter(username=username)[0].get('user_type') == 1:
             request.session['username'] = username
             return redirect(reverse('admin:index'))
 
@@ -95,6 +99,7 @@ def addgood(request):
 
 # 订单列表
 def orderlist(request):
+
     with connection.cursor() as cursor:
         cursor.execute("select o.id,o.uid_id,a.receiver,a.phone_number,e.express_name,a.location,a.detail_address,o.orderstatus from order_twenty o join user_address a on o.addressid=a.aid join express_company e on e.id=o.expressbrandid")
     columns = [col[0] for col in cursor.description]
@@ -171,8 +176,7 @@ def userdetail(request, uid):
             current_user.email = request.POST.get('email')
             current_user.phone_number = request.POST.get('phonenumber')
             usertype = request.POST.get('usertype')
-            if usertype != 2:
-                current_user.user_type = usertype
+            current_user.user_type = usertype
             current_user.save()
             return redirect(reverse('admin:userlist'))
         else:
@@ -184,10 +188,11 @@ def userdetail(request, uid):
                 if newpassword != 'da39a3ee5e6b4b0d3255bfef95601890afd80709':
                     current_user.password = newpassword
                 usertype = request.POST.get('usertype')
-                if usertype != 2:
-                    current_user.user_type = usertype
+                current_user.user_type = usertype
                 current_user.email = form.cleaned_data.get('email')
                 current_user.phone_number = form.cleaned_data.get('phonenumber')
+                file = request.FILES.get('picture')
+
                 current_user.save()
                 return render(request, 'admin/login.html')
 
@@ -247,7 +252,11 @@ def paylist(request):
 
 # 浏览量
 def pageviews(request):
-    return render(request, 'admin/pageviews.html')
+    view_count = Mobilecount.objects.all()
+    print(view_count)
+    return render(request, 'admin/pageviews.html', context={
+        'view_count': view_count
+    })
 
 
 # 销售额统计
@@ -260,3 +269,53 @@ def delpayway(request, id):
     payway.delete()
     return redirect(reverse('admin:paylist'))
 
+
+def choiceorder(request):
+    if request.method == 'POST':
+        way = request.POST.get('choice')
+        if way == 'waitpay':
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "select o.id,o.uid_id,a.receiver,a.phone_number,e.express_name,a.location,a.detail_address,o.orderstatus from order_twenty o join user_address a on o.addressid=a.aid join express_company e on e.id=o.expressbrandid where o.orderstatus = 0")
+            columns = [col[0] for col in cursor.description]
+            res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+            print(2222, res)
+            return render(request, 'admin/order_list.html', context={
+                'res': res
+            })
+        elif way == 'waitsend':
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "select o.id,o.uid_id,a.receiver,a.phone_number,e.express_name,a.location,a.detail_address,o.orderstatus from order_twenty o join user_address a on o.addressid=a.aid join express_company e on e.id=o.expressbrandid where o.orderstatus = 1")
+            columns = [col[0] for col in cursor.description]
+            res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+            return render(request, 'admin/order_list.html', context={
+                'res': res
+            })
+        elif way == 'waitget':
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "select o.id,o.uid_id,a.receiver,a.phone_number,e.express_name,a.location,a.detail_address,o.orderstatus from order_twenty o join user_address a on o.addressid=a.aid join express_company e on e.id=o.expressbrandid where o.orderstatus = 2")
+            columns = [col[0] for col in cursor.description]
+            res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+            return render(request, 'admin/order_list.html', context={
+                'res': res
+            })
+        elif way == 'waitsay':
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "select o.id,o.uid_id,a.receiver,a.phone_number,e.express_name,a.location,a.detail_address,o.orderstatus from order_twenty o join user_address a on o.addressid=a.aid join express_company e on e.id=o.expressbrandid where o.orderstatus = 3 or o.orderstatus = 4")
+            columns = [col[0] for col in cursor.description]
+            res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+            return render(request, 'admin/order_list.html', context={
+                'res': res
+            })
+        else:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "select o.id,o.uid_id,a.receiver,a.phone_number,e.express_name,a.location,a.detail_address,o.orderstatus from order_twenty o join user_address a on o.addressid=a.aid join express_company e on e.id=o.expressbrandid")
+            columns = [col[0] for col in cursor.description]
+            res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+            return render(request, 'admin/order_list.html', context={
+                'res': res
+            })
