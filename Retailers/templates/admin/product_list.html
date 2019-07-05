@@ -23,21 +23,21 @@
         <th>货号</th>
         <th>单价</th>
         <th>单位</th>
-        <th>精品</th>
-        <th>新品</th>
+        <th>口味</th>
+        <th>规格</th>
         <th>热销</th>
         <th>库存</th>
         <th>操作</th>
        </tr>
-       {% for good in all_goods %}
+       {% for good in res %}
        <tr>
         <td class="center"><img src="{% static good.picture %}" width="50" height="50"/></td>
         <td>{{ good.gname }}</td>
         <td class="center">{{ good.gid }}</td>
-        <td class="center"><strong class="rmb_icon">{{ good.weightprice }}</strong></td>
+        <td class="center"><strong class="rmb_icon">{{ good.price }}</strong></td>
         <td class="center">{{ good.unit }}</td>
-        <td class="center"><a title="是" class="link_icon">&#89;</a></td>
-        <td class="center"><a title="否" class="link_icon">&#88;</a></td>
+        <td class="center">{{ good.smallclassesattribute }}</td>
+        <td class="center">{{ good.specification }}</td>
         <td class="center"><a title="是" class="link_icon">&#89;</td>
         <td class="center">{{ good.inventory }}</td>
         <td class="center">

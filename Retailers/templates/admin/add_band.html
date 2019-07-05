@@ -1,0 +1,27 @@
+{% extends 'admin/index.html' %}
+{% load static %}
+
+{% block content %}
+    <section class="rt_wrap content mCustomScrollbar">
+        <div class="rt_content">
+            <div class="page_title">
+                <h2 class="fl">添加品牌</h2>
+            </div>
+            <form action="{% url 'admin:addband'%}" method="post">
+                {% csrf_token %}
+                <ul>
+                    <li>
+                        <span class="item_name" style="width:120px;">新品牌：</span>
+                        <input name="newband" class="textbox textbox_225" placeholder="请填写新的品牌"/>
+                    </li>
+                    <li>
+                        <input type="submit" value="提交">
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </section>
+{% endblock content %}
+
+{% block foot %}
+{% endblock foot %}
