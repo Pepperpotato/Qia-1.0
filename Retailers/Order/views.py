@@ -45,9 +45,9 @@ def intro(request,dlbid,xlbid,goodid):
     return HttpResponse(res)
 
 
-def verf(request):
-    province = request.POST.get('province')
-    city = request.POST.get('city')
-    block = request.POST.get('block')
-    print(province,city,block)
+def verf(request,goodid):
+    province = request.GET.get('province')
+    city = request.GET.get('city')
+    block = request.GET.get('block')
+    print(province,city,block,'++++++++++++++++++++++')
     return HttpResponse('ok')
