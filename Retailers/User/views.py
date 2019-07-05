@@ -4,6 +4,7 @@ import os
 from datetime import datetime
 from random import randint
 
+from django.core.paginator import Paginator
 from django.db import connection
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -11,9 +12,10 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from django.urls import reverse
 
-from Goods.models import Goods, CommodityBrand, CommodityCategories
+from Goods.models import Goods, CommodityBrand, CommodityCategories, Specification
 from Order.models import OrderTwenty, OrderchildTwentyone, Mobilecount
-from Retailers import settings
+from Retailers.settings import NUMOFPAGE
+
 from User.forms import ChangeForm
 from User.models import User, Express_company, Pay_way, User_account, User_grade
 
@@ -69,10 +71,13 @@ def logout(request):
 
 # 商品列表
 def productlist(request):
-    all_goods = Goods.objects.all()
-    print(all_goods)
-    return render(request, 'admin/product_list.html',context={
-        'all_goods': all_goods
+    with connection.cursor() as cursor:
+        cursor.execute("select * from goodsone g join commodity_categories_two_four c on g.gid=c.gid join specification s on s.id=c.specification_id")
+    columns = [col[0] for col in cursor.description]
+    res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+    print(res)
+    return render(request, 'admin/product_list.html', context={
+        'res': res
     })
 
 
@@ -88,13 +93,37 @@ def productdetail(request):
     })
 
 
-
 def addgood(request):
-    gname = request.POST.get('gname')
-    print(gname)
+    if request.method == 'POST':
+        brand = request.POST.get('brand')
+        category = request.POST.get('category')
+        goodname = request.POST.get('goodname')
+        newsection = request.POST.get('newsection')
 
-    return redirect(reverse('admin:productdetail'))
+        print(brand,category,goodname,newsection)
 
+
+
+
+    commodity_brand = CommodityBrand.objects.all()
+    commodity_categories = CommodityCategories.objects.filter(parentid__gt=0)
+
+    return render(request, 'admin/add_good.html', context={
+        'commodity_brand': commodity_brand,
+        'commodity_categories': commodity_categories
+    })
+
+
+# 添加商品品牌
+def addband(request):
+    if request.method == 'POST':
+        bandname = request.POST.get('newband')
+        newband = CommodityBrand()
+        newband.brandname = bandname
+        newband.save()
+        return redirect(reverse('admin:productlist'))
+
+    return render(request, 'admin/add_band.html')
 
 
 # 订单列表
@@ -143,15 +172,38 @@ def orderdetail(request, id):
 
 
 # 会员列表
-def userlist(request):
+def userlist(request, page=1):
     all_user = User.objects.all()
     all_account = User_account.objects.all()
+    with connection.cursor() as cursor:
+        cursor.execute("select * from user u right join user_account a on u.uid=a.uid")
+    columns = [col[0] for col in cursor.description]
+    res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+    print(res)
+    paginator = Paginator(res, NUMOFPAGE)
+    page = int(page)
+    pagination = paginator.page(page)
+
+    if paginator.num_pages> 5:
+        #如果当前页码-5小于0
+        if page - 2 <= 0:
+            customRange = range(1,6)
+        elif page + 2 > paginator.num_pages:
+            customRange = range(paginator.num_pages-4,paginator.num_pages+1)
+        else:
+            customRange = range(page-2,page+2)
+    else: #页码总数小于10
+        customRange = paginator.page_range
+
     # account = User_account.objects.all()
     # user_info = account.user
     # print(user_info)
     return render(request, 'admin/user_list.html', context={
         'all_user': all_user,
-        'all_account': all_account
+        'all_account': all_account,
+        'pagerange': customRange,
+        'pagination': pagination,
+        'res': res
     })
 
 
@@ -319,3 +371,5 @@ def choiceorder(request):
             return render(request, 'admin/order_list.html', context={
                 'res': res
             })
+
+
