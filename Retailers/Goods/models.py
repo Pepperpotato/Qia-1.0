@@ -56,6 +56,7 @@ class CommodityCategoriesTwo(models.Model):
     smallclassesid = models.IntegerField()  # 小类别id
     smallclassesattribute = models.CharField(max_length=20) #小类别属性
     weightprice = models.IntegerField() #对应价格
+    sort = models.IntegerField(null=True)
 
 
     class Meta:

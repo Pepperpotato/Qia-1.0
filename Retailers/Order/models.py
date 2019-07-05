@@ -28,19 +28,19 @@ class ConsultTwentyeight(models.Model):
 class OrderTwenty(models.Model):
     uid = models.ForeignKey(User,models.CASCADE)
 
-    ordertime = models.DateTimeField()#下单时间
-    addressid = models.IntegerField()#收货地址id
-    expressbrandid = models.IntegerField(default=1)#物流品牌id
-    paywayid = models.IntegerField()#支付id
-    integral = models.IntegerField()#获得积分
-    orderstatus = models.IntegerField()#订单状态 0~4
+    ordertime = models.DateTimeField(null=True)#下单时间
+    addressid = models.IntegerField(null=True)#收货地址id
+    expressbrandid = models.IntegerField(default=1,null=True)#物流品牌id
+    paywayid = models.IntegerField(null=True)#支付id
+    integral = models.IntegerField(null=True)#获得积分
+    orderstatus = models.IntegerField(null=True)#订单状态 0~4
     # 0     没付钱
     # 1   已付款未发货
     # 2   已发货未收货
     # 3   已收货未评价
     # 4   评价了，交易完成
     getgoodstime = models.DateTimeField(blank=True, null=True) #收货时间
-    remarks= models.CharField(max_length=100,null=True, default='--') #购买备注
+    remarks= models.CharField(max_length=100, null=True, default='--') #购买备注
 
     class Meta:
 
@@ -48,11 +48,11 @@ class OrderTwenty(models.Model):
 
 
 class OrderchildTwentyone(models.Model):
-    orderid = models.IntegerField() #订单id
-    goodid = models.IntegerField() #商品id
-    goodcount = models.IntegerField() #商品数量
-    goodmoney = models.IntegerField() #商品单价
-    goodmoneycount = models.IntegerField() #合计
+    orderid = models.IntegerField(null=True) #订单id
+    goodid = models.IntegerField(null=True) #商品id
+    goodcount = models.IntegerField(null=True) #商品数量
+    goodmoney = models.IntegerField(null=True) #商品单价
+    goodmoneycount = models.IntegerField(null=True) #合计
 
     class Meta:
 
