@@ -92,98 +92,100 @@ def idcard(request):
 def index(request):
     username = request.session.get('username')
     # print(username)
-    user = User.objects.filter(username=username)
-    if user:
-        user=user[0]
-        print(user.uid)
-        # print(user.uid)
-        # 用户最新积分
-        grade = user.user_grade_set.all()
-        # print(grade,'*'*100)
-        grade = grade[len(grade) - 1].changed_grade
-        # print(grade)
-        # 用户账户信息表
-        account=user.user_account
-        # print(account,'*'*100)
-        # print(account.useroffer_id,type(account.used_userofferid))
-        coupons=0
-        if account:
-            # 计算可用优惠券数量
+    if username:
+        user = User.objects.filter(username=username)
+        if user:
+            user=user[0]
+            print(user.uid)
+            # print(user.uid)
+            # 用户最新积分
+            grade = user.user_grade_set.all()
+            # print(grade,'*'*100)
+            # grade = grade[len(grade) - 1].changed_grade
+            # print(grade)
+            # 用户账户信息表
+            account=user.user_account
+            # print(account,'*'*100)
+            # print(account.useroffer_id,type(account.used_userofferid))
             coupons=0
-            if account.useroffer_id:
-                for i in account.useroffer_id:
-                    coupons+=1
-            if account.goodoffer_id:
-                for g in account.goodoffer_id:
-                    coupons+=1
-            # print(coupons)
-        # 计算用户安全分
-        safety = 0
-        if user.realname:
-            safety+=10
-        if user.pay_password:
-            safety+=10
-        if user.certificate:
-            safety+=10
-        if user.phone_number:
-            safety+=10
-        if user.email:
-            safety+=10
-        if user.question1:
-            safety+=10
-        if user.question2:
-            safety+=10
-        if account.pay_password:
-            safety+=10
-        if account.bankcard_id:
-            safety+=10
-        if account.alipay_number:
-            safety+=5
-        if account.wechat_number:
-            safety+=5
-        # 黄色安全条
-        articleyellow=100-safety
+            if account:
+                # 计算可用优惠券数量
+                coupons=0
+                if account.useroffer_id:
+                    for i in account.useroffer_id:
+                        coupons+=1
+                if account.goodoffer_id:
+                    for g in account.goodoffer_id:
+                        coupons+=1
+                # print(coupons)
+            # 计算用户安全分
+            safety = 0
+            if user.realname:
+                safety+=10
+            if user.pay_password:
+                safety+=10
+            if user.certificate:
+                safety+=10
+            if user.phone_number:
+                safety+=10
+            if user.email:
+                safety+=10
+            if user.question1:
+                safety+=10
+            if user.question2:
+                safety+=10
+            if account.pay_password:
+                safety+=10
+            if account.bankcard_id:
+                safety+=10
+            if account.alipay_number:
+                safety+=5
+            if account.wechat_number:
+                safety+=5
+            # 黄色安全条
+            articleyellow=100-safety
 
-        # 用户订单表
-        orders=user.ordertwenty_set.all()
-        # print(orders)
-        first=second=None
-        if orders:
-            # 最新订单记录
-            first=orders[len(orders)-1]
-            # print(first.)
-            if len(orders)>1:
-                # 第二新订单记录
-                second=orders[len(orders)-2]
-        # # 商品优惠卷查询
-        # goodscoupons=coupons
+            # 用户订单表
+            orders=user.ordertwenty_set.all()
+            # print(orders)
+            first=second=None
+            if orders:
+                # 最新订单记录
+                first=orders[len(orders)-1]
+                # print(first.)
+                if len(orders)>1:
+                    # 第二新订单记录
+                    second=orders[len(orders)-2]
+            # 商品优惠卷查询
+            # goodscoupons=coupons
+            return render(request,'shop/person/index.html',context={
+            'user':user,
+            'coupons':coupons,
+            'account':account,
+            'grade':grade,
+            'first':first,
+            'second':second,
+            'safety':safety,
+            'articleyellow':articleyellow,
+        })
+    return render(request, 'shop/person/index.html',context={
+        'coupons': 0,
+        'grade': 0,
 
-
-
-        return render(request,'shop/person/index.html',context={
-        'user':user,
-        'coupons':coupons,
-        'account':account,
-        'grade':grade,
-        'first':first,
-        'second':second,
-        'safety':safety,
-        'articleyellow':articleyellow,
     })
-    return render(request, 'shop/person/index.html')
 
 # 个人资料
 def information(request):
     email=request.session.get('email')
     phone=request.session.get('phone')
-    print('*'*10)
-    print(email)
-    print(phone)
+    # print('*'*10)
+    # print(email)
+    # print(phone)
 
     if email:
-        print(email)
+        # print(email)
         user = User.objects.filter(email=email)[0]
-        print(user.username)
+        # print(user.username)
         if request.method == "POST":
             # photo 是表单中文件上传的name
             file = request.FILES.get('picture')
@@ -209,9 +211,9 @@ def information(request):
                     file_name = ext[0] + datetime.today().strftime("%Y%m%d%H%M%S") + str(randint(1, 1000)) + ext[1] if len(
                         ext) > 1 else ''
                     path = os.path.join(dir, file_name)
-                    print(path)
+                    # print(path)
                     pathh=path.split('Retailers/static')
-                    print(pathh[1])
+                    # print(pathh[1])
                     user.user_photo=pathh[1]
                     user.save()
 
@@ -233,7 +235,7 @@ def information(request):
             birthday = birthyear + birthmonth + birthday
             phonee = request.POST.get('user-phone')
             emaill = request.POST.get('user-email')
-            print(username, realname, sex, birthday, phonee, emaill)
+            # print(username, realname, sex, birthday, phonee, emaill)
             if not User.objects.filter(username=username).exists() and username:
                 user.username=username
                 user.save()
@@ -284,9 +286,9 @@ def information(request):
                         1] if len(
                         ext) > 1 else ''
                     path = os.path.join(dir, file_name)
-                    print(path)
+                    # print(path)
                     pathh = path.split('Retailers/static')
-                    print(pathh[1])
+                    # print(pathh[1])
                     user.user_photo = pathh[1]
                     user.save()
 
@@ -474,7 +476,7 @@ def register(request):
                 #用户首次注册赠送100积分
                 User_grade.objects.create(change_source='首次注册系统赠送',change_number=100,changed_grade=100,growth_value=100,uid_id=uid)
                 # 用户账户信息表
-                User_account.objects.create(uid=uid)
+                User_account.objects.create(user_id=uid)
                 # 保存session数据
                 request.session['email']=email
                 # 验证成功跳转到首页
@@ -523,7 +525,7 @@ def register(request):
                                       uid_id=uid)
 
             # 用户账户信息表
-            User_account.objects.create(uid=uid)
+            User_account.objects.create(user_id=uid)
             # # 保存session数据
             request.session['phone'] = phone
             # # 验证成功跳转到首页
