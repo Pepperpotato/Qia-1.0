@@ -57,7 +57,7 @@ class CommodityCategoriesTwo(models.Model):
     historicalprices = models.IntegerField()     # 历史价格
     inventory = models.IntegerField(default=0)   # 库存
     unit = models.CharField(max_length=20, default='件')
-    gid = models.IntegerField(default=1)
+    gid = models.IntegerField()
     class Meta:
         db_table = 'commodity_categories_two_four'
 
