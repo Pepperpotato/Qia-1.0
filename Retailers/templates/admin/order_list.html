@@ -24,7 +24,7 @@
         <th>收件人</th>
         <th>联系电话</th>
         <th>收件人地址</th>
-        <th>订单金额</th>
+        <th>订单状态</th>
         <th>配送方式</th>
         <th>操作</th>
        </tr>
@@ -36,10 +36,20 @@
             <td>
              <address>{{ res.location }}{{ res.detail_address }}</address>
             </td>
-            <td class="center"><strong class="rmb_icon">{{ res.goodmoneycount}}</strong></td>
+            {% if res.orderstatus == 0 %}
+                <td class="center">买家未支付</td>
+            {% elif res.orderstatus == 1 %}
+                <td class="center">买家已付款，未发货</td>
+            {% elif res.orderstatus == 2 %}
+                <td class="center">已发货，买家未收货</td>
+            {% elif res.orderstatus == 3 %}
+                <td class="center">买家已收货，未评价</td>
+            {% elif res.orderstatus == 4 %}
+                <td class="center">买家已评价，交易完成</td>
+            {% endif %}
             <td class="center">{{ res.express_name }}</td>
             <td class="center">
-             <a href="{% url 'admin:orderdetail' res.uid_id %}" title="查看订单" class="link_icon" target="_blank">&#118;</a>
+             <a href="{% url 'admin:orderdetail' res.id %}" title="查看订单" class="link_icon" target="_blank">&#118;</a>
              <a href="{% url 'admin:delorder' res.id %}" title="删除" class="link_icon">&#100;</a>
             </td>
            </tr>

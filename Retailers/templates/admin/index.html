@@ -4,6 +4,8 @@
 {% block head %}
 <head>
 <meta charset="utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>后台管理系统</title>
 <meta name="author" content="DeathGhost" />
 <link rel="stylesheet" type="text/css" href="{% static 'admin/css/style.css' %}">
@@ -45,7 +47,7 @@
  <ul class="rt_nav">
   <li><a href="{% url 'order:home' %}" target="_blank" class="website_icon">站点首页</a></li>
   <li><a href="#" class="clear_icon">清除缓存</a></li>
-  <li><a href="#" class="admin_icon">DeathGhost</a></li>
+  <li><a href="#" class="admin_icon">{{ admin }}</a></li>
   <li><a href="#" class="set_icon">账号设置</a></li>
   <li><a href="{% url 'admin:login' %}" class="quit_icon">安全退出</a></li>
  </ul>
@@ -57,7 +59,7 @@
  <ul>
   <li>
    <dl>
-    <dt>常用布局示例</dt>
+    <dt>商品管理</dt>
     <!--当前链接则添加class:active-->
     <dd><a href="{% url 'admin:productlist' %}" class="active">商品列表</a></dd>
     <dd><a href="{% url 'admin:productdetail' %}">添加商品</a></dd>

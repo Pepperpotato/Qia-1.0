@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^logout/$', views.logout, name='logout'),
     url(r'^productlist/$', views.productlist, name='productlist'),
     url(r'^productdetail/$', views.productdetail, name='productdetail'),
+    url(r'^addgood/$', views.addgood, name='addgood'),
     url(r'^orderlist/$', views.orderlist, name='orderlist'),
     url(r'^delorder/(\d+)/$', views.delorder,name='delorder'),
     url(r'^orderdetail/(\d+)/$', views.orderdetail, name='orderdetail'),

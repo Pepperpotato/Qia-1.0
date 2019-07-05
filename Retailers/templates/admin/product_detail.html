@@ -9,31 +9,37 @@
        <a class="fr top_rt_btn">返回产品列表</a>
       </div>
      <section>
-    <form action="">
+    <form action="{% url 'admin:addgood' %}" method="post">
+        {% csrf_token %}
       <ul class="ulColumn2">
        <li>
         <span class="item_name" style="width:120px;">商品名称：</span>
-        <input type="text" class="textbox textbox_295" placeholder="商品名称..."/>
-        <span class="errorTips">错误提示信息...</span>
+        <input name="gname" type="text" class="textbox textbox_295" placeholder="商品名称..."/>
        </li>
-       <li>
-        <span class="item_name" style="width:120px;">商品货号：</span>
-        <input type="text" class="textbox" placeholder="商品货号..."/>
-        <span class="errorTips">错误提示信息...</span>
-       </li>
+{#       <li>#}
+{#        <span class="item_name" style="width:120px;">商品货号：</span>#}
+{#        <input type="text" class="textbox" placeholder="商品货号..."/>#}
+{#        <span class="errorTips">错误提示信息...</span>#}
+{#       </li>#}
        <li>
         <span class="item_name" style="width:120px;">品牌：</span>
-        <select class="select">
-         <option>选择品牌</option>
+        <select name="band" class="select">
+            <option>选择品牌</option>
+             {% for commodity in commodity_brand %}
+                    <option value="{{ commodity.id }}">{{ commodity.brandname }}</option>
+             {% endfor %}
         </select>
-        <span class="errorTips">错误提示信息...</span>
+
        </li>
        <li>
         <span class="item_name" style="width:120px;">分类：</span>
-        <select class="select">
-         <option>选择产品分类</option>
+        <select name="category" class="select">
+         <option>选择已有产品分类</option>
+         {% for commodity_category in commodity_categories %}
+            <option value="{{ commodity_category.id }}">{{ commodity_category.categoryname }}</option>
+         {% endfor %}
         </select>
-        <span class="errorTips">错误提示信息...</span>
+
        </li>
        <li>
         <span class="item_name" style="width:120px;">推荐：</span>
@@ -44,50 +50,52 @@
        <li>
         <span class="item_name" style="width:120px;">上传图片：</span>
         <label class="uploadImg">
-         <input type="file"/>
+         <input name="picture" type="file"/>
          <span>上传图片</span>
         </label>
        </li>
-       <li>
-        <span class="item_name" style="width:120px;">产品详情：</span>
-        <script id="editor" type="text/plain" style="width:1024px;height:500px;margin-left:120px;margin-top:0;"></script>
-           <!--ueditor可删除下列信息-->
-           <div id="btns" style="margin-left:120px;margin-top:8px;">
-            <div>
-                <button onclick="getAllHtml()">获得整个html的内容</button>
-                <button onclick="getContent()">获得内容</button>
-                <button onclick="setContent()">写入内容</button>
-                <button onclick="setContent(true)">追加内容</button>
-                <button onclick="getContentTxt()">获得纯文本</button>
-                <button onclick="getPlainTxt()">获得带格式的纯文本</button>
-                <button onclick="hasContent()">判断是否有内容</button>
-                <button onclick="setFocus()">使编辑器获得焦点</button>
-                <button onmousedown="isFocus(event)">编辑器是否获得焦点</button>
-                <button onmousedown="setblur(event)" >编辑器失去焦点</button>
-        
-            </div>
-            <div>
-                <button onclick="getText()">获得当前选中的文本</button>
-                <button onclick="insertHtml()">插入给定的内容</button>
-                <button id="enable" onclick="setEnabled()">可以编辑</button>
-                <button onclick="setDisabled()">不可编辑</button>
-                <button onclick=" UE.getEditor('editor').setHide()">隐藏编辑器</button>
-                <button onclick=" UE.getEditor('editor').setShow()">显示编辑器</button>
-                <button onclick=" UE.getEditor('editor').setHeight(300)">设置高度为300默认关闭了自动长高</button>
-            </div>
-        
-            <div>
-                <button onclick="getLocalData()" >获取草稿箱内容</button>
-                <button onclick="clearLocalData()" >清空草稿箱</button>
-            </div>
-        
-        </div>
-       </li>
+
+{#       <li>#}
+{#        <span class="item_name" style="width:120px;">产品详情：</span>#}
+{#        <script id="editor" type="text/plain" style="width:1024px;height:500px;margin-left:120px;margin-top:0;"></script>#}
+{#           <!--ueditor可删除下列信息-->#}
+{#           <div id="btns" style="margin-left:120px;margin-top:8px;">#}
+{#            <div>#}
+{#                <button onclick="getAllHtml()">获得整个html的内容</button>#}
+{#                <button onclick="getContent()">获得内容</button>#}
+{#                <button onclick="setContent()">写入内容</button>#}
+{#                <button onclick="setContent(true)">追加内容</button>#}
+{#                <button onclick="getContentTxt()">获得纯文本</button>#}
+{#                <button onclick="getPlainTxt()">获得带格式的纯文本</button>#}
+{#                <button onclick="hasContent()">判断是否有内容</button>#}
+{#                <button onclick="setFocus()">使编辑器获得焦点</button>#}
+{#                <button onmousedown="isFocus(event)">编辑器是否获得焦点</button>#}
+{#                <button onmousedown="setblur(event)" >编辑器失去焦点</button>#}
+{#        #}
+{#            </div>#}
+{#            <div>#}
+{#                <button onclick="getText()">获得当前选中的文本</button>#}
+{#                <button onclick="insertHtml()">插入给定的内容</button>#}
+{#                <button id="enable" onclick="setEnabled()">可以编辑</button>#}
+{#                <button onclick="setDisabled()">不可编辑</button>#}
+{#                <button onclick=" UE.getEditor('editor').setHide()">隐藏编辑器</button>#}
+{#                <button onclick=" UE.getEditor('editor').setShow()">显示编辑器</button>#}
+{#                <button onclick=" UE.getEditor('editor').setHeight(300)">设置高度为300默认关闭了自动长高</button>#}
+{#            </div>#}
+{#        #}
+{#            <div>#}
+{#                <button onclick="getLocalData()" >获取草稿箱内容</button>#}
+{#                <button onclick="clearLocalData()" >清空草稿箱</button>#}
+{#            </div>#}
+{#        #}
+{#        </div>#}
+{#       </li>#}
        <li>
         <span class="item_name" style="width:120px;"></span>
         <input type="submit" class="link_btn"/>
        </li>
       </ul>
+    </form>
      </section>
  </div>
 </section>
