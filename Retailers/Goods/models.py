@@ -11,7 +11,6 @@ from django.utils import timezone
 class CommodityBrand(models.Model):
     id = models.AutoField(primary_key=True)  #id
     brandname = models.CharField(max_length=20)  #品牌名称
-    weightprice = models.IntegerField(default=0)
 
     class Meta:
 
@@ -37,11 +36,10 @@ class Goods(models.Model):
     gname = models.CharField(unique=True, max_length=50) #商品名称
     discount = models.CharField( default=0,max_length=50) #优惠方式
     picture = models.CharField(max_length=1000)  #图片
-    attribute = models.CharField(max_length=50)   #商品属性
+    attributeid = models.IntegerField(default=1)   #商品属性id
     keyword = models.CharField(max_length=128)    #搜索关键字
     weightprice = models.IntegerField()             # 权重价格
     historicalprices = models.IntegerField()      #历史价格
-    inventory = models.IntegerField()            # 库存
     goodsstate = models.IntegerField(default=0)               #商品状态已上线0已下线1
     brandid = models.IntegerField()             #品牌id
     smallclassesid = models.IntegerField()         #小类别id
@@ -56,18 +54,24 @@ class CommodityCategoriesTwo(models.Model):
     id=models.AutoField(primary_key=True)  #id
     smallclassesid = models.IntegerField()  # 小类别id
     smallclassesattribute = models.CharField(max_length=20) #小类别属性
-    weightprice = models.IntegerField() #对应价格
-    sort = models.IntegerField(null=True)
-
+    specification_id = models.IntegerField()
+    brandid = models.IntegerField(null=True)
+    price = models.IntegerField(default=0)  # 对应价格
+    inventory = models.IntegerField(default=0)   # 库存
 
     class Meta:
-        
         db_table = 'commodity_categories_two_four'
 
 
+class Specification(models.Model):
+    specification = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = 'specification'
+
 
 # 优惠券表5
-class  coupons(models.Model):
+class  Coupons(models.Model):
     id = models.AutoField(primary_key=True)  # id
     preferentialthreshold=models.IntegerField()  #优惠门槛
     preferentialcontent=models.IntegerField()  #优惠内容（展示满100减10）
