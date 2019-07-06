@@ -40,7 +40,6 @@ class Goods(models.Model):
     goodsstate = models.IntegerField(default=0)               #商品状态已上线0已下线1
     brandid = models.IntegerField()             #品牌id
     smallclassesid = models.IntegerField()         #小类别id
-    classid=models.ForeignKey(CommodityCategories,default=None ,db_column='id')
 
     class Meta:
         db_table = 'goodsone'
