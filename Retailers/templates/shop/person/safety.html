@@ -25,16 +25,37 @@
 						<div class="user-infoPic">
 
 							<div class="filePic">
-								<img class="am-circle am-img-thumbnail" src="{% static 'shop/images/getAvatar.do.jpg' %}" alt="" />
+                                {% if user %}
+                                    <img class="am-circle am-img-thumbnail" src="/static{{ user.user_photo }}" alt="" />
+                                    {% else %}
+                                    <img src="/static/admin/upload/avatar_blank.gif" alt="">
+                                {% endif %}
+
+
 							</div>
 
 							<p class="am-form-help">头像</p>
 
 							<div class="info-m">
-								<div><b>用户名：<i>小叮当</i></b></div>
+								<div><b>用户名：<i>{{ user.username }}</i></b></div>
                                 <div class="safeText">
-                                  	<a href="safety.html">账户安全:<em style="margin-left:20px ;">60</em>分</a>
-									<div class="progressBar"><span style="left: -95px;" class="progress"></span></div>
+                                  	<a href="safety.html">账户安全:<em style="margin-left:20px ;">
+                                       {% if safety %}
+                                        {{ safety }}
+                                           {% else %}
+                                           0
+                                       {% endif %}
+
+                                    </em>分</a>
+									<div class="progressBar">
+                                        {% if articleyellow %}
+                                            <span style="left: -{{ articleyellow }}%;" class="progress"></span>
+                                        {% else %}
+                                            <span style="left: -100%;" class="progress"></span>
+                                        {% endif %}
+
+
+                                    </div>
 								</div>
 							</div>
 						</div>
@@ -49,7 +70,7 @@
 									</div>
 									<div class="fore3">
 										<a href="{% url 'goods:password' %}">
-											<div class="am-btn am-btn-secondary">修改</div>
+											<div class="am-btn am-btn-secondary" style="border-radius: 3px;">修改</div>
 										</a>
 									</div>
 								</li>
@@ -61,7 +82,7 @@
 									</div>
 									<div class="fore3">
 										<a href="{% url 'goods:setpay' %}">
-											<div class="am-btn am-btn-secondary">立即启用</div>
+											<div class="am-btn am-btn-secondary" style="border-radius: 3px;">立即启用</div>
 										</a>
 									</div>
 								</li>
@@ -73,7 +94,7 @@
 									</div>
 									<div class="fore3">
 										<a href="{% url 'goods:bindphone' %}">
-											<div class="am-btn am-btn-secondary">换绑</div>
+											<div class="am-btn am-btn-secondary" style="border-radius: 3px;">换绑</div>
 										</a>
 									</div>
 								</li>
@@ -85,7 +106,7 @@
 									</div>
 									<div class="fore3">
 										<a href="{% url 'goods:email' %}">
-											<div class="am-btn am-btn-secondary">换绑</div>
+											<div class="am-btn am-btn-secondary" style="border-radius: 3px;">换绑</div>
 										</a>
 									</div>
 								</li>
@@ -97,7 +118,7 @@
 									</div>
 									<div class="fore3">
 										<a href="{% url 'goods:idcard' %}">
-											<div class="am-btn am-btn-secondary">认证</div>
+											<div class="am-btn am-btn-secondary" style="border-radius: 3px;">认证</div>
 										</a>
 									</div>
 								</li>
@@ -109,7 +130,7 @@
 									</div>
 									<div class="fore3">
 										<a href="{% url 'goods:question' %}">
-											<div class="am-btn am-btn-secondary">认证</div>
+											<div class="am-btn am-btn-secondary" style="border-radius: 3px;">认证</div>
 										</a>
 									</div>
 								</li>

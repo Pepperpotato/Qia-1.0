@@ -1,0 +1,52 @@
+{% extends 'admin/index.html' %}
+{% load static %}
+
+{% block content %}
+    <section class="rt_wrap content mCustomScrollbar">
+        <div class="rt_content">
+            <div class="page_title">
+                <h2 class="fl">添加已有类别商品</h2>
+            </div>
+            <form action="{% url 'admin:addgood' %}" method="post">
+                {% csrf_token %}
+                <ul class="ulColumn2">
+                    <li>
+                        <span class="item_name" style="width:120px;">品牌：</span>
+                        <select name="brand" class="select">
+                            <option>选择品牌</option>
+                            {% for commodity in commodity_brand %}
+                                <option value="{{ commodity.id }}">{{ commodity.brandname }}</option>
+                            {% endfor %}
+                        </select>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">分类：</span>
+                        <select name="category" class="select">
+                            <option>选择已有产品分类</option>
+                            {% for commodity_category in commodity_categories %}
+                                <option value="{{ commodity_category.id }}">{{ commodity_category.categoryname }}</option>
+                            {% endfor %}
+                        </select>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">商品名称：</span>
+                        <input name="goodname" class="textbox textbox_225"/>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">商品类别：</span>
+                        <input name="newsection" class="textbox textbox_225"/>
+                    </li>
+                    <li>
+                        <input type="button" value="继续添加商品类别">
+                    </li>
+                    <li>
+                        <input type="submit" value="提交">
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </section>
+{% endblock content %}
+
+{% block foot %}
+{% endblock foot %}

@@ -84,7 +84,7 @@ urlpatterns = [
     # 注册页面
     url(r'^register/$',views.register,name='register'),
     #删除session
-    url(r'^sc/$',views.sc)
+    url(r'^sc/$',views.sc,name='sc')
 
 ]
 

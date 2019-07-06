@@ -154,4 +154,17 @@ EXCLUDE_URL =  (
     '/goods/auth_code_/',
 )
 
+# 分页
+NUMOFPAGE = 5
 
+# 配置激活邮件
+# 发送邮件配置
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.qq.com'
+EMAIL_PORT = 25
+#发送邮件的邮箱
+EMAIL_HOST_USER = '245399366@qq.com'
+#在邮箱中设置的客户端授权密码
+EMAIL_HOST_PASSWORD = 'rqxtjepreuiwcbed'
+#收件人看到的发件人
+EMAIL_FROM = '辛姐小吃铺'
