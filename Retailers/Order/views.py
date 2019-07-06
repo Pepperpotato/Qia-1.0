@@ -16,6 +16,7 @@ def home(request):
     dlb = CommodityCategories.objects.filter(parentid=0)  # 寻找大类别 3
     xlb = CommodityCategories.objects.exclude(parentid=0)  # 寻找小类别 3
     store = CommodityBrand.objects.all()  # 寻找品牌 2
+    price = CommodityCategoriesTwo.objects.all()
     dic = {}
 
 
@@ -34,9 +35,11 @@ def home(request):
         list1=list[:6]
         dic[i.id] = list1
 
-    res = temp.render(context={'dlb': dlb, 'xlb': xlb, 'store': store,'dic':dic})
+    res = temp.render(context={'dlb': dlb, 'xlb': xlb, 'store': store,'dic':dic,'price':price})
     return HttpResponse(res)
     # return render(request,'shop/home/home3.html')
+
+
 
 
 def intro(request,dlbid,xlbid,goodid):
@@ -52,6 +55,9 @@ def intro(request,dlbid,xlbid,goodid):
     print(norm[0]['specification_id'],normall[0].id)
     temp = loader.get_template('shop/home/introduction.html')
     res = temp.render(context={'detail':detail,'goods':goods,'attr':attr,'attrnum':attrnum,'norm':norm,'normall':normall})
+    if request.POST:
+        we = request.POST
+        print(we,'+++++++++++++++++++++++++++++++++++++')
     return HttpResponse(res)
 
 

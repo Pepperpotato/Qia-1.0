@@ -259,12 +259,54 @@
                                                             {% for n in norm %}
                                                                 {% for m in normall %}
                                                                 {% if n.specification_id == m.id  %}
-															<li class="sku-line">{{ m.specification }}<i></i></li>
+															<li onclick="load()" class="sku-line">{{ m.specification }}<i></i></li>
+                                                                    <div id="myDiv">111</div>
+                                                                    <script>
+                                                                        var r
+                                                                    r =24
+															</script>
                                                             {% endif %}
                                                                     {% endfor %}
                                                             {% endfor %}
 														</ul>
 													</div>
+
+
+                                                    <script>
+
+                                                        function createXMLHttpRequest(){
+                                                            if(window.ActiveXObject){
+                                                                    xmlHttpRequest = new ActiveXObject("Microsoft.XMLHTTP")
+                                                                }
+                                                            else if(window.XMLHttpRequest){
+                                                                    xmlHttpRequest = new XMLHttpRequest();
+                                                                }
+                                                            xmlHttpRequest.open('POST','order/intro')
+                                                            xmlHttpRequest.setRequestHeader('')
+                                                            }
+                                                        function load(){
+                                                            if(xmlHttpRequest.readyState == 4){
+                                                                if(xmlHttpRequest.status == 200 || xmlHttpRequest.status == 0){
+                                                                    var node = document.getElementById('myDiv');
+                                                                    node.firstChild.nodeValue = xmlHttpRequest.responseText;
+                                                                }
+                                                                else{
+                                                                    alert("error")
+                                                                }
+                                                            }
+                                                        }
+                                                        function  getData(name,value) {
+                                                            createXMLHttpRequest();
+                                                            if(xmlHttpRequest!=null){
+                                                                xmlHttpRequest.open('POST','{% url 'order:intro' %}')
+                                                            }
+                                                        }
+
+                                                    </script>
+
+
+
+
 													<div class="theme-options">
 														<div class="cart-title number">数量</div>
 														<dd>

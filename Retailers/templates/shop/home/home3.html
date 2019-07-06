@@ -339,7 +339,12 @@
 
                                                 <img src=" /static{{ it.picture }} "/>
                                                 <div class="pro-title ">{{ it.gname }}</div>
-                                                <span class="e-price ">{{ it.weightprice }}</span>
+                                                {% for p in price %}
+                                                    {% if p.gid == it.gid%}
+                                                    <span class="e-price ">{{ p.price }}</span>
+                                                    {% endif %}
+
+                                                {% endfor %}
                                             </a>
                                         </div>
                                     </li>
