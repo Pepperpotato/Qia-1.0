@@ -1,9 +1,10 @@
+from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template import loader
 from django.urls import reverse
 
-from Goods.models import CommodityCategories, CommodityBrand, Goods, Goodsdetails
+from Goods.models import CommodityCategories, CommodityBrand, Goods, Goodsdetails, CommodityCategoriesTwo, Specification
 
 from .models import Mobilecount
 from django.db import connection
@@ -39,12 +40,18 @@ def home(request):
 
 
 def intro(request,dlbid,xlbid,goodid):
-    detail = Goodsdetails.objects.filter(Goodsid=goodid).first()
+    detail = Goodsdetails.objects.filter(Goodsid=goodid).first()#提供商品详情与展示图
     # print(goodid,'+++++++++++++++++++++++++++++++')
-    goods = Goods.objects.filter(gid = goodid).first()
-    print(goods.gname)
+    goods = Goods.objects.filter(gid = goodid).first()#属性主表查商品详情，提供商品名称
+    attr = CommodityCategoriesTwo.objects.filter(gid = goodid).first()#属性附表查详情 提供现在价格与历史价格
+    # attrnum = CommodityCategoriesTwo.objects.filter(gid=goodid).values('gid').annotate(Count('smallclassesattribute'))
+    # attrnum = CommodityCategoriesTwo.objects.filter(gid=goodid).values('smallclassesattribute').distinct().count()#提供小类别个数
+    attrnum = CommodityCategoriesTwo.objects.filter(gid=goodid).values('smallclassesattribute').distinct()#提供小类别的详情
+    norm = CommodityCategoriesTwo.objects.filter(gid=goodid).values('specification_id').distinct()#与当前商品相关的规格
+    normall = Specification.objects.all()#所有规格
+    print(norm[0]['specification_id'],normall[0].id)
     temp = loader.get_template('shop/home/introduction.html')
-    res = temp.render(context={'detail':detail})
+    res = temp.render(context={'detail':detail,'goods':goods,'attr':attr,'attrnum':attrnum,'norm':norm,'normall':normall})
     return HttpResponse(res)
 
 
