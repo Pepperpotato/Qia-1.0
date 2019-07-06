@@ -1,6 +1,5 @@
 import hashlib
 import re
 
-a='ll'
-password=hashlib.sha1(a.encode('utf8')).hexdigest()
-print(password)
+a='15010507563'
+print(a[-4:])

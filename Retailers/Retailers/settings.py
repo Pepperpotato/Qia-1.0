@@ -133,12 +133,19 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 
-#阿里云短信验证码配置
+#阿里云注册短信验证码配置
 SMSCONFIG = {
     'ACCESS_KEY_ID':"LTAI87A9iBxVPguw",
     'ACCESS_KEY_SECRET':"K7nOKnmiimuFgfRFTdEjuoXQMLFHoL",
     'SignName':"辛姐小吃铺",
     'TemplateCode':"SMS_169505312"
+}
+#阿里云修改密码短信验证码配置
+SMSCONFIGG = {
+    'ACCESS_KEY_ID':"LTAI87A9iBxVPguw",
+    'ACCESS_KEY_SECRET':"K7nOKnmiimuFgfRFTdEjuoXQMLFHoL",
+    'SignName':"辛姐小吃铺",
+    'TemplateCode':"SMS_169902815"
 }
 
 #文件上传路径|
@@ -152,11 +159,10 @@ EXCLUDE_URL =  (
      '/goods/login/',
      '/goods/register/',
     '/goods/auth_code_/',
+    '/order/home',
 )
-
 # 分页
 NUMOFPAGE = 5
-
 # 配置激活邮件
 # 发送邮件配置
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
