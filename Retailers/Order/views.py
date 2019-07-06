@@ -40,6 +40,9 @@ def home(request):
 
 def intro(request,dlbid,xlbid,goodid):
     detail = Goodsdetails.objects.filter(Goodsid=goodid).first()
+    # print(goodid,'+++++++++++++++++++++++++++++++')
+    goods = Goods.objects.filter(gid = goodid).first()
+    print(goods.gname)
     temp = loader.get_template('shop/home/introduction.html')
     res = temp.render(context={'detail':detail})
     return HttpResponse(res)
