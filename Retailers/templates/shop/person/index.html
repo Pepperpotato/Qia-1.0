@@ -22,12 +22,13 @@
                     <a href="{% url 'goods:news' %}">
                         <div class="tipsBox"><i class="am-icon-envelope"></i></div>
                     </a>
+
                     <div class="m-baseinfo">
                         <a class="m-pic" href="{% url 'goods:information' %}">
                             {% if  user %}
                                 <img src="/static{{ user.user_photo }}">
                             {% else %}
-                            <img src="/static/admin/upload/avatar_blank.gif">
+                                <img src="/static/admin/upload/avatar_blank.gif">
                             {% endif %}
                         </a>
                         <div class="m-info">
@@ -39,12 +40,13 @@
                                     style="margin-left:20px ;">
                                 {% if safety %}
                                     {{ safety }}
-                                    {% else %}
+                                {% else %}
                                     0
                                 {% endif %}
 
                             </em>分</a>
-                                <div class="progressBar"><span style="left:-{{ articleyellow }}%;" class="progress"></span></div>
+                                <div class="progressBar"><span style="left:-{{ articleyellow }}%;"
+                                                               class="progress"></span></div>
                             </div>
                             <div class="m-address">
                                 <a href="{% url 'goods:address' %}" class="i-trigger">收货地址<i class="am-icon-angle-right"
@@ -310,32 +312,81 @@
 
             <!--优惠券积分-->
             <div class="twoTab">
+                {% for goodscoupon in goodscoupons %}
+                    <div class="twoTabModel Coupon">
+                        <h5 class="squareTitle"><a href="#"><span class="splitBorder"></span>优惠券<i
+                                class="am-icon-angle-right"></i></a></h5>
+                        <div class="Box">
+                            <div class="CouponList">
+                                <span class="price">¥<strong
+                                        class="num">{{ goodscoupon.preferentialthreshold }}</strong></span>
+                                <p class="brandName" style="font-size: 12px">通用优惠券
+                                </p>
+                                <p class="discount">满<span>{{ goodscoupon.preferentialcontent }}</span>元抵扣</p>
+                                {#                            <a href="#" class="btnReceive">立即领取</a>#}
+                                <button class="btnReceive" style="border-width:0px" id="{{ goodscoupon.id }}" name="ll"
 
-                <div class="twoTabModel Coupon">
-                    <h5 class="squareTitle"><a href="#"><span class="splitBorder"></span>优惠券<i
-                            class="am-icon-angle-right"></i></a></h5>
-                    <div class="Box">
-                        <div class="CouponList">
-                            <span class="price">¥<strong class="num">50</strong></span>
-                            <p class="brandName"><a href="#">ABC品牌499减50</a></p>
-                            <p class="discount">满<span>499</span>元抵扣</p>
-                            <a href="#" class="btnReceive">立即领取</a>
+                                        {% for goodoffer in account.goodoffer_id %}
+                                            {% if goodoffer == '1'  %}
+                                                {% if goodscoupon.id == 1 %}
+                                                    disabled="disabled"
+                                                {% endif %}
+                                            {% endif %}
+                                            {% if goodoffer == '2'  %}
+                                                {% if goodscoupon.id == 2 %}
+                                                    disabled="disabled"
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+{#                                        {% for goodoffer in account.goodoffer_id %}#}
+{#                                            {% if goodoffer == '2' %}#}
+{#                                        disabled="disabled"#}
+{#                                            {% endif %}#}
+{#                                        {% endfor %}#}
+
+
+                                >立即领取
+
+                                </button>
+
+                                {#                                {% for goodoffer in account.goodoffer_id %}#}
+                                {#                                        <p>{{ '1'|phone2numeric }}</p>#}
+                                {#                                        <p>{{ goodscoupon.id }}</p>#}
+                                {#                                        <p>{{  }}</p>#}
+                                {##}
+                                {#                                    {% if goodoffer == '1'  %}#}
+                                {#                                        <p>{{ goodoffer }}</p>#}
+                                {#                                    {% endif %}#}
+                                {#                                {% endfor %}#}
+
+                            </div>
                         </div>
                     </div>
-                </div>
+                {% endfor %}
+                <script>
 
-                <div class="twoTabModel Coupon">
-                    <h5 class="squareTitle"><a href="#"><span class="splitBorder"></span>优惠券<i
-                            class="am-icon-angle-right"></i></a></h5>
-                    <div class="Box">
-                        <div class="CouponList">
-                            <span class="price">¥<strong class="num">50</strong></span>
-                            <p class="brandName"><a href="#">ABC品牌499减50</a></p>
-                            <p class="discount">满<span>499</span>元抵扣</p>
-                            <a href="#" class="btnReceive">立即领取</a>
-                        </div>
-                    </div>
-                </div>
+                    $('#1').click(function () {
+                        this.disabled = "disabled";
+                        $.post("{% url 'goods:index' %}", '1')
+                    });
+                    $('#2').click(function () {
+                        this.disabled = "disabled";
+                        $.post("{% url 'goods:index' %}", '2')
+                    })
+
+                </script>
+                {#                <div class="twoTabModel Coupon">#}
+                {#                    <h5 class="squareTitle"><a href="#"><span class="splitBorder"></span>优惠券<i#}
+                {#                            class="am-icon-angle-right"></i></a></h5>#}
+                {#                    <div class="Box">#}
+                {#                        <div class="CouponList">#}
+                {#                            <span class="price">¥<strong class="num">50</strong></span>#}
+                {#                            <p class="brandName"><a href="#">ABC品牌499减50</a></p>#}
+                {#                            <p class="discount">满<span>499</span>元抵扣</p>#}
+                {#                            <a href="#" class="btnReceive">立即领取</a>#}
+                {#                        </div>#}
+                {#                    </div>#}
+                {#                </div>#}
                 {#                <div class="twoTabModel credit">#}
                 {#                    <h5 class="squareTitle"><a href="#"><span class="splitBorder"></span>积分商城<i#}
                 {#                            class="am-icon-angle-right"></i></a></h5>#}

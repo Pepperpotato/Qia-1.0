@@ -47,7 +47,9 @@
         <div class="am-form-group bind">
             <label for="user-phone" class="am-form-label">验证手机</label>
             <div class="am-form-content">
-                <span id="user-phone">186XXXX0531</span>
+                <span id="user-phone">{% if phone_number %}
+                    {{ phone_number }}
+                {% endif %}</span>
             </div>
         </div>
         <div class="am-form-group code">
@@ -56,7 +58,7 @@
                 <input type="tel" id="user-code" placeholder="短信验证码">
             </div>
             <a class="btn" href="javascript:void(0);" onclick="sendMobileCode();" id="sendMobileCode">
-                <div class="am-btn am-btn-danger">验证码</div>
+                <div class="am-btn am-btn-danger" style="border-radius: 3px;">获取验证码</div>
             </a>
         </div>
         <div class="am-form-group">
@@ -66,20 +68,60 @@
             </div>
         </div>
         <div class="am-form-group code">
-            <label for="user-new-code" class="am-form-label">验证码</label>
+            <label for="user-new-code" class="am-form-label" style="border-radius: 3px;">验证码</label>
             <div class="am-form-content">
                 <input type="tel" id="user-new-code" placeholder="短信验证码">
             </div>
-            <a class="btn" href="javascript:void(0);" onclick="sendMobileCode();" id="sendMobileCode">
-                <div class="am-btn am-btn-danger">验证码</div>
+            <a class="btn" href="javascript:void(0);" onclick="sendMobileCode();" id="sendMobileCodee">
+                <div class="am-btn am-btn-danger" style="border-radius: 3px;">获取验证码</div>
             </a>
         </div>
         <div class="info-btn">
-            <div class="am-btn am-btn-danger">保存修改</div>
+            <div class="am-btn am-btn-danger" style="border-radius: 3px;">保存修改</div>
+            <p><span id='result'></span></p>
         </div>
 
     </form>
+    <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script>
+        {# 获取验证码#}
+        $(document).ready(function () {
+            $("#sendMobileCode").click(function () {
+                $.get("{% url 'goods:pswordcode_' %}", function (ret) {
+                    $('#result').append(ret.data + '<br>');
+                })
 
+            });
+        });
+        {# 获取新手机号验证码#}
+        $(document).ready(function () {
+            $("#sendMobileCodee").click(function () {
+                var code = $('#user-code').val();
+                var newphone = $('#user-new-phone').val();
+                $.get("{% url 'goods:pswordcode_' %}",{
+                    'code': code,
+                    'newphone': newphone,
+                }, function (ret) {
+                    $('#result').append(ret.data + '<br>');
+                })
+
+            });
+        });
+
+        {#提交数据#}
+        $(document).ready(function () {
+            $("#sumbit").click(function () {
+                var code = $('#user-new-code').val();
+                var newphone = $('#user-new-phone').val();
+                $.get("/goods/setpay/", {
+                    'newphone': newphone,
+                    'code': code
+                }, function (ret) {
+                    $('#result').append(ret.data + '<br>');
+                })
+            });
+        });
+    </script>
 
 {% endblock %}
 

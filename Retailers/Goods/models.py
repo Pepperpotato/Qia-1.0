@@ -47,16 +47,18 @@ class Goods(models.Model):
 
 #  商品类别表4（属性）
 class CommodityCategoriesTwo(models.Model):
-    id=models.AutoField(primary_key=True)  #id
+    id=models.AutoField(primary_key=True)  # id
     smallclassesid = models.IntegerField()  # 小类别id
-    smallclassesattribute = models.CharField(max_length=20) #小类别属性
-    specification_id = models.IntegerField()
-    brandid = models.IntegerField(null=True)
+    smallclassesattribute = models.CharField(max_length=20) # 小类别属性
+    specification_id = models.IntegerField()  # 对应规格id
+    brandid = models.IntegerField(null=True)   # 品牌id
     price = models.IntegerField()  # 对应价格
     historicalprices = models.IntegerField(null=True)     # 历史价格
     inventory = models.IntegerField(default=0)   # 库存
     unit = models.CharField(max_length=20, default='件')
-    gid = models.IntegerField()
+    is_show = models.IntegerField(default=0)  # 是否在首页展示  1代表展示
+    gid = models.IntegerField()  # 商品1表id
+
     class Meta:
         db_table = 'commodity_categories_two_four'
 
