@@ -38,11 +38,12 @@
 							<div class="u-progress-bar-inner"></div>
 						</div>
 					</div>
-					<form class="am-form am-form-horizontal">
+					<form class="am-form am-form-horizontal" action="{% url 'goods:question' %}" method="post">
+                    {% csrf_token %}
 						<div class="am-form-group select">
 							<label for="user-question1" class="am-form-label">问题一</label>
 							<div class="am-form-content">
-								<select data-am-selected>
+								<select data-am-selected name="question1">
 									<option value="a" selected>请选择安全问题</option>
 									<option value="b">您最喜欢的颜色是什么？</option>
 									<option value="c">您的故乡在哪里？</option>
@@ -52,13 +53,13 @@
 						<div class="am-form-group">
 							<label for="user-answer1" class="am-form-label">答案</label>
 							<div class="am-form-content">
-								<input type="text" id="user-answer1" placeholder="请输入安全问题答案">
+								<input type="text" id="user-answer1" placeholder="请输入安全问题答案" name="answer1">
 							</div>
 						</div>
 						<div class="am-form-group select">
 							<label for="user-question2" class="am-form-label">问题二</label>
 							<div class="am-form-content">
-								<select data-am-selected>
+								<select data-am-selected name="question2">
 									<option value="a" selected>请选择安全问题</option>
 									<option value="b">您最喜欢的颜色是什么？</option>
 									<option value="c">您的故乡在哪里？</option>
@@ -68,11 +69,25 @@
 						<div class="am-form-group">
 							<label for="user-answer2" class="am-form-label">答案</label>
 							<div class="am-form-content">
-								<input type="text" id="user-answer2" placeholder="请输入安全问题答案">
+								<input type="text" id="user-answer2" placeholder="请输入安全问题答案" name="answer2">
 							</div>
 						</div>
 						<div class="info-btn">
-							<div class="am-btn am-btn-danger">保存修改</div>
+{#							<div class="am-btn am-btn-danger">保存修改</div>#}
+                            <input type="submit" style="
+    width: 270px; /* 宽度 */
+	height: 40px; /* 高度 */
+	border-width: 0px; /* 边框宽度 */
+	border-radius: 3px; /* 边框半径 */
+	background: #dd514c; /* 背景颜色 */
+	cursor: pointer; /* 鼠标移入按钮范围时出现手势 */
+	outline: none; /* 不显示轮廓线 */
+	font-family: Microsoft YaHei; /* 设置字体 */
+	color: white; /* 字体颜色 */
+	font-size: 17px; /* 字体大小 */
+	text-align:center
+
+" value="保存修改" >
 						</div>
 
 					</form>

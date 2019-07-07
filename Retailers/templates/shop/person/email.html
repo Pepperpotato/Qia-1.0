@@ -52,14 +52,37 @@
 								<input type="tel" id="user-code" placeholder="验证码">
 							</div>
 							<a class="btn" href="javascript:void(0);" onclick="sendMobileCode();" id="sendMobileCode">
-								<div class="am-btn am-btn-danger">验证码</div>
+								<div class="am-btn am-btn-danger" id="btn-danger" style="border-radius: 3px;">验证码</div>
 							</a>
 						</div>
 						<div class="info-btn">
-							<div class="am-btn am-btn-danger">保存修改</div>
+							<div class="am-btn am-btn-danger" id="am-btn-danger" style="border-radius: 3px;">保存修改</div>
+                            <p><span id='result'></span></p>
 						</div>
 
 					</form>
+    <script>
+    $(document).ready(function () {
+        $('#btn-danger').click(function () {
+
+            var newemail=$('#user-email').val();
+            $.get("{% url 'goods:email' %}",{'newemail':newemail},function (ret) {
+                 $('#result').append(ret.data + '<br>');
+                 if(ret.data=='发送成功'){
+                     $('#user-email').attr("disabled","disabled");
+                 }
+            })
+        });
+        $('#am-btn-danger').click(function () {
+            var newemail=$('#user-email').val();
+            var code=$('#user-code').val();
+            $.get("{% url 'goods:email' %}",{'newemail':newemail,'code':code},function (ret) {
+                 $('#result').append(ret.data + '<br>');
+                 timename = setTimeout(window.location.href = "{% url 'goods:email' %}", 2000);
+            })
+        })
+        })
+    </script>
 
 {% endblock %}
 

@@ -174,3 +174,8 @@ EMAIL_HOST_USER = '245399366@qq.com'
 EMAIL_HOST_PASSWORD = 'rqxtjepreuiwcbed'
 #收件人看到的发件人
 EMAIL_FROM = '辛姐小吃铺'
+# 邮件有效时间
+EMAIL_TIME=3600
+# 邮件标题
+EMAIL_SUBJECT_ACTIVATIONE="辛姐小吃铺激活邮件"
+EMAIL_SUBJECT_CODE="辛姐小吃铺验证码邮件"
