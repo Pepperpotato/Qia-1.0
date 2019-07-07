@@ -42,7 +42,7 @@ def home(request):
 
 
 
-def intro(request,goodid,kouwei,fenliang,count):
+def intro(request,goodid):
     detail = Goodsdetails.objects.filter(Goodsid=goodid).first()#提供商品详情与展示图
     # print(goodid,'+++++++++++++++++++++++++++++++')
     goods = Goods.objects.filter(gid = goodid).first()#属性主表查商品详情，提供商品名称
@@ -51,20 +51,14 @@ def intro(request,goodid,kouwei,fenliang,count):
     # attrnum = CommodityCategoriesTwo.objects.filter(gid=goodid).values('smallclassesattribute').distinct().count()#提供小类别个数
     attrnum = CommodityCategoriesTwo.objects.filter(gid=goodid).values('smallclassesattribute').distinct()#提供小类别的详情
     norm = CommodityCategoriesTwo.objects.filter(gid=goodid).values('specification_id').distinct()#与当前商品相关的规格
-
+    inven = CommodityCategoriesTwo.objects.get(gid=goodid,is_show=1)
     normall = Specification.objects.all()#所有规格
     print(norm[0]['specification_id'],normall[0].id)
     temp = loader.get_template('shop/home/introduction.html')
 
-    # if request.method == 'POST':
-    # we = request.POST
-    # print(we,'+++++++++++++++++++++++++++++++++++++')
 
-    if request.is_ajax():
-        print(kouwei,fenliang,count,'+++++++++++++++++++')
-
-        return JsonResponse({'fl':218})
-    res = temp.render(context={'detail': detail, 'goods': goods, 'attr': attr, 'attrnum': attrnum, 'norm': norm, 'normall': normall})
+    print("attrnum",attrnum)
+    res = temp.render(context={'detail': detail, 'inven':inven,'goods': goods, 'attr': attr, 'attrnum': attrnum, 'norm': norm, 'normall': normall})
     return HttpResponse(res)
 
 
@@ -74,3 +68,25 @@ def verf(request,goodid):
     block = request.GET.get('block')
     print(province,city,block,'++++++++++++++++++++++')
     return HttpResponse('ok')
+
+
+def price_change(request):
+    if request.method == "POST":
+        fenliang_value = request.POST.get("fenliang_value")
+        kouwei_value = request.POST.get("kouwei_value")
+        goodid = request.POST.get("goodid")
+        norm = Specification.objects.get(specification=fenliang_value)
+        count = request.POST.get("count")
+        price = CommodityCategoriesTwo.objects.get(gid=goodid,smallclassesattribute=kouwei_value,specification_id=norm.id)
+        print(price,price.price,'++++++++++++++++++++++++++++++++')
+        total_price = int(count)*int(price.price)
+        total_count = price.inventory
+
+        data = {
+            "total_price":total_price,
+            "total_count":total_count
+        }
+        return JsonResponse(data)
+    else:
+        print("nonoo")
+
