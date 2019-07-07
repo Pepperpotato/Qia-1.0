@@ -7,7 +7,7 @@
             <div class="page_title">
                 <h2 class="fl">添加已有类别商品</h2>
             </div>
-            <form action="{% url 'admin:addgood' %}" method="post">
+            <form action="{% url 'admin:addgood' %}" method="post" enctype="multipart/form-data" >
                 {% csrf_token %}
                 <ul class="ulColumn2">
                     <li>
@@ -33,20 +33,50 @@
                         <input name="goodname" class="textbox textbox_225"/>
                     </li>
                     <li>
+                        <span class="item_name" style="width:120px;">搜索关键字：</span>
+                        <input name="keyword" class="textbox textbox_225"/>
+                    </li>
+                    <li id="a1">
                         <span class="item_name" style="width:120px;">商品类别：</span>
                         <input name="newsection" class="textbox textbox_225"/>
                     </li>
                     <li>
-                        <input type="button" value="继续添加商品类别">
+                        <span class="item_name" style="width:120px;"></span>
+                        <input type="button" onclick="add(this.form,this.parentNode)" value="继续添加商品类别">
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">商品单位：</span>
+                        <input name="unit" class="textbox textbox_225"/>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">商品规格：</span>
+                        <input name="format" class="textbox textbox_225"/>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">商品单价：</span>
+                        <input name="price" class="textbox textbox_225"/>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">商品库存：</span>
+                        <input name="inventory" class="textbox textbox_225"/>
+                    </li>
+
+                    <li>
+                        <span class="item_name" style="width:120px;">上传图片：</span>
+                            <label class="uploadImg">
+                                <input name="picture" type="file"/>
+                            </label>
                     </li>
                     <li>
                         <input type="submit" value="提交">
                     </li>
                 </ul>
             </form>
+
         </div>
     </section>
 {% endblock content %}
 
 {% block foot %}
 {% endblock foot %}
+

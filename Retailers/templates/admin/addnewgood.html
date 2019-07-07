@@ -9,18 +9,14 @@
                 <a class="fr top_rt_btn">返回产品列表</a>
             </div>
             <section>
-                <form action="{% url 'admin:addgood' %}" method="post">
+                <form action="{% url 'admin:addnewgood' %}" method="post">
                     {% csrf_token %}
                     <ul class="ulColumn2">
                         <li>
                             <span class="item_name" style="width:120px;">商品名称：</span>
                             <input name="gname" type="text" class="textbox textbox_295" placeholder="商品名称..."/>
                         </li>
-                        {#       <li>#}
-                        {#        <span class="item_name" style="width:120px;">商品货号：</span>#}
-                        {#        <input type="text" class="textbox" placeholder="商品货号..."/>#}
-                        {#        <span class="errorTips">错误提示信息...</span>#}
-                        {#       </li>#}
+
                         <li>
                             <span class="item_name" style="width:120px;">品牌：</span>
                             <select name="band" class="select">
