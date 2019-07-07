@@ -23,8 +23,7 @@
             </div>
         </div>
         <hr/>
-        <form class="am-form am-form-horizontal" action="{% url 'goods:information' %}" method="post"
-              enctype="multipart/form-data">
+        <form class="am-form am-form-horizontal" action="{% url 'goods:information' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <!--头像 -->
             <div class="user-infoPic">

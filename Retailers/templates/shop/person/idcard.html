@@ -5,10 +5,10 @@
 {% endblock %}
 {% block head %}
 
-        <link href="{% static 'shop/AmazeUI-2.4.2/assets/css/admin.css' %}" rel="stylesheet" type="text/css"/>
-        <link href="{% static 'shop/AmazeUI-2.4.2/assets/css/amazeui.css' %}" rel="stylesheet" type="text/css"/>
-        <link href="{% static 'shop/css/personal.css' %}" rel="stylesheet" type="text/css"/>
-        <link href="{% static 'shop/css/stepstyle.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'shop/AmazeUI-2.4.2/assets/css/admin.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'shop/AmazeUI-2.4.2/assets/css/amazeui.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'shop/css/personal.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'shop/css/stepstyle.css' %}" rel="stylesheet" type="text/css"/>
 
 
 {% endblock %}
@@ -16,65 +16,175 @@
 {% block content %}
 
     <div class="am-cf am-padding">
-						<div class="am-fl am-cf"><strong class="am-text-danger am-text-lg">实名认证</strong> / <small>Real&nbsp;authentication</small></div>
-					</div>
-					<hr/>
-					<div class="authentication">
-						<p class="tip">请填写您身份证上的真实信息，以用于报关审核</p>
-						<div class="authenticationInfo">
-							<p class="title">填写个人信息</p>
+        <div class="am-fl am-cf"><strong class="am-text-danger am-text-lg">实名认证</strong> /
+            <small>Real&nbsp;authentication</small>
+        </div>
+    </div>
+    <hr/>
+    <div class="authentication">
+        <p class="tip">请填写您身份证上的真实信息，以用于报关审核</p>
+        <div class="authenticationInfo">
+            <p class="title">填写个人信息</p>
+            <form action="{% url 'goods:idcard' %}" enctype="multipart/form-data" method="post">
+                {% csrf_token %}
+                <div class="am-form-group">
+                    <label for="user-name" class="am-form-label">真实姓名</label>
+                    <div class="am-form-content">
+                        <input type="text" id="user-name"
 
-							<div class="am-form-group">
-								<label for="user-name" class="am-form-label">真实姓名</label>
-								<div class="am-form-content">
-									<input type="text" id="user-name" placeholder="请输入您的真实姓名">
-								</div>
-							</div>
-							<div class="am-form-group">
-								<label for="user-IDcard" class="am-form-label">身份证号</label>
-								<div class="am-form-content">
-									<input type="tel" id="user-IDcard" placeholder="请输入您的身份证信息">
-								</div>
-							</div>
-						</div>
-						<div class="authenticationPic">
-							<p class="title">上传身份证照片</p>
-							<p class="tip">请按要求上传身份证</p>
-							<ul class="cardlist">
-								<li>
-									<div class="cardPic">
-										<img src="{% static 'shop/images/cardbg.jpg' %}">
-										<div class="cardText"><i class="am-icon-plus"></i>
-											<p>正面照片</p>
-										</div>
-										<p class="titleText">身份证正面</p>
-									</div>
-									<div class="cardExample">
-										<img src="{% static 'shop/images/cardbg.jpg' %}">
-										<p class="titleText">示例</p>
-									</div>
+                                {% if realname %}
+                               placeholder={{ realname }}
+                                       disabled="disabled"
+                                {% else %}
+                               placeholder="请输入您的真实姓名"
+                                {% endif %}
+                        name="user-name" >
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="user-IDcard" class="am-form-label">身份证号</label>
+                    <div class="am-form-content">
+                        <input type="tel" id="user-IDcard" placeholder="请输入您的身份证信息" name="user-IDcard">
+                    </div>
+                </div>
+        </div>
+        <div class="authenticationPic">
+            <p class="title">上传身份证照片</p>
+            <p class="tip">请按要求上传身份证</p>
+            <ul class="cardlist">
+                <li>
+                    {##}
+                    <div class="cardPic">
+                        <input type="file" id="file" name="file1"/>
+                        <div id="result"><img class="normalFace" src="{% static 'shop/images/cardbg.jpg' %}"
+                                              onclick="fileSelect();"
+                                              id="cropedBigImg">
+                            <div class="cardText">
+                                <i class="am-icon-plus"></i>
+                                <p>正面照片</p>
+                            </div>
+                        </div>
 
-								</li>
-								<li>
-									<div class="cardPic">
-										<img src="{% static 'shop/images/cardbg.jpg' %}">
-										<div class="cardText"><i class="am-icon-plus"></i>
-											<p>背面照片</p>
-										</div>
-										<p class="titleText">身份证背面</p>
-									</div>
-									<div class="cardExample">
-										<img src="{% static 'shop/images/cardbg.jpg' %}">
-										<p class="titleText">示例</p>
-									</div>
+                        <p class="titleText">身份证正面</p>
 
-								</li>
-							</ul>
-						</div>
-						<div class="info-btn">
-							<div class="am-btn am-btn-danger">提交</div>
-						</div>
-					</div>
+                    </div>
+
+                    <script type="text/javascript">
+                        {#function fileSelect() {#}
+                        {#    document.getElementById("file").click();#}
+                        {# }#}
+                        {##}
+                        {#function fileSelected() {#}
+                        {#    // 文件选择后触发次函数#}
+                        {# }#}
+
+
+                        function ProcessFile(e) {
+                            var file = document.getElementById('file').files[0];
+                            {#console.log(file)#}
+                            if (file) {
+                                var reader = new FileReader();
+                                {#console.log(reader)#}
+                                reader.onload = function (event) {
+                                    var txt = event.target.result;
+                                    var img = document.createElement("img");
+                                    img.src = txt;//将图片base64字符串赋值给img的src
+                                    // console.log(txt);
+
+                                    document.getElementById('result').innerHTML = '';
+
+                                    document.getElementById("result").appendChild(img);
+                                };
+                            }
+                            reader.readAsDataURL(file);
+                        }
+
+
+                        function ProcessFilee(e) {
+
+                            var file2 = document.getElementById('file2').files[0];
+                            {#console.log(file2);#}
+                            if (file2) {
+                                var reader2 = new FileReader();
+                                {#console.log(reader2)#}
+                                reader2.onload = function (event) {
+                                    {#console.log('123');#}
+                                    var txt = event.target.result;
+                                    var img = document.createElement("img");
+                                    img.src = txt;//将图片base64字符串赋值给img的src
+
+                                    document.getElementById('result2').innerHTML = '';
+
+                                    document.getElementById("result2").appendChild(img);
+                                    {#console.log(txt)#}
+                                };
+                            }
+                            reader2.readAsDataURL(file2);
+                        }
+
+                        function contentLoaded() {
+                            document.getElementById('file').addEventListener('change', ProcessFile, false);
+                            document.getElementById('file2').addEventListener('change', ProcessFilee, false);
+                        }
+
+                        window.addEventListener("DOMContentLoaded", contentLoaded, false);
+
+                    </script>
+
+
+                    <div class="cardExample">
+                        <img src="{% static 'shop/images/timg.jpeg' %}">
+                        <p class="titleText">示例</p>
+                    </div>
+
+                </li>
+                <li>
+                    <div class="cardPic">
+                        <input type="file" id="file2" name="file2"/>
+                        <div id="result2"><img class="normalFace" src="{% static 'shop/images/cardbg.jpg' %}"
+                                               id="cropedBigImg">
+                            <div class="cardText">
+                                <i class="am-icon-plus"></i>
+                                <p>反面照片</p>
+                            </div>
+                        </div>
+
+                        <p class="titleText">身份证反面</p>
+                    </div>
+                    <div class="cardExample">
+                        <img src="{% static 'shop/images/timg (1).jpeg' %}">
+                        <p class="titleText">示例</p>
+                    </div>
+
+                    <script type="text/javascript">
+
+
+                    </script>
+
+                </li>
+            </ul>
+        </div>
+        <div class="info-btn">
+            <input type="submit" value="提交" style="
+    width: 270px; /* 宽度 */
+	height: 40px; /* 高度 */
+	border-width: 0px; /* 边框宽度 */
+	border-radius: 3px; /* 边框半径 */
+	background: #dd514c; /* 背景颜色 */
+	cursor: pointer; /* 鼠标移入按钮范围时出现手势 */
+	outline: none; /* 不显示轮廓线 */
+	font-family: Microsoft YaHei; /* 设置字体 */
+	color: white; /* 字体颜色 */
+	font-size: 17px; /* 字体大小 */
+	text-align:center
+
+">
+            {% if data %}
+                {{ data }}
+            {% endif %}
+        </div>
+        </form>
+    </div>
 {% endblock %}
 {##}
 {#<!DOCTYPE html>#}
