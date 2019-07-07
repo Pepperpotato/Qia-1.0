@@ -17,6 +17,8 @@ class User(models.Model):
     user_type = models.IntegerField(default=0, null=True)   # 用户类型 0为普通用户 1为管理员
     certificate = models.CharField(max_length=20, null=True)   # 证件类型
     certificate_id = models.CharField(max_length=20, null=True)    # 证件号码
+    certificate_top = models.CharField(max_length=200, null=True)  # 身份证正面
+    certificate_down = models.CharField(max_length=200, null=True)  # 身份证反面
     phone_number = models.CharField(max_length=20, null=True)  # 手机号码
     email = models.CharField(max_length=50, null=True)     # 邮箱
     sex = models.CharField(choices=((1, "男"), (2, "女"), (0, "保密")), default=1, max_length=5)   # 性别
