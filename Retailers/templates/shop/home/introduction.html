@@ -249,7 +249,8 @@
 														<div class="cart-title">口味</div>
 														<ul>
                                                             {% for at in attrnum %}
-															<li class="sku-line">{{ at.smallclassesattribute }}<i></i></li>
+															<li id="kouwei" class="sku-line" value="{{ at.id }}">{{ at.smallclassesattribute }}<i></i></li>
+{#                                                                <input type="hidden" value="">#}
                                                             {% endfor %}
 														</ul>
 													</div>
@@ -259,12 +260,8 @@
                                                             {% for n in norm %}
                                                                 {% for m in normall %}
                                                                 {% if n.specification_id == m.id  %}
-															<li onclick="load()" class="sku-line">{{ m.specification }}<i></i></li>
-                                                                    <div id="myDiv">111</div>
-                                                                    <script>
-                                                                        var r
-                                                                    r =24
-															</script>
+															<li id="fenliang" class="sku-line" value="{{ m.id }}">{{ m.specification }}<i></i></li>
+                                                                    <script>alert({{ m.id }})</script>
                                                             {% endif %}
                                                                     {% endfor %}
                                                             {% endfor %}
@@ -273,35 +270,26 @@
 
 
                                                     <script>
-
-                                                        function createXMLHttpRequest(){
-                                                            if(window.ActiveXObject){
-                                                                    xmlHttpRequest = new ActiveXObject("Microsoft.XMLHTTP")
-                                                                }
-                                                            else if(window.XMLHttpRequest){
-                                                                    xmlHttpRequest = new XMLHttpRequest();
-                                                                }
-                                                            xmlHttpRequest.open('POST','order/intro')
-                                                            xmlHttpRequest.setRequestHeader('')
-                                                            }
-                                                        function load(){
-                                                            if(xmlHttpRequest.readyState == 4){
-                                                                if(xmlHttpRequest.status == 200 || xmlHttpRequest.status == 0){
-                                                                    var node = document.getElementById('myDiv');
-                                                                    node.firstChild.nodeValue = xmlHttpRequest.responseText;
-                                                                }
-                                                                else{
-                                                                    alert("error")
-                                                                }
-                                                            }
-                                                        }
-                                                        function  getData(name,value) {
-                                                            createXMLHttpRequest();
-                                                            if(xmlHttpRequest!=null){
-                                                                xmlHttpRequest.open('POST','{% url 'order:intro' %}')
-                                                            }
-                                                        }
-
+                                                        {#$('.sku-line').click(function(){#}
+                                                        {#    sku_id=$(this).attr('sku_line');#}
+                                                        {#    count = $('#text_box').val();#}
+                                                        {#    csrf=$('input[name="csrfmiddlewaretoken"]').val();#}
+                                                        {#     alert (sku_id+':'+count);#}
+                                                        {#    params = {'sku_id':sku_id,'count':count,"csrfmiddlewaretoken":csrf};#}
+                                                        {#    $.get('/order/intro/{{ sku_id }}/{{ count }}/0/',function (data) {#}
+                                                        {#        $('')#}
+                                                        {##}
+                                                        {#    })#}
+                                                        $(document).ready(function () {
+                                                            $('#fenliang').click(function () {
+                                                                {#var kw = $('#kouwei').val();#}
+                                                                var fl = $('#fenliang').val();
+                                                                console.log(fl)
+                                                                $.get('/order/intro/{{ detail.Goodsid }}/0/'+fl+'/0/',function (data){
+                                                                    console.log(data.fl)
+                                                                })
+                                                            })
+                                                        })
                                                     </script>
 
 

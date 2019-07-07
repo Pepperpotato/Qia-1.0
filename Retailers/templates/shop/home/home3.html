@@ -335,13 +335,15 @@
                         {% for it in v %}
                                     <li>
                                         <div class="list ">
-                                            <a href="/order/intro/{{ k }}/{{ it.smallclassesid }}/{{ it.gid }}/">
+                                            <a href="/order/intro/{{ it.gid }}/0/0/0/">
 
                                                 <img src=" /static{{ it.picture }} "/>
                                                 <div class="pro-title ">{{ it.gname }}</div>
                                                 {% for p in price %}
                                                     {% if p.gid == it.gid%}
+                                                        {% if p.is_show %}
                                                     <span class="e-price ">{{ p.price }}</span>
+                                                            {% endif %}
                                                     {% endif %}
 
                                                 {% endfor %}
