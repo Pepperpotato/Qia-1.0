@@ -28,9 +28,6 @@ from django.core.mail import send_mail
 def frame(request):
     return render(request,'shop/frame.html')
 
-# 地址管理
-def address(request):
-    return render(request,'shop/person/address.html')
 
 # 账单
 def bill(request):
@@ -80,14 +77,9 @@ def consultation(request):
 def coupon(request):
     return render(request,'shop/person/coupon.html')
 
-
-
 # 我的足迹
 def foot(request):
     return render(request,'shop/person/foot.html')
-
-
-
 
 # 物流信息
 def logistics(request):
@@ -113,10 +105,6 @@ def pointnew(request):
 # 积分明细
 def points(request):
     return render(request,'shop/person/points.html')
-
-# 安全问题
-def question(request):
-    return render(request,'shop/person/question.html')
 
 # 钱款去向
 def record(request):
@@ -226,6 +214,8 @@ def register(request):
                 User_grade.objects.create(change_source='首次注册系统赠送',change_number=100,changed_grade=100,growth_value=100,uid_id=uid)
                 # 用户账户信息表
                 User_account.objects.create(user_id=uid)
+                # 用户地址表
+                User_address.objects.create(uid_id=uid)
                 # 保存session数据
                 request.session['email']=email
                 # 发送激活邮件
@@ -283,11 +273,11 @@ def register(request):
             # 获取新用户的uid
             uid = User.objects.filter(phone_number=phone)[0].uid
             # 用户首次注册赠送100积分
-            User_grade.objects.create(change_source='首次注册系统赠送', change_number=100, changed_grade=100, growth_value=100,
-                                      uid_id=uid)
-
+            User_grade.objects.create(change_source='首次注册系统赠送', change_number=100, changed_grade=100, growth_value=100,uid_id=uid)
             # 用户账户信息表
             User_account.objects.create(user_id=uid)
+            # 用户地址表
+            User_address.objects.create(uid_id=uid)
             # # 保存session数据
             request.session['phone'] = phone
             # # 验证成功跳转到首页
@@ -472,15 +462,12 @@ def information(request):
             # photo 是表单中文件上传的name
             file = request.FILES.get('picture')
             if file:
-
                 # 文件路径
                 path = os.path.join(settings.MEDIA_ROOT, file.name)
-
                 # 文件类型过滤
                 ext = os.path.splitext(file.name)
                 if len(ext) < 1 or not ext[1] in settings.ALLOWED_FILEEXTS:
                     return redirect(reverse('upload'))
-
                 # 解决文件重名
                 if os.path.exists(path):
                     # 日期目录
@@ -488,7 +475,6 @@ def information(request):
                     dir = os.path.join(settings.MEDIA_ROOT, dir)
                     if not os.path.exists(dir):
                         os.makedirs(dir)  # 递归创建目录
-
                     # list.png
                     file_name = ext[0] + datetime.today().strftime("%Y%m%d%H%M%S") + str(randint(1, 1000)) + ext[1] if len(
                         ext) > 1 else ''
@@ -498,7 +484,6 @@ def information(request):
                     # print(pathh[1])
                     user.user_photo=pathh[1]
                     user.save()
-
                 # 创建新文件
                 with open(path, 'wb') as fp:
                     # 如果文件超过2.5M,则分块读写
@@ -507,7 +492,6 @@ def information(request):
                             fp.write(block1)
                     else:
                         fp.write(file.read())
-
             username = request.POST.get('user-name')
             realname = request.POST.get('realname')
             sex = request.POST.get('radio10')
@@ -752,6 +736,7 @@ def idcard(request):
     username=request.session.get('username')
     realname=User.objects.filter(username=username)[0].realname
     user=User.objects.filter(username=username)[0]
+    certificateid=user.certificate_id
     if request.method=="POST":
         realnam=request.POST.get('user-name')
         if realnam:
@@ -797,7 +782,6 @@ def idcard(request):
                         fp.write(block1)
                 else:
                     fp.write(file.read())
-
                 # photo 是表单中文件上传的name
                 file2 = request.FILES.get('file2')
                 if file2:
@@ -838,4 +822,48 @@ def idcard(request):
 
     return render(request,'shop/person/idcard.html',context={
         'realname':realname,
+        'certificateid':certificateid,
+    })
+
+# 安全问题
+def question(request):
+    username=request.session.get('username')
+    user=User.objects.filter(username=username)
+    if request.method =="POST":
+        question1 = request.POST.get('question1')
+        answer1 = request.POST.get('answer1')
+        question2 = request.POST.get('question2')
+        answer2 = request.POST.get('answer2')
+        # print(question1,answer1,question2,answer2)
+        if user:
+            user[0].question1=question1
+            user[0].question2=question2
+            user[0].answer1=answer1
+            user[0].answer2=answer2
+            user[0].save()
+    return render(request,'shop/person/question.html')
+
+# 地址管理
+def address(request):
+    username=request.session.get('username')
+    user=User.objects.filter(username=username)[0]
+    address=user.user_address_set.all()
+    # print(address)
+    aid=request.GET.get('aid')
+    dell=request.GET.get('del')
+    if aid:
+        # 取消原有默认地址
+        userr=user.user_address_set.filter(default_address=1)[0]
+        userr.default_address=0
+        userr.save()
+        # 设置新的默认地址
+        userr=user.user_address_set.filter(aid=aid)[0]
+        userr.default_address = 1
+        userr.save()
+    if dell:
+        useraddress = user.user_address_set.filter(pk=dell)
+        useraddress.delete()
+        return HttpResponse(json.dumps({'data': '删除成功'}), content_type='application/json')
+    return render(request,'shop/person/address.html',context={
+        'address':address,
     })

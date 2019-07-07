@@ -38,7 +38,7 @@
                                 {% else %}
                                placeholder="请输入您的真实姓名"
                                 {% endif %}
-                        name="user-name" >
+                               name="user-name">
                     </div>
                 </div>
                 <div class="am-form-group">
@@ -165,7 +165,7 @@
             </ul>
         </div>
         <div class="info-btn">
-            <input type="submit" value="提交" style="
+            <input type="submit" style="
     width: 270px; /* 宽度 */
 	height: 40px; /* 高度 */
 	border-width: 0px; /* 边框宽度 */
@@ -178,7 +178,13 @@
 	font-size: 17px; /* 字体大小 */
 	text-align:center
 
-">
+"
+                    {% if certificateid %}
+                        value="您已实名认证"
+                        disabled="disabled"
+                    {% else %}
+                   value="提交"
+                    {% endif %}>
             {% if data %}
                 {{ data }}
             {% endif %}

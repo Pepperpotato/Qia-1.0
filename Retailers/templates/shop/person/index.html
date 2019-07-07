@@ -327,22 +327,22 @@
                                 <button class="btnReceive" style="border-width:0px" id="{{ goodscoupon.id }}" name="ll"
 
                                         {% for goodoffer in account.goodoffer_id %}
-                                            {% if goodoffer == '1'  %}
+                                            {% if goodoffer == '1' %}
                                                 {% if goodscoupon.id == 1 %}
-                                                    disabled="disabled"
+                                        disabled="disabled"
                                                 {% endif %}
                                             {% endif %}
-                                            {% if goodoffer == '2'  %}
+                                            {% if goodoffer == '2' %}
                                                 {% if goodscoupon.id == 2 %}
-                                                    disabled="disabled"
+                                        disabled="disabled"
                                                 {% endif %}
                                             {% endif %}
                                         {% endfor %}
-{#                                        {% for goodoffer in account.goodoffer_id %}#}
-{#                                            {% if goodoffer == '2' %}#}
-{#                                        disabled="disabled"#}
-{#                                            {% endif %}#}
-{#                                        {% endfor %}#}
+                                        {#                                        {% for goodoffer in account.goodoffer_id %}#}
+                                        {#                                            {% if goodoffer == '2' %}#}
+                                        {#                                        disabled="disabled"#}
+                                        {#                                            {% endif %}#}
+                                        {#                                        {% endfor %}#}
 
 
                                 >立即领取

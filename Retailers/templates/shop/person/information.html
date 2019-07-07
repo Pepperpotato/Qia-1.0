@@ -23,7 +23,8 @@
             </div>
         </div>
         <hr/>
-        <form class="am-form am-form-horizontal" action="{% url 'goods:information' %}" method="post" enctype="multipart/form-data">
+        <form class="am-form am-form-horizontal" action="{% url 'goods:information' %}" method="post"
+              enctype="multipart/form-data">
             {% csrf_token %}
             <!--头像 -->
             <div class="user-infoPic">
@@ -51,22 +52,15 @@
 
 
                 <div class="am-form-group">
+
                     <label for="user-name2" class="am-form-label">昵称</label>
                     <div class="am-form-content">
                         <input type="text" name="user-name" id="user-name2" placeholder="{{ user.username }}"
-
-
-
                                 {% if  user.username %}
-
                                disabled="disabled"
-
                                 {% endif %}
-
-
-
                         >
-                        <small>昵称长度不能超过40个汉字</small>
+                        <small style="color: red">*昵称长度不能超过40个汉字,昵称为必填项</small>
                     </div>
                 </div>
 
@@ -282,10 +276,10 @@
     </div>
 
     <style type="text/css">
-#login-button:hover { /* 鼠标移入按钮范围时改变颜色 */
-	background: #5599FF;
-}
-</style>
+        #login-button:hover { /* 鼠标移入按钮范围时改变颜色 */
+            background: #5599FF;
+        }
+    </style>
 
 
 {% endblock %}
