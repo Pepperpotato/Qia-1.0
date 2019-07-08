@@ -296,7 +296,7 @@
         </div>
         <div class="theme-signin-right">
             <div class="img-info">
-                <img src="../images/songzi.jpg"/>
+                <img src="/static/shop/images/songzi.jpg"/>
             </div>
             <div class="text-info">
                 <span class="J_Price price-now">¥39.00</span>
@@ -335,13 +335,13 @@
 
 <div class="pay">
     <div class="pay-opt">
-        <a href="home.html"><span class="am-icon-home am-icon-fw">首页</span></a>
+        <a href="{% url 'order:home' %}"><span class="am-icon-home am-icon-fw">首页</span></a>
         <a><span class="am-icon-heart am-icon-fw">收藏</span></a>
 
     </div>
     <li>
         <div class="clearfix tb-btn tb-btn-buy theme-login">
-            <a id="LikBuy" title="点此按钮到下一步确认购买信息" href="{% url 'order:purchase' %}">立即购买</a>
+            <a id="LikBuy" title="点此按钮到下一步确认购买信息"  href="#">立即购买</a>
         </div>
     </li>
     <li>
@@ -373,7 +373,7 @@
         <ul class="like_list">
             <li>
                 <div class="s_picBox">
-                    <a class="s_pic" href="#"><img src="../images/cp.jpg"></a>
+                    <a class="s_pic" href="#"><img src="/static/shop/images/cp.jpg"></a>
                 </div>
                 <a class="txt" target="_blank" href="#">萨拉米 1+1小鸡腿</a>
                 <div class="info-box"><span class="info-box-price">¥ 29.90</span> <span class="info-original-price">￥ 199.00</span>
@@ -382,7 +382,7 @@
             <li class="plus_icon"><i>+</i></li>
             <li>
                 <div class="s_picBox">
-                    <a class="s_pic" href="#"><img src="../images/cp2.jpg"></a>
+                    <a class="s_pic" href="#"><img src="/static/shop/images/cp2.jpg"></a>
                 </div>
                 <a class="txt" target="_blank" href="#">ZEK 原味海苔</a>
                 <div class="info-box"><span class="info-box-price">¥ 8.90</span> <span class="info-original-price">￥ 299.00</span>
@@ -411,7 +411,7 @@
 
                 <li class="first">
                     <div class="p-img">
-                        <a href="#"> <img class="" src="../images/browse1.jpg"> </a>
+                        <a href="#"> <img class="" src="/static/shop/images/browse1.jpg"> </a>
                     </div>
                     <div class="p-name"><a href="#">
                         【三只松鼠_开口松子】零食坚果特产炒货东北红松子原味
@@ -421,7 +421,7 @@
                 </li>
                 <li>
                     <div class="p-img">
-                        <a href="#"> <img class="" src="../images/browse1.jpg"> </a>
+                        <a href="#"> <img class="" src="/static/shop/images/browse1.jpg"> </a>
                     </div>
                     <div class="p-name"><a href="#">
                         【三只松鼠_开口松子】零食坚果特产炒货东北红松子原味
@@ -431,7 +431,7 @@
                 </li>
                 <li>
                     <div class="p-img">
-                        <a href="#"> <img class="" src="../images/browse1.jpg"> </a>
+                        <a href="#"> <img class="" src="/static/shop/images/browse1.jpg"> </a>
                     </div>
                     <div class="p-name"><a href="#">
                         【三只松鼠_开口松子】零食坚果特产炒货东北红松子原味
@@ -441,7 +441,7 @@
                 </li>
                 <li>
                     <div class="p-img">
-                        <a href="#"> <img class="" src="../images/browse1.jpg"> </a>
+                        <a href="#"> <img class="" src="/static/shop/images/browse1.jpg"> </a>
                     </div>
                     <div class="p-name"><a href="#">
                         【三只松鼠_开口松子】零食坚果特产炒货东北红松子原味
@@ -451,7 +451,7 @@
                 </li>
                 <li>
                     <div class="p-img">
-                        <a href="#"> <img class="" src="../images/browse1.jpg"> </a>
+                        <a href="#"> <img class="" src="/static/shop/images/browse1.jpg"> </a>
                     </div>
                     <div class="p-name"><a href="#">
                         【三只松鼠_开口松子218g】零食坚果特产炒货东北红松子原味
@@ -496,16 +496,16 @@
                             <h4>产品参数：</h4></div>
                         <div class="clear"></div>
                         <ul id="J_AttrUL">
-                            <li title="">产品类型:&nbsp;烘炒类</li>
-                            <li title="">原料产地:&nbsp;巴基斯坦</li>
-                            <li title="">产地:&nbsp;湖北省武汉市</li>
-                            <li title="">配料表:&nbsp;进口松子、食用盐</li>
-                            <li title="">产品规格:&nbsp;210g</li>
-                            <li title="">保质期:&nbsp;180天</li>
-                            <li title="">产品标准号:&nbsp;GB/T 22165</li>
-                            <li title="">生产许可证编号：&nbsp;QS4201 1801 0226</li>
-                            <li title="">储存方法：&nbsp;请放置于常温、阴凉、通风、干燥处保存</li>
-                            <li title="">食用方法：&nbsp;开袋去壳即食</li>
+                            <li title="">产品类型:&nbsp;{{ detail.productclass }}</li>
+                            <li title="">原料产地:&nbsp;{{ detail.rawmaterial }}</li>
+                            <li title="">产地:&nbsp;{{ detail.origin }}</li>
+                            <li title="">配料表:&nbsp;{{ detail.ingredients }}</li>
+                            <li title="">产品规格:&nbsp;{{ detail.productspecification }}</li>
+                            <li title="">保质期:&nbsp;{{ detail.shelflife }}</li>
+                            <li title="">产品标准号:&nbsp;{{ detail.productstandardnumber }}</li>
+                            <li title="">生产许可证编号：&nbsp;{{ detail.productionlicensenumber }}</li>
+                            <li title="">储存方法：&nbsp;{{ detail.storeway }}</li>
+                            <li title="">食用方法：&nbsp;{{ detail.eatway }}</li>
                         </ul>
                         <div class="clear"></div>
                     </div>
@@ -515,13 +515,13 @@
                             <h4>商品细节</h4>
                         </div>
                         <div class="twlistNews">
-                            <img src="../images/tw1.jpg"/>
-                            <img src="../images/tw2.jpg"/>
-                            <img src="../images/tw3.jpg"/>
-                            <img src="../images/tw4.jpg"/>
-                            <img src="../images/tw5.jpg"/>
-                            <img src="../images/tw6.jpg"/>
-                            <img src="../images/tw7.jpg"/>
+                            <img src="/static{{ detail.picture1 }}"/>
+                            <img src="/static{{ detail.picture2 }}"/>
+                            <img src="/static{{ detail.picture3 }}"/>
+                            <img src="/static{{ detail.picture4 }}"/>
+                            <img src="/static{{ detail.picture5 }}"/>
+                            <img src="/static{{ detail.picture6 }}"/>
+                            <img src="/static{{ detail.picture7 }}"/>
                         </div>
                     </div>
                     <div class="clear"></div>

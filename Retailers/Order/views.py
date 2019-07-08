@@ -5,6 +5,7 @@ from django.template import loader
 from django.urls import reverse
 
 from Goods.models import CommodityCategories, CommodityBrand, Goods, Goodsdetails, CommodityCategoriesTwo, Specification
+from User.models import User_address
 
 from .models import Mobilecount
 from django.db import connection
@@ -62,8 +63,20 @@ def intro(request,goodid):
     return render(request,'shop/home/introduction.html',context={'detail': detail, 'inven':inven,'num':1,'goods': goods, 'attr': attr, 'attrnum': attrnum, 'norm': norm, 'normall': normall})
 
 
-def purchase(request):
-    return render(request,'shop/home/pay.html')
+# def purchase(request):
+#     if request.method == "POST":
+#         fenliang_value = request.POST.get("fenliang_value")
+#         kouwei_value = request.POST.get("kouwei_value")
+#         goodid = request.POST.get("goodid")
+#         count = request.POST.get("count")
+#
+#         print('+++++++++++++++++++++++')
+#         data = {
+#
+#
+#         }
+#         return JsonResponse(data)
+#     return render(request,'shop/home/pay.html')
 
 
 def price_change(request):
@@ -72,33 +85,52 @@ def price_change(request):
         kouwei_value = request.POST.get("kouwei_value")
         goodid = request.POST.get("goodid")
         norm = Specification.objects.get(specification=fenliang_value)
+
         count = request.POST.get("count")
+        fenliang = Specification.objects.get(specification=fenliang_value)
+        attr = CommodityCategoriesTwo.objects.get(gid=goodid, specification_id=fenliang.id,smallclassesattribute=kouwei_value)
         price = CommodityCategoriesTwo.objects.get(gid=goodid,smallclassesattribute=kouwei_value,specification_id=norm.id)
-        print(price,price.price,'++++++++++++++++++++++++++++++++')
 
         if price:
             total_count = price.inventory
 
             data = {
                 "total_price":price.price,
-                "total_count":total_count
+                "total_count":total_count,
+                'goods': attr.id,
+                'count': count
             }
             return JsonResponse(data)
         else:
             data = {
                 "total_price": '',
-                "total_count": 0
+                "total_count": 0,
+                'goods': attr.id,
+                'count': count
             }
             return JsonResponse(data)
 
 
-def add_cart(request):
-    if request.method == "POST":
-        fenliang_value = request.POST.get("fenliang_value")
-        kouwei_value = request.POST.get("kouwei_value")
-        goodid = request.POST.get("goodid")
-        count = request.POST.get("count")
-        data = {
-            'emm':count
-        }
-        return JsonResponse(data)
+# def add_cart(request):
+#     if request.method == "POST":
+#         fenliang_value = request.POST.get("fenliang_value")
+#         kouwei_value = request.POST.get("kouwei_value")
+#         goodid = request.POST.get("goodid")
+#         count = request.POST.get("count")
+#         data = {
+#             'emm':count
+#         }
+#         return JsonResponse(data)
+
+
+def pay(request,commodityid,count):
+    userid = User.objects.get(username = request.session.get('username')).uid
+    address = User_address.objects.filter(uid_id = userid)
+
+
+    commodity = CommodityCategoriesTwo.objects.get(id=commodityid)
+    goods = Goods.objects.get(gid=commodity.gid)
+    norm = Specification.objects.get(id=commodity.specification_id)
+    total_price = int(commodity.price)*int(count)
+    total=total_price+10
+    return render(request,'shop/home/pay.html',context={'address':address,'goods':goods,'commodity':commodity,'count':count,'norm':norm,'total_price':total_price,'total':total})

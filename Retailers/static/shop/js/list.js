@@ -49,6 +49,13 @@ $(function() {
 						$("#cuxiaojia").text(total_price);
 						// $("#cuxiaojia").val(total_price);
 						$("#kucunliang").text(total_count);
+						var commodityid = data.goods;
+					 	var count = $("#text_box").val();
+					 	// $('#LikBuy').click(function (ev) {
+						// 	ev.preventDefault()
+						//
+						// })
+						 $('#LikBuy').attr('href','/order/pay/'+commodityid+'/'+count+'/')
 						// $("#kucunliang").val(total_count);
 				 }
 				})
