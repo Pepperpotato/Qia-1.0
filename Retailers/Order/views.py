@@ -58,7 +58,7 @@ def intro(request,goodid):
 
 
     print("attrnum",attrnum)
-    res = temp.render(context={'detail': detail, 'inven':inven,'goods': goods, 'attr': attr, 'attrnum': attrnum, 'norm': norm, 'normall': normall})
+    res = temp.render(context={'detail': detail, 'inven':inven,'num':1,'goods': goods, 'attr': attr, 'attrnum': attrnum, 'norm': norm, 'normall': normall})
     return HttpResponse(res)
 
 
@@ -79,14 +79,30 @@ def price_change(request):
         count = request.POST.get("count")
         price = CommodityCategoriesTwo.objects.get(gid=goodid,smallclassesattribute=kouwei_value,specification_id=norm.id)
         print(price,price.price,'++++++++++++++++++++++++++++++++')
-        total_price = int(count)*int(price.price)
-        total_count = price.inventory
 
+        if price:
+            total_count = price.inventory
+
+            data = {
+                "total_price":price.price,
+                "total_count":total_count
+            }
+            return JsonResponse(data)
+        else:
+            data = {
+                "total_price": '',
+                "total_count": 0
+            }
+            return JsonResponse(data)
+
+
+def add_cart(request):
+    if request.method == "POST":
+        fenliang_value = request.POST.get("fenliang_value")
+        kouwei_value = request.POST.get("kouwei_value")
+        goodid = request.POST.get("goodid")
+        count = request.POST.get("count")
         data = {
-            "total_price":total_price,
-            "total_count":total_count
+            'emm':count
         }
         return JsonResponse(data)
-    else:
-        print("nonoo")
-

@@ -28,8 +28,19 @@
         <ul class="message-l">
             <div class="topMessage">
                 <div class="menu-hd">
-                    <a href="{% url "goods:login" %}" target="_top" class="h">亲，请登录</a>
-                    <a href="{% url "goods:register" %}" target="_top">免费注册</a>
+                    {% if session %}
+                            <a href="{% url 'goods:login' %}" target="_top" class="h">亲，请登录</a>
+                            <a href="{% url 'goods:register' %}" target="_top">免费注册</a>
+                            {% else %}
+                                欢迎{% if request.session.username %}
+                                {{ request.session.username }}
+                                {% elif request.session.email %}
+                                {{ request.session.email }}
+                            {% elif request.session.phone %}
+                                {{ request.session.phone }}
+                                {% endif %}
+                               <a href="{% url 'goods:sc' %}" target="_top" class="h">退出</a>
+                            {% endif %}
                 </div>
             </div>
         </ul>

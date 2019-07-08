@@ -159,7 +159,7 @@ EXCLUDE_URL =  (
      '/goods/login/',
      '/goods/register/',
     '/goods/auth_code_/',
-    '/order/home',
+    '/order/home/',
 )
 # 分页
 NUMOFPAGE = 5

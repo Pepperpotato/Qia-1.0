@@ -25,8 +25,19 @@
     <ul class="message-l">
         <div class="topMessage">
             <div class="menu-hd">
-                <a href="{% url "goods:login" %}" target="_top" class="h">亲，请登录</a>
-                <a href="{% url "goods:register" %}" target="_top">免费注册</a>
+               {% if session %}
+                            <a href="{% url 'goods:login' %}" target="_top" class="h">亲，请登录</a>
+                            <a href="{% url 'goods:register' %}" target="_top">免费注册</a>
+                            {% else %}
+                                欢迎{% if request.session.username %}
+                                {{ request.session.username }}
+                                {% elif request.session.email %}
+                                {{ request.session.email }}
+                            {% elif request.session.phone %}
+                                {{ request.session.phone }}
+                                {% endif %}
+                               <a href="{% url 'goods:sc' %}" target="_top" class="h">退出</a>
+                            {% endif %}
             </div>
         </div>
     </ul>
@@ -238,7 +249,7 @@
                                             <ul id="kouwei">
                                                 {% for at in attrnum %}
                                                     <li class="sku-line kouwei"
-                                                        value="{{ at.id }}" onclick="price_change()">{{ at.smallclassesattribute }}<i></i></li>
+                                                        >{{ at.smallclassesattribute }}<i></i></li>
                                                     {#                                                                <input type="hidden" value="">#}
                                                 {% endfor %}
                                             </ul>
@@ -251,7 +262,7 @@
                                                     {% for m in normall %}
                                                         {% if n.specification_id == m.id %}
                                                             <li class="sku-line fenliang"
-                                                                value="{{ m.id }}" onclick="price_change()">{{ m.specification }}<i></i></li>
+                                                                 >{{ m.specification }}<i></i></li>
                                                         {% endif %}
                                                     {% endfor %}
                                                 {% endfor %}
@@ -265,9 +276,9 @@
                                         <div class="theme-options">
                                             <div class="cart-title number">数量</div>
                     <dd>
-                        <input id="min" class="am-btn am-btn-default" name="jianhao" type="button"  value="-"/>
-                        <input id="text_box" name="" type="text" value='1' style="width:30px;"/>
-                        <input id="add" class="am-btn am-btn-default" onclick="price_change(this)" name="jiahao" type="button"  value="+"/>
+                        <input id="min" class="am-btn am-btn-default " name="jianhao" type="button"  value="-"/>
+                        <input id="text_box" name="" type="text" value='{{ num }}' style="width:30px;"/>
+                        <input id="add" class="am-btn am-btn-default "  name="jiahao" type="button"  value="+"/>
                         <span id="Stock" class="tb-hidden">库存<span class="stock"  id="kucunliang">{{ inven.inventory }}</span>{{ inven.unit }}</span>
                     </dd>
 
@@ -331,7 +342,16 @@
     </li>
     <li>
         <div class="clearfix tb-btn tb-btn-basket theme-login">
-            <a id="LikBasket" title="加入购物车" href="#"><i></i>加入购物车</a>
+
+
+                            {% if request.session.username %}
+                           <a id="LikBasket" title="加入购物车" onclick="add_cart()" href="#"><i></i>加入购物车</a>
+                            {% else %}
+                            <a id="LikBasket" title="加入购物车" href="{% url "goods:login" %}"><i></i>加入购物车</a>
+
+                           {% endif %}
+
+
         </div>
     </li>
 </div>
@@ -1348,30 +1368,5 @@
 </body>
 
 </html>
-<script>
-    var vm = new Vue({
-        el:'#text_box',
-        data:{
-            num:1
-        },
-        methods:{
-            sub:function(){
-                this.num--
-            },
-            add:function () {
-                this.num++
-            }
-        },
-        watch:{
-            num:function (newVaule,oldValue) {
-                if (newVaule < 0){
-                    this.num = 0
-                }
-                if (newVaule > this.stock) {
-                    this.num = oldValue
-                }
-            }
-        },
 
-    })
 </script>
