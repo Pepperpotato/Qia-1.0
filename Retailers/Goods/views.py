@@ -864,6 +864,12 @@ def address(request):
         useraddress = user.user_address_set.filter(pk=dell)
         useraddress.delete()
         return HttpResponse(json.dumps({'data': '删除成功'}), content_type='application/json')
+    user_name=request.GET.get('user-name')
+    user_phone=request.GET.get('user-phone')
+    cmbProvince=request.GET.get('cmbProvince')
+    cmbProvince=request.GET.get('cmbProvince')
+    cmbProvince=request.GET.get('cmbProvince')
+
     return render(request,'shop/person/address.html',context={
         'address':address,
     })

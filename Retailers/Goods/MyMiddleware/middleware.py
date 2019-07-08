@@ -14,7 +14,9 @@ class AuthMiddleware(MiddlewareMixin):
     def process_request(self, request):
         # pass
         url_path = request.path
-        # print(url_path)
+        print(url_path)
+        if re.match(r'/order/intro/',url_path):
+            return
         # print(EXCLUDE_URL)
         if not url_path in EXCLUDE_URL:
             if request.session.get('username') or request.session.get('email') or request.session.get('phone'):
