@@ -25,7 +25,7 @@
         var json = [
             {#{"name": "{{ day1time | date:"d" }}", "value": "{{ day1view }}"},#}
             {#{"name": "{{ day2time | date:"d" }}", "value": "{{ day2view }}"},#}
-            {#{"name": "{{ day3time | date:"d" }}", "value": "{{ day3view }}"},#}
+            {"name": "{{ day3time | date:"d" }}", "value": "{{ day3view }}"},
             {"name": "{{ day4time | date:"d" }}", "value": "{{ day4view }}"},
             {"name": '{{ day5time | date:"d" }}', "value": '{{ day5view}}'},
             {"name": '{{ day6time | date:"d" }}', "value": '{{ day6view }}'},

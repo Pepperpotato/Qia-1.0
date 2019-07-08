@@ -10,7 +10,6 @@
             <form action="{% url 'admin:addinventory4' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <ul class="ulColumn2">
-
                     <li>
                         <span class="item_name" style="width:120px;">分类：</span>
                         <select name="category" class="select" id="category" style="width: 120px;">
@@ -50,7 +49,7 @@
                     </li>
                     <li>
                         <span class="item_name" style="width:120px;">现有库存：</span>
-                        <input id="inventory" name="inventory" class="textbox textbox_225" type="text" value="请填写数据" readonly />
+                        <input id="inventory" name="inventory" class="textbox textbox_225" type="text" value="..." readonly />
                     </li>
 
                     <li>
@@ -75,9 +74,7 @@
         console.log(Inventory.val());
         var Specification = $('#specification');
         Category.change(function () {
-            console.log(this.value)
             $.post('{% url 'admin:addinventory' %}', {'categoryid': this.value}, function (data) {
-                console.log(data);
                 Goodname.empty();
                 Section.empty();
                 Specification.empty();
@@ -105,9 +102,8 @@
             })
         });
 
-
         Section.change(function () {
-            console.log(this.value);
+
             $.post('{% url 'admin:addinventory2' %}', {'section': this.value}, function(data){
                 Specification.empty();
                 console.log(data);
@@ -122,7 +118,7 @@
 
         Specification.change(function () {
             $.post('{% url 'admin:addinventory3' %}', {'specificationid': this.value}, function(data){
-                console.log(data[0].inventory);
+
                 Inventory.val(data[0].inventory)
             })
         })

@@ -120,7 +120,7 @@ TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
-USE_L10N = False
+USE_L10N = True
 
 USE_TZ = False
 
@@ -183,3 +183,16 @@ EMAIL_TIME=3600
 # 邮件标题
 EMAIL_SUBJECT_ACTIVATIONE="辛姐小吃铺激活邮件"
 EMAIL_SUBJECT_CODE="辛姐小吃铺验证码邮件"
+
+# 全文检索haystack框架配置
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        # 使用whoosh引擎
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        # 索引文件路径
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    }
+}
+
+# 当数据库表 添加、修改、删除数据时，自动生成索引
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'

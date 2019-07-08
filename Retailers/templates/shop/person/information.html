@@ -276,11 +276,22 @@
     </div>
 
     <style type="text/css">
-        #login-button:hover { /* 鼠标移入按钮范围时改变颜色 */
-            background: #5599FF;
-        }
-    </style>
+        {##login-button:hover { /* 鼠标移入按钮范围时改变颜色 */#}
+        {#    background: #5599FF;#}
+        {# };#}
 
+    </style>
+    <script>
+
+        $("#login-button").click(function () {
+            var data=$('#user-name2').val()
+            if (data){
+
+            } else {
+                alert('昵称为必填项')
+            }
+        });
+    </script>
 
 {% endblock %}
 
