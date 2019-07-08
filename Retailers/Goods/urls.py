@@ -86,7 +86,10 @@ urlpatterns = [
     # 注册页面
     url(r'^register/$',views.register,name='register'),
     #删除session
-    url(r'^sc/$',views.sc,name='sc')
+    url(r'^sc/$',views.sc,name='sc'),
+    #搜索路由
+    url(r'^search/(\d+)/$',views.search,name='search1'),
+    url(r'^search/$',views.search,name='search')
 
 ]
 

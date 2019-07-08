@@ -5,6 +5,9 @@ import re
 from datetime import datetime
 from random import randint
 
+from celery import chain
+from django.core.paginator import Paginator
+from django.db import connection
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 
@@ -16,10 +19,10 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 
 from Goods.forms import UserForm1,UserForm2
-from Goods.models import Coupons
+from Goods.models import Coupons, Goods, CommodityCategoriesTwo, CommodityBrand, CommodityCategories
 from Goods.sms import send_sms
 from Retailers import settings
-from Retailers.settings import SMSCONFIG, SMSCONFIGG
+from Retailers.settings import SMSCONFIG, SMSCONFIGG, NUMOFPAGE
 from User.models import User, User_grade, User_address, User_account
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from django.core.mail import send_mail
@@ -878,4 +881,50 @@ def address(request):
 
     return render(request,'shop/person/address.html',context={
         'address':address,
+    })
+
+search_data=None
+# 搜索页面
+def search(request,page=1):
+    dataa=request.POST.get('index_none_header_sysc')
+    # print(dataa)
+    if dataa:
+        global search_data
+        search_data=dataa
+    goods=count=None
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM goodsone g JOIN commodity_categories_two_four c ON g.gid=c.gid WHERE g.keyword LIKE '%{}%' AND c.is_show=1".format(search_data))
+    columns = [col[0] for col in cursor.description]
+    goods = [dict(zip(columns, row)) for row in cursor.fetchall()]
+    count=len(goods)
+    # print(goods)
+    # print(count)
+    paginator = Paginator(goods, NUMOFPAGE)
+    page = int(page)
+
+    pagination = paginator.page(page)
+
+    if paginator.num_pages > 5:
+        # 如果当前页码-5小于0
+        if page - 2 <= 0:
+            customRange = range(1, 6)
+        elif page + 2 > paginator.num_pages:
+            customRange = range(paginator.num_pages - 4, paginator.num_pages + 1)
+        else:
+            customRange = range(page - 2, page + 2)
+    else:  # 页码总数小于10
+        customRange = paginator.page_range
+    # 品牌
+    brand=CommodityBrand.objects.filter().all()
+    # print(brand)
+    # 种类
+    commodity=CommodityCategories.objects.filter()
+    return render(request, 'shop/home/search.html', context={
+        'data': search_data,
+        # 'goods': goods,
+        'count': count,
+        'goods': pagination.object_list,
+        'pagerange': customRange,
+        'pagination': pagination,
+        'brand':brand,
     })

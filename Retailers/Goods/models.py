@@ -6,8 +6,6 @@ from django.db import models
 
 # 商品品牌表2
 from django.utils import timezone
-
-
 class CommodityBrand(models.Model):
     id = models.AutoField(primary_key=True)  #id
     brandname = models.CharField(max_length=20)  #品牌名称
