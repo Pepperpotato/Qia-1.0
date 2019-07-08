@@ -3,10 +3,10 @@
 <html>
 
 <head>
-{% block meta %}
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=0">
-{% endblock %}
+    {% block meta %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=0">
+    {% endblock %}
     {% block title %}
 
     {% endblock %}
@@ -26,18 +26,21 @@
                 <ul class="message-l">
                     <div class="topMessage">
                         <div class="menu-hd">
-                            {% if session %}
-                            <a href="{% url 'goods:login' %}" target="_top" class="h">亲，请登录</a>
-                            <a href="{% url 'goods:register' %}" target="_top">免费注册</a>
-                            {% else %}
-                                欢迎{% if request.session.username %}
-                                {{ request.session.username }}
+                            {% if  'username' in request.session or 'email' in request.session or 'phone' in request.session  %}
+                              欢迎
+                                {% if request.session.username %}
+                                    {{ request.session.username }}
                                 {% elif request.session.email %}
-                                {{ request.session.email }}
-                            {% elif request.session.phone %}
-                                {{ request.session.phone }}
+                                    {{ request.session.email }}
+                                {% elif request.session.phone %}
+                                    {{ request.session.phone }}
                                 {% endif %}
-                               <a href="{% url 'goods:sc' %}" target="_top" class="h">退出</a>
+                                <a href="{% url 'goods:sc' %}" target="_top" class="h">退出</a>
+
+                            {% else %}
+                               <a href="{% url 'goods:login' %}" target="_top" class="h">亲，请登录</a>
+                                <a href="{% url 'goods:register' %}" target="_top">免费注册</a>
+
                             {% endif %}
                         </div>
                     </div>
@@ -105,94 +108,94 @@
 
 {% block blog %}
 
-<div class="center">
-    <div class="col-main">
-        <div class="main-wrap">
-            {% block content %}
+    <div class="center">
+        <div class="col-main">
+            <div class="main-wrap">
+                {% block content %}
 
+                {% endblock %}
+            </div>
+            {% block footer %}
+                <!--底部-->
+                <div class="footer">
+                    <div class="footer-hd">
+                        <p>
+                            <a href="#">恒望科技</a>
+                            <b>|</b>
+                            <a href="#">商城首页</a>
+                            <b>|</b>
+                            <a href="#">支付宝</a>
+                            <b>|</b>
+                            <a href="#">物流</a>
+                        </p>
+                    </div>
+                    <div class="footer-bd">
+                        <p>
+                            <a href="#">关于恒望</a>
+                            <a href="#">合作伙伴</a>
+                            <a href="#">联系我们</a>
+                            <a href="#">网站地图</a>
+                            <em>© 2015-2025 Hengwang.com 版权所有</em>
+                        </p>
+                    </div>
+                </div>
             {% endblock %}
         </div>
-        {% block footer %}
-        <!--底部-->
-        <div class="footer">
-            <div class="footer-hd">
-                <p>
-                    <a href="#">恒望科技</a>
-                    <b>|</b>
-                    <a href="#">商城首页</a>
-                    <b>|</b>
-                    <a href="#">支付宝</a>
-                    <b>|</b>
-                    <a href="#">物流</a>
-                </p>
-            </div>
-            <div class="footer-bd">
-                <p>
-                    <a href="#">关于恒望</a>
-                    <a href="#">合作伙伴</a>
-                    <a href="#">联系我们</a>
-                    <a href="#">网站地图</a>
-                    <em>© 2015-2025 Hengwang.com 版权所有</em>
-                </p>
-            </div>
-        </div>
-        {% endblock %}
+
+        <aside class="menu">
+            <ul>
+                <li class="person active">
+                    <a href="{% url 'goods:index' %}"><i class="am-icon-user"></i>个人中心</a>
+                </li>
+                <li class="person">
+                    <p><i class="am-icon-newspaper-o"></i>个人资料</p>
+                    <ul>
+                        <li><a href="{% url 'goods:information' %}">个人信息</a></li>
+                        <li><a href="{% url 'goods:safety' %}">安全设置</a></li>
+                        <li><a href="{% url 'goods:address' %}">地址管理</a></li>
+                        <li><a href="{% url 'goods:cardlist' %}">快捷支付</a></li>
+                    </ul>
+                </li>
+                <li class="person">
+                    <p><i class="am-icon-balance-scale"></i>我的交易</p>
+                    <ul>
+                        <li><a href="{% url 'goods:order' %}">订单管理</a></li>
+                        <li><a href="{% url 'goods:change' %}">退款售后</a></li>
+                        <li><a href="{% url 'goods:comment' %}">评价商品</a></li>
+                    </ul>
+                </li>
+                <li class="person">
+                    <p><i class="am-icon-dollar"></i>我的资产</p>
+                    <ul>
+                        <li><a href="{% url 'goods:points' %}">我的积分</a></li>
+                        <li><a href="{% url 'goods:coupon' %}">优惠券 </a></li>
+                        <li><a href="{% url 'goods:bonus' %}">红包</a></li>
+                        <li><a href="{% url 'goods:walletlist' %}">账户余额</a></li>
+                        <li><a href="{% url 'goods:bill' %}">账单明细</a></li>
+                    </ul>
+                </li>
+
+                <li class="person">
+                    <p><i class="am-icon-tags"></i>我的收藏</p>
+                    <ul>
+                        <li><a href="{% url 'goods:collection' %}">收藏</a></li>
+                        <li><a href="{% url 'goods:foot' %}">足迹</a></li>
+                    </ul>
+                </li>
+
+                <li class="person">
+                    <p><i class="am-icon-qq"></i>在线客服</p>
+                    <ul>
+                        <li><a href="{% url 'goods:consultation' %}">商品咨询</a></li>
+                        <li><a href="{% url 'goods:suggest' %}">意见反馈</a></li>
+
+                        <li><a href="{% url 'goods:news' %}">我的消息</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+        </aside>
     </div>
-
-    <aside class="menu">
-        <ul>
-            <li class="person active">
-                <a href="{% url 'goods:index' %}"><i class="am-icon-user"></i>个人中心</a>
-            </li>
-            <li class="person">
-                <p><i class="am-icon-newspaper-o"></i>个人资料</p>
-                <ul>
-                    <li><a href="{% url 'goods:information' %}">个人信息</a></li>
-                    <li><a href="{% url 'goods:safety' %}">安全设置</a></li>
-                    <li><a href="{% url 'goods:address' %}">地址管理</a></li>
-                    <li><a href="{% url 'goods:cardlist' %}">快捷支付</a></li>
-                </ul>
-            </li>
-            <li class="person">
-                <p><i class="am-icon-balance-scale"></i>我的交易</p>
-                <ul>
-                    <li><a href="{% url 'goods:order' %}">订单管理</a></li>
-                    <li><a href="{% url 'goods:change' %}">退款售后</a></li>
-                    <li><a href="{% url 'goods:comment' %}">评价商品</a></li>
-                </ul>
-            </li>
-            <li class="person">
-                <p><i class="am-icon-dollar"></i>我的资产</p>
-                <ul>
-                    <li><a href="{% url 'goods:points' %}">我的积分</a></li>
-                    <li><a href="{% url 'goods:coupon' %}">优惠券 </a></li>
-                    <li><a href="{% url 'goods:bonus' %}">红包</a></li>
-                    <li><a href="{% url 'goods:walletlist' %}">账户余额</a></li>
-                    <li><a href="{% url 'goods:bill' %}">账单明细</a></li>
-                </ul>
-            </li>
-
-            <li class="person">
-                <p><i class="am-icon-tags"></i>我的收藏</p>
-                <ul>
-                    <li><a href="{% url 'goods:collection' %}">收藏</a></li>
-                    <li><a href="{% url 'goods:foot' %}">足迹</a></li>
-                </ul>
-            </li>
-
-            <li class="person">
-                <p><i class="am-icon-qq"></i>在线客服</p>
-                <ul>
-                    <li><a href="{% url 'goods:consultation' %}">商品咨询</a></li>
-                    <li><a href="{% url 'goods:suggest' %}">意见反馈</a></li>
-
-                    <li><a href="{% url 'goods:news' %}">我的消息</a></li>
-                </ul>
-            </li>
-        </ul>
-
-    </aside>
-</div>
 {% endblock %}
 </body>
 
