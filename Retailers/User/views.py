@@ -212,47 +212,90 @@ def addband(request):
 @csrf_exempt
 # 添加库存
 def addinventory(request):
+
     if request.is_ajax():
-        brandid = request.POST.get('brandid')
-        if brandid:
-            request.session['brandid'] = brandid
-        with connection.cursor() as cursor:
-            cursor.execute("select categoryname,id as categoryid from commodity_categories_three c join goodsone g on g.smallclassesid=c.id where parentid>0 and brandid=%s", [brandid])
-        columns = [col[0] for col in cursor.description]
-        res = [dict(zip(columns, row)) for row in cursor.fetchall()]
-
-        print(request.POST)
-        bid = request.session.get('brandid')
-
         categoryid = request.POST.get('categoryid')
         if categoryid:
+            # 小类别id 松子
             request.session['categoryid'] = categoryid
         with connection.cursor() as cursor:
-            cursor.execute("select gname,gid from commodity_categories_three c join goodsone g on g.smallclassesid=c.id where parentid>0 and brandid=%s and smallclassesid=%s", [bid, categoryid])
+            cursor.execute("select gname,gid from commodity_categories_three c join goodsone g on g.smallclassesid=c.id where parentid>0 and  smallclassesid=%s", [categoryid])
         columns = [col[0] for col in cursor.description]
         res1 = [dict(zip(columns, row)) for row in cursor.fetchall()]
-
-
+        print(res1)
         if res1:
             return JsonResponse(res1, safe=False)
-        else:
-            return JsonResponse(res, safe=False)
-    commodity_brand = CommodityBrand.objects.all()
-    commodity_categories = CommodityCategories.objects.filter(parentid__gt=0)
 
-    return render(request, 'admin/add_inventory.html',context={
+    commodity_categories = CommodityCategories.objects.filter(parentid__gt=0)
+    commodity_brand = CommodityBrand.objects.all()
+    return render(request, 'admin/add_inventory.html', context={
         'commodity_brand': commodity_brand,
         'commodity_categories': commodity_categories
     })
 
+
 @csrf_exempt
 def addinventory1(request):
-
     if request.is_ajax():
-        gid = request.POST.get('gid')
-        attr = CommodityCategoriesTwo.objects.filter(gid=gid)
-        res = json.dumps(list(attr.values()))
-        return JsonResponse(res, safe=False)
+        brandid = request.POST.get('brandid')
+        if brandid:
+            # 品牌id 良品铺子
+            request.session['brandid'] = brandid
+        cid = int(request.session['categoryid'])
+        with connection.cursor() as cursor:
+            cursor.execute("select distinct smallclassesattribute from goodsone g join commodity_categories_two_four c on g.gid=c.gid where c.smallclassesid=%s", [cid])
+        columns = [col[0] for col in cursor.description]
+        res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        print(res)
+        if res:
+            return JsonResponse(res, safe=False)
+
+@csrf_exempt
+def addinventory2(request):
+    if request.is_ajax():
+        section = request.POST.get('section')
+        if section:
+            # 属性  奶油
+            request.session['section'] = section
+        cid = request.session.get('categoryid')
+        with connection.cursor() as cursor:
+            cursor.execute("select s.id,specification from commodity_categories_two_four c join specification s on c.specification_id=s.id where c.smallclassesid=%s and c.smallclassesattribute=%s", [cid,section])
+        columns = [col[0] for col in cursor.description]
+        res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        print(res)
+        if res:
+            return JsonResponse(res, safe=False)
+
+@csrf_exempt
+def addinventory3(request):
+    if request.is_ajax():
+        specificationid = request.POST.get('specificationid')
+        if specificationid:
+            request.session['specificationid'] = specificationid
+        cid = request.session.get('categoryid')
+        section = request.session.get('section')
+        with connection.cursor() as cursor:
+            cursor.execute("select inventory from commodity_categories_two_four where smallclassesid=%s and smallclassesattribute=%s and specification_id=%s", [cid, section, specificationid])
+        columns = [col[0] for col in cursor.description]
+        res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        print(res)
+        if res:
+            return JsonResponse(res, safe=False)
+
+
+def addinventory4(request):
+    if request.method == 'POST':
+        inventory = request.POST.get('add')
+        print(inventory)
+        cid = request.session.get('categoryid')
+        section = request.session.get('section')
+        specificationid = request.session.get('specificationid')
+        current_id = CommodityCategoriesTwo.objects.values('id').filter(smallclassesid=cid, smallclassesattribute=section, specification_id=specificationid)
+        id = current_id[0]['id']
+        current_good = CommodityCategoriesTwo.objects.get(pk=id)
+        current_good.inventory += int(inventory)
+        current_good.save()
+        return redirect(reverse('admin:productlist'))
 
 
 # 订单列表
