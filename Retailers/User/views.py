@@ -48,9 +48,28 @@ def index(request):
 
     admin_info = User.objects.filter(username=admin)
 
+    user_count = User.objects.count()
+
+    month = datetime.now().month
+    lastmonth = month - 1
+    # 本月订单量
+    order_count = OrderTwenty.objects.filter(ordertime__month=month).count()
+    # 上月订单量
+    lastorder_count = OrderTwenty.objects.filter(ordertime__month=lastmonth).count()
+
+    # 库存不足产品
+    with connection.cursor() as cursor:
+        cursor.execute("select c.gid,g.gname,specification,inventory from goodsone g join commodity_categories_two_four c on g.gid=c.gid join specification s on s.id=c.specification_id where inventory<50")
+    columns = [col[0] for col in cursor.description]
+    res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+    print(res)
     return render(request, 'admin/index.html', context={
         'admin_info': admin_info,
-        'admin': admin
+        'admin': admin,
+        'user_count': user_count,
+        'order_count': order_count,
+        'lastorder_count': lastorder_count,
+        'res': res
     })
 
 
@@ -102,19 +121,6 @@ def productlist(request, page=1):
     })
 
 
-# 添加新商品
-def addnewgood(request):
-
-    # 商品品牌
-    commodity_brand = CommodityBrand.objects.all()
-    commodity_categories = CommodityCategories.objects.all()
-
-    return render(request, 'admin/addnewgood.html', context={
-        'commodity_brand': commodity_brand,
-        'commodity_categories': commodity_categories
-    })
-
-
 # 添加已有类别商品
 def addgood(request):
     if request.method == 'POST':
@@ -142,14 +148,14 @@ def addgood(request):
 
             # 文件路径
             path = os.path.join(settings.MEDIA_ROOT, file.name)
-            print(path)
+
             # 文件类型过滤
             ext = os.path.splitext(file.name)
             if len(ext) < 1 or not ext[1] in settings.ALLOWED_FILEEXTS:
                 return redirect(reverse('admin:addgood'))
 
             pathh = path.split('Retailers/static')
-            print(2222,pathh[1])
+
             goodphoto = pathh[1]
 
             # 创建新文件
@@ -197,6 +203,68 @@ def addgood(request):
     })
 
 
+# 添加新的商品大类别
+@csrf_exempt
+def addbigcategory(request):
+    if request.method == 'POST':
+        newbigcategory = request.POST.get('newbigcategory')
+        check_category = CommodityCategories.objects.filter(categoryname=newbigcategory)
+        if check_category:
+            return JsonResponse({'code': 0, 'data': '大类别已存在，请重新输入'})
+
+        category = CommodityCategories()
+
+        file = request.FILES.get('newpicture')
+
+        if file:
+            # 文件路径
+            path = os.path.join(settings.MEDIA_ROOT, file.name)
+
+            # 文件类型过滤
+            ext = os.path.splitext(file.name)
+            if len(ext) < 1 or not ext[1] in settings.ALLOWED_FILEEXTS:
+                return JsonResponse({'code': 2, 'data': '不允许的图片格式'})
+
+            pathh = path.split('Retailers/static')
+
+            goodphoto = pathh[1]
+            category.picture = goodphoto
+            # 创建新文件
+            with open(path, 'wb') as fp:
+                # 如果文件超过2.5M,则分块读写
+                if file.multiple_chunks():
+                    for block1 in file.chunks():
+                        fp.write(block1)
+                else:
+                    fp.write(file.read())
+
+        category.categoryname = newbigcategory
+        category.parentid = 0
+        category.save()
+        return JsonResponse({'code': 1, 'data': '新大类别已添加'})
+    return render(request, 'admin/add_bigcategory.html')
+
+
+# 添加商品小类别
+def addsmallcategory(request):
+    if request.is_ajax():
+        smallcategory = request.POST.get('smallcategory')
+        bigcategoryid = request.POST.get('bigcategoryid')
+
+        if CommodityCategories.objects.filter(parentid=int(bigcategoryid),categoryname=smallcategory):
+            return JsonResponse({'code': 0, 'data': '新商品小类别已存在，请重新填写'})
+
+        category = CommodityCategories()
+        category.categoryname = smallcategory
+        category.parentid = int(bigcategoryid)
+        category.save()
+        return JsonResponse({'code': 1, 'data': '新商品小类别已储存'})
+    res = CommodityCategories.objects.filter(parentid=0)
+    return render(request, 'admin/add_smallcategory.html', context={
+        'res': res
+    })
+
+
 # 添加商品品牌
 def addband(request):
     if request.method == 'POST':
@@ -222,7 +290,7 @@ def addinventory(request):
             cursor.execute("select gname,gid from commodity_categories_three c join goodsone g on g.smallclassesid=c.id where parentid>0 and  smallclassesid=%s", [categoryid])
         columns = [col[0] for col in cursor.description]
         res1 = [dict(zip(columns, row)) for row in cursor.fetchall()]
-        print(res1)
+
         if res1:
             return JsonResponse(res1, safe=False)
 
@@ -246,7 +314,7 @@ def addinventory1(request):
             cursor.execute("select distinct smallclassesattribute from goodsone g join commodity_categories_two_four c on g.gid=c.gid where c.smallclassesid=%s", [cid])
         columns = [col[0] for col in cursor.description]
         res = [dict(zip(columns, row)) for row in cursor.fetchall()]
-        print(res)
+
         if res:
             return JsonResponse(res, safe=False)
 
@@ -262,7 +330,7 @@ def addinventory2(request):
             cursor.execute("select s.id,specification from commodity_categories_two_four c join specification s on c.specification_id=s.id where c.smallclassesid=%s and c.smallclassesattribute=%s", [cid,section])
         columns = [col[0] for col in cursor.description]
         res = [dict(zip(columns, row)) for row in cursor.fetchall()]
-        print(res)
+
         if res:
             return JsonResponse(res, safe=False)
 
@@ -278,7 +346,7 @@ def addinventory3(request):
             cursor.execute("select inventory from commodity_categories_two_four where smallclassesid=%s and smallclassesattribute=%s and specification_id=%s", [cid, section, specificationid])
         columns = [col[0] for col in cursor.description]
         res = [dict(zip(columns, row)) for row in cursor.fetchall()]
-        print(res)
+
         if res:
             return JsonResponse(res, safe=False)
 
@@ -286,7 +354,7 @@ def addinventory3(request):
 def addinventory4(request):
     if request.method == 'POST':
         inventory = request.POST.get('add')
-        print(inventory)
+
         cid = request.session.get('categoryid')
         section = request.session.get('section')
         specificationid = request.session.get('specificationid')
@@ -344,18 +412,23 @@ def orderdetail(request, id):
         cursor.execute("select * from order_twenty o join user_address a on o.addressid=a.aid join express_company e on e.id=o.expressbrandid join orderchild_twentyone t on o.id=t.orderid where o.id=%s", [id])
     columns = [col[0] for col in cursor.description]
     res = [dict(zip(columns, row)) for row in cursor.fetchall()]
-    print(res)
-    # buy_what = OrderchildTwentyone.objects.filter(orderid=id)
-    # print(111111,buy_what)
+
+
     with connection.cursor() as cursor:
         cursor.execute("select * from orderchild_twentyone t join goodsone g on t.goodid=g.gid where t.orderid=%s", [id])
     columns = [col[0] for col in cursor.description]
     buy_what = [dict(zip(columns, row)) for row in cursor.fetchall()]
-    # print(222222,res1)
+
+
+    with connection.cursor() as cursor:
+        cursor.execute("select sum(goodmoneycount) as sum1 from orderchild_twentyone t join goodsone g on t.goodid=g.gid where t.orderid=%s", [id])
+    columns = [col[0] for col in cursor.description]
+    sum1 = [dict(zip(columns, row)) for row in cursor.fetchall()]
 
     return render(request, 'admin/order_detail.html', context={
         'res': res[0],
-        'buy_what': buy_what
+        'buy_what': buy_what,
+        'sum1': sum1[0]['sum1']
     })
 
 
@@ -383,9 +456,6 @@ def userlist(request, page=1):
     else: #页码总数小于10
         customRange = paginator.page_range
 
-    # account = User_account.objects.all()
-    # user_info = account.user
-    # print(user_info)
     return render(request, 'admin/user_list.html', context={
         'all_user': all_user,
         'all_account': all_account,
@@ -509,9 +579,9 @@ def pageviews(request):
     day4view = day4['view']
     day4time = day4['time']
     #
-    # day3 = res[4]
-    # day3view = day3['view']
-    # day3time = day3['time']
+    day3 = res[4]
+    day3view = day3['view']
+    day3time = day3['time']
     #
     # day2 = res[5]
     # day2view = day2['view']
@@ -529,8 +599,8 @@ def pageviews(request):
         'day5time': day5time,
         'day4view': day4view,
         'day4time': day4time,
-        # 'day3view': day3view,
-        # 'day3time': day3time,
+        'day3view': day3view,
+        'day3time': day3time,
         # 'day2view': day2view,
         # 'day2time': day2time,
         # 'day1view': day1view,

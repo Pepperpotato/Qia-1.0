@@ -1,0 +1,81 @@
+{% extends 'admin/index.html' %}
+{% load static %}
+
+{% block content %}
+    <section class="rt_wrap content mCustomScrollbar">
+        <div class="rt_content">
+            <div class="page_title">
+                <h2 class="fl">添加新的商品小类别</h2>
+            </div>
+            <form action="{% url 'admin:addsmallcategory' %}" method="post" id="form1" >
+                {% csrf_token %}
+            <ul class="ulColumn2">
+
+                <li>
+                    <span class="item_name" style="width:190px;">请选择商品的大类别：</span>
+                    <select name="bigcategoryid" class="select" style="width: 120px">
+                        <option>请选择</option>
+                        {% for re in res %}
+                            <option value="{{ re.id }}">{{ re.categoryname }}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <li>
+                    <span class="item_name" style="width:120px;">商品小类别</span>
+                    <input type="text" name="smallcategory" placeholder="请输入商品的小类别">
+                </li>
+                <li>
+                    <span class="item_name" style="width:45px;"></span>
+                    <input type="button" value="提交" onclick="big()" >
+                </li>
+            </ul>
+            </form>
+        </div>
+    </section>
+    <script>
+
+        function big(e) {
+            var ev = e || event
+            ev.preventDefault()
+            $.ajax({
+
+                cache: false,
+                contentType: false,
+
+                type: "POST",
+
+                dataType: "json",//返回的数据类型为Json对象
+
+                url: "{% url 'admin:addsmallcategory' %}", //发送请求到后台的地址
+
+                data: new FormData(document.getElementById("form1")), //发送的数据是id="for"的表单中的数据,其中document.getElementById()函数的功能是根据对象的名称获取对象
+                processData: false,//不希望自动转换
+
+                {#async: false,//请求设为异步#}
+
+                error: function (request) {//发送请求失败执行的函数
+
+                    alert("发送请求失败！");
+
+                },
+
+                success: function (data) {//发送请求成功执行的函数
+
+                    if (data['code'] == 1) {
+                        alert(data['data'])
+                    }
+                    else
+                    {
+                        alert(data['data'])
+                    }
+                }
+
+            });
+        }
+
+    </script>
+{% endblock content %}
+
+{% block foot %}
+{% endblock foot %}
+

@@ -12,12 +12,12 @@
         <td>收件人：{{ res.receiver }}</td>
         <td>联系电话：{{ res.phone_number }}</td>
         <td>收件地址：{{ res.location }}{{ res.detail_address }}</td>
-        <td>付款时间：2016-02-01 13:56</td>
+{#        <td>付款时间：2016-02-01 13:56</td>#}
        </tr>
        <tr>
         <td>下单时间：{{ res.ordertime }}</td>
-        <td>付款时间：2016-02-01 13:56</td>
-        <td>确认时间：{{ res.getgoodstime }}</td>
+{#        <td>付款时间：2016-02-01 13:56</td>#}
+        <td>确认时间：{{ res.getgoodstime   }}</td>
         <td>评价时间时间：---</td>
        </tr>
        <tr>
@@ -54,14 +54,7 @@
 
       </table>
       <aside class="mtb" style="text-align:right;">
-       <label>管理员操作：</label>
-       <input type="text" class="textbox textbox_295" placeholder="管理员操作备注"/>
-       <input type="button" value="打印订单" class="group_btn"/>
-       <input type="button" value="确认订单" class="group_btn"/>
-       <input type="button" value="付款" class="group_btn"/>
-       <input type="button" value="配货" class="group_btn"/>
-       <input type="button" value="发货" class="group_btn"/>
-       <input type="button" value="确认收货" class="group_btn"/>
+       <label>订单总价：{{ sum1 }}</label>
       </aside>
  </div>
 </section>
