@@ -165,3 +165,11 @@ class Pay_way(models.Model):
         db_table = 'pay_way'
 
 
+# 地区信息表
+class Areainfo(models.Model):
+    code = models.CharField(max_length=6,primary_key=True)
+    name = models.CharField(max_length=32)
+    pid = models.CharField(max_length=6, null=True)
+
+    class Meta:
+        db_table = 'areainfo'
