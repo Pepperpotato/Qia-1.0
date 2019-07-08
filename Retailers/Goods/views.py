@@ -847,6 +847,7 @@ def question(request):
 def address(request):
     username=request.session.get('username')
     user=User.objects.filter(username=username)[0]
+    uid=User.objects.filter(username=username)[0].uid
     address=user.user_address_set.all()
     # print(address)
     aid=request.GET.get('aid')
@@ -864,11 +865,16 @@ def address(request):
         useraddress = user.user_address_set.filter(pk=dell)
         useraddress.delete()
         return HttpResponse(json.dumps({'data': '删除成功'}), content_type='application/json')
-    user_name=request.GET.get('user-name')
-    user_phone=request.GET.get('user-phone')
-    cmbProvince=request.GET.get('cmbProvince')
-    cmbProvince=request.GET.get('cmbProvince')
-    cmbProvince=request.GET.get('cmbProvince')
+    if request.method=="POST":
+        user_name=request.POST.get('user-name')
+        user_phone=request.POST.get('user-phone')
+        cmbProvince=request.POST.get('cmbProvince')
+        cmbCity=request.POST.get('cmbCity')
+        cmbArea=request.POST.get('cmbArea')
+        detail_address=request.POST.get('user-intro')
+        location=cmbProvince+cmbCity+cmbArea
+        print(user_name,user_phone,cmbProvince,cmbCity,cmbArea)
+        User_address.objects.create(location=location,detail_address=detail_address,receiver=user_name,phone_number=user_phone,uid_id=uid)
 
     return render(request,'shop/person/address.html',context={
         'address':address,
