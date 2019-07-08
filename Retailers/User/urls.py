@@ -3,6 +3,7 @@ from django.conf.urls import url
 
 
 from User import views
+from User.views import OrderPayView
 
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
@@ -40,6 +41,7 @@ urlpatterns = [
     url(r'^paylist/$', views.paylist, name='paylist'),
     url(r'^delpayway/(\d)/$', views.delpayway, name='delpayway'),
     url(r'^pageviews/$', views.pageviews, name='pageviews'),
-    url(r'^sales/$', views.sales, name='sales')
+    url(r'^sales/$', views.sales, name='sales'),
+    url(r"^pay/$", OrderPayView.as_view(), name='pay'),
 ]
 
