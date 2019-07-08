@@ -52,8 +52,9 @@ class CommodityCategoriesTwo(models.Model):
     smallclassesattribute = models.CharField(max_length=20) # 小类别属性
     specification_id = models.IntegerField()  # 对应规格id
     brandid = models.IntegerField(null=True)   # 品牌id
-    price = models.IntegerField()  # 对应价格
-    historicalprices = models.IntegerField(null=True)     # 历史价格
+    price = models.IntegerField()  # 对应售价
+    historicalprices = models.IntegerField(null=True)     # 历史售价
+    stockprice = models.IntegerField(default=10)    # 采购价格
     inventory = models.IntegerField(default=0)   # 库存
     unit = models.CharField(max_length=20, default='件')
     is_show = models.IntegerField(default=0)  # 是否在首页展示  1代表展示
