@@ -6,7 +6,7 @@
  <div class="rt_content">
       <div class="page_title">
        <h2 class="fl">商品列表示例</h2>
-       <a href="{% url 'admin:productdetail' %}" class="fr top_rt_btn add_icon">添加商品</a>
+       <a href="{% url 'admin:addgood' %}" class="fr top_rt_btn add_icon">添加商品</a>
       </div>
       <section class="mtb">
        <select class="select">
@@ -42,21 +42,54 @@
         <td class="center">{{ good.inventory }}</td>
         <td class="center">
          <a href="http://www.mycodes.net" title="预览" class="link_icon" target="_blank">&#118;</a>
-         <a href="{% url 'admin:productdetail' %}" title="编辑" class="link_icon">&#101;</a>
+         <a href="#" title="编辑" class="link_icon">&#101;</a>
          <a href="#" title="删除" class="link_icon">&#100;</a>
         </td>
        </tr>
         {% endfor %}
       </table>
-      <aside class="paging">
-       <a>第一页</a>
-       <a>1</a>
-       <a>2</a>
-       <a>3</a>
-       <a>…</a>
-       <a>1004</a>
-       <a>最后一页</a>
-      </aside>
+      <div class="row">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        {% if pagination.has_previous %}
+                            <li>
+                                <a href="{% url 'admin:productlist1' pagination.previous_page_number %}"
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="disabled">
+                                <a href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% for page in pagerange %}
+                            {% if page == pagination.number %}
+                                <li class="active"><a href="{% url 'admin:productlist1' page %}">{{ page }}</a></li>
+                            {% else %}
+                                <li><a href="{% url 'admin:productlist1' page %}">{{ page }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if pagination.has_next %}
+                            <li>
+                                <a href="{% url 'admin:productlist1' pagination.next_page_number %}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="disabled">
+                                <a href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+
+            </div>
  </div>
 </section>
 {% endblock content %}

@@ -74,7 +74,7 @@
         </div>
         <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
         <script>
-            {#            获取验证码#}
+            {#获取验证码#}
             $(document).ready(function () {
                 $("#sendMobileCode").click(function () {
                    $.get("{% url 'goods:pswordcode_' %}", function (ret) {
@@ -89,12 +89,13 @@
                     var code = $('#user-code').val();
                     var password1 = $('#user-password').val();
                     var password2 = $('#user-confirm-password').val();
-                    $.get("/goods/setpay/", {
+                    $.get("{% url 'goods:setpay' %}", {
                         'code': code,
                         'password1': password1,
                         'password2': password2
                     }, function (ret) {
                         $('#result').append(ret.data + '<br>');
+                        timename = setTimeout(window.location.href = "{% url 'goods:setpay' %}", 2000);
                     })
                 });
             });

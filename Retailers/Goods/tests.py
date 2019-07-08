@@ -1,5 +1,4 @@
-import hashlib
-import re
-
-a='15010507563'
-print(a[-4:])
+import  hashlib
+a='ll'
+b=hashlib.sha1(a.encode('utf8')).hexdigest()
+print(b)

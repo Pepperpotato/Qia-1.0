@@ -14,6 +14,7 @@
 <script src="js/html5.js"></script>
 <![endif]-->
 <script src="{% static 'admin/js/jquery.js' %}"></script>
+<script src="{%  static 'admin/js/jquery.min.js' %}"></script>
 <script src="{% static 'admin/js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
 <script>
 
@@ -63,10 +64,10 @@
     <dt>商品管理</dt>
     <!--当前链接则添加class:active-->
     <dd><a href="{% url 'admin:productlist' %}" class="active">商品列表</a></dd>
-    <dd><a href="{% url 'admin:productdetail' %}">添加新商品</a></dd>
+    <dd><a href="{% url 'admin:addnewgood' %}">添加新商品</a></dd>
     <dd><a href="{% url 'admin:addgood' %}">添加已有类别商品</a></dd>
     <dd><a href="{% url 'admin:addband' %}">添加品牌</a></dd>
-    <dd><a href="{% url 'admin:productdetail' %}">商品进货</a></dd>
+    <dd><a href="{% url 'admin:addinventory' %}">商品进货</a></dd>
     <dd><a href="#">商品回收站示例</a></dd>
    </dl>
   </li>

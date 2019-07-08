@@ -6,7 +6,7 @@
  <div class="rt_content">
       <div class="page_title">
        <h2 class="fl">配送方式</h2>
-       <a href="product_detail.html" class="fr top_rt_btn add_icon">添加配送方式</a>
+       <a href="addnewgood.html" class="fr top_rt_btn add_icon">添加配送方式</a>
       </div>
       <table class="table">
        <tr>
@@ -23,7 +23,7 @@
         <td style="text-align: center">{{ express.express_price}}</td>
         <td><p>{{ express.express_info }}</p></td>
         <td class="center">
-         <a href="product_detail.html" title="编辑" class="link_icon">&#101;</a>
+         <a href="addnewgood.html" title="编辑" class="link_icon">&#101;</a>
          <a href="{% url 'admin:delexpress' express.id %}" title="删除" class="link_icon">&#100;</a>
         </td>
        </tr>

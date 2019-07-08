@@ -77,7 +77,7 @@
             </a>
         </div>
         <div class="info-btn">
-            <div class="am-btn am-btn-danger" style="border-radius: 3px;">保存修改</div>
+            <div class="am-btn am-btn-danger" style="border-radius: 3px;" id="sumbit">保存修改</div>
             <p><span id='result'></span></p>
         </div>
 
@@ -90,37 +90,37 @@
                 $.get("{% url 'goods:pswordcode_' %}", function (ret) {
                     $('#result').append(ret.data + '<br>');
                 })
-
             });
-        });
-        {# 获取新手机号验证码#}
-        $(document).ready(function () {
+            {# 获取新手机号验证码#}
             $("#sendMobileCodee").click(function () {
                 var code = $('#user-code').val();
                 var newphone = $('#user-new-phone').val();
-                $.get("{% url 'goods:pswordcode_' %}",{
+                $.get("{% url 'goods:pswordcode_' %}", {
                     'code': code,
                     'newphone': newphone,
                 }, function (ret) {
                     $('#result').append(ret.data + '<br>');
                 })
-
             });
-        });
 
-        {#提交数据#}
-        $(document).ready(function () {
+            {#提交数据#}
+
             $("#sumbit").click(function () {
                 var code = $('#user-new-code').val();
                 var newphone = $('#user-new-phone').val();
-                $.get("/goods/setpay/", {
+                $.get("{% url 'goods:bindphone' %}", {
                     'newphone': newphone,
                     'code': code
                 }, function (ret) {
                     $('#result').append(ret.data + '<br>');
+                    timename = setTimeout(window.location.href = "{% url 'goods:bindphone' %}", 2000);
+
                 })
             });
+
+
         });
+
     </script>
 
 {% endblock %}

@@ -1,5 +1,6 @@
 
 import hashlib
+import json
 import os
 from datetime import datetime
 from random import randint
@@ -11,9 +12,12 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.urls import reverse
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
-from Goods.models import Goods, CommodityBrand, CommodityCategories, Specification
+from Goods.models import Goods, CommodityBrand, CommodityCategories, Specification, CommodityCategoriesTwo
 from Order.models import OrderTwenty, OrderchildTwentyone, Mobilecount
+from Retailers import settings
 from Retailers.settings import NUMOFPAGE
 
 from User.forms import ChangeForm
@@ -41,7 +45,7 @@ def add(request):
 # 首页
 def index(request):
     admin = request.session.get('username')
-    print(admin)
+
     admin_info = User.objects.filter(username=admin)
 
     return render(request, 'admin/index.html', context={
@@ -70,40 +74,119 @@ def logout(request):
 
 
 # 商品列表
-def productlist(request):
+def productlist(request, page=1):
     with connection.cursor() as cursor:
         cursor.execute("select * from goodsone g join commodity_categories_two_four c on g.gid=c.gid join specification s on s.id=c.specification_id")
     columns = [col[0] for col in cursor.description]
     res = [dict(zip(columns, row)) for row in cursor.fetchall()]
-    print(res)
+
+    paginator = Paginator(res, NUMOFPAGE)
+    page = int(page)
+    pagination = paginator.page(page)
+
+    if paginator.num_pages> 5:
+        #如果当前页码-5小于0
+        if page - 2 <= 0:
+            customRange = range(1,6)
+        elif page + 2 > paginator.num_pages:
+            customRange = range(paginator.num_pages-4,paginator.num_pages+1)
+        else:
+            customRange = range(page-2,page+2)
+    else: #页码总数小于10
+        customRange = paginator.page_range
     return render(request, 'admin/product_list.html', context={
-        'res': res
+        'res': pagination.object_list,
+        'pagerange': customRange,
+        'pagination': pagination,
+
     })
 
 
-# 商品详情
-def productdetail(request):
+# 添加新商品
+def addnewgood(request):
+
     # 商品品牌
     commodity_brand = CommodityBrand.objects.all()
     commodity_categories = CommodityCategories.objects.all()
 
-    return render(request, 'admin/product_detail.html', context={
+    return render(request, 'admin/addnewgood.html', context={
         'commodity_brand': commodity_brand,
         'commodity_categories': commodity_categories
     })
 
 
+# 添加已有类别商品
 def addgood(request):
     if request.method == 'POST':
-        brand = request.POST.get('brand')
-        category = request.POST.get('category')
+        # 品牌id
+        brand = int(request.POST.get('brand'))
+        # 小版块id
+        category = int(request.POST.get('category'))
+        # 商品名称
         goodname = request.POST.get('goodname')
+        # 类型
         newsection = request.POST.get('newsection')
+        # 规格
+        format = request.POST.get('format')
+        # 单价
+        price = int(request.POST.get('price'))
+        # 单位
+        unit = request.POST.get('unit')
+        # 库存
+        inventory = int(request.POST.get('inventory'))
+        # 关键字'
+        keyword = request.POST.get('keyword')
+        # 图片
+        file = request.FILES.get('picture')
+        if file:
 
-        print(brand,category,goodname,newsection)
+            # 文件路径
+            path = os.path.join(settings.MEDIA_ROOT, file.name)
+            print(path)
+            # 文件类型过滤
+            ext = os.path.splitext(file.name)
+            if len(ext) < 1 or not ext[1] in settings.ALLOWED_FILEEXTS:
+                return redirect(reverse('admin:addgood'))
 
+            pathh = path.split('Retailers/static')
+            print(2222,pathh[1])
+            goodphoto = pathh[1]
 
+            # 创建新文件
+            with open(path, 'wb') as fp:
+                # 如果文件超过2.5M,则分块读写
+                if file.multiple_chunks():
+                    for block1 in file.chunks():
+                        fp.write(block1)
+                else:
+                    fp.write(file.read())
 
+        newgood = Goods()
+        newgood.gname = goodname
+        newgood.picture = goodphoto
+        newgood.keyword = keyword
+        newgood.brandid = brand
+        newgood.smallclassesid = category
+        newgood.save()
+        gid = newgood.gid
+
+        newspecification = Specification()
+        newspecification.specification = format
+        newspecification.save()
+        sid = newspecification.id
+
+        newcategory = CommodityCategoriesTwo()
+        newcategory.smallclassesid = category
+        newcategory.smallclassesattribute = newsection
+        newcategory.specification_id = sid
+        newcategory.brandid = brand
+        newcategory.price = price
+        newcategory.inventory = inventory
+        newcategory.unit = unit
+        newcategory.gid = gid
+        newcategory.save()
+
+        return redirect(reverse('admin:productlist'))
 
     commodity_brand = CommodityBrand.objects.all()
     commodity_categories = CommodityCategories.objects.filter(parentid__gt=0)
@@ -126,16 +209,121 @@ def addband(request):
     return render(request, 'admin/add_band.html')
 
 
+@csrf_exempt
+# 添加库存
+def addinventory(request):
+
+    if request.is_ajax():
+        categoryid = request.POST.get('categoryid')
+        if categoryid:
+            # 小类别id 松子
+            request.session['categoryid'] = categoryid
+        with connection.cursor() as cursor:
+            cursor.execute("select gname,gid from commodity_categories_three c join goodsone g on g.smallclassesid=c.id where parentid>0 and  smallclassesid=%s", [categoryid])
+        columns = [col[0] for col in cursor.description]
+        res1 = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        print(res1)
+        if res1:
+            return JsonResponse(res1, safe=False)
+
+    commodity_categories = CommodityCategories.objects.filter(parentid__gt=0)
+    commodity_brand = CommodityBrand.objects.all()
+    return render(request, 'admin/add_inventory.html', context={
+        'commodity_brand': commodity_brand,
+        'commodity_categories': commodity_categories
+    })
+
+
+@csrf_exempt
+def addinventory1(request):
+    if request.is_ajax():
+        brandid = request.POST.get('brandid')
+        if brandid:
+            # 品牌id 良品铺子
+            request.session['brandid'] = brandid
+        cid = int(request.session['categoryid'])
+        with connection.cursor() as cursor:
+            cursor.execute("select distinct smallclassesattribute from goodsone g join commodity_categories_two_four c on g.gid=c.gid where c.smallclassesid=%s", [cid])
+        columns = [col[0] for col in cursor.description]
+        res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        print(res)
+        if res:
+            return JsonResponse(res, safe=False)
+
+@csrf_exempt
+def addinventory2(request):
+    if request.is_ajax():
+        section = request.POST.get('section')
+        if section:
+            # 属性  奶油
+            request.session['section'] = section
+        cid = request.session.get('categoryid')
+        with connection.cursor() as cursor:
+            cursor.execute("select s.id,specification from commodity_categories_two_four c join specification s on c.specification_id=s.id where c.smallclassesid=%s and c.smallclassesattribute=%s", [cid,section])
+        columns = [col[0] for col in cursor.description]
+        res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        print(res)
+        if res:
+            return JsonResponse(res, safe=False)
+
+@csrf_exempt
+def addinventory3(request):
+    if request.is_ajax():
+        specificationid = request.POST.get('specificationid')
+        if specificationid:
+            request.session['specificationid'] = specificationid
+        cid = request.session.get('categoryid')
+        section = request.session.get('section')
+        with connection.cursor() as cursor:
+            cursor.execute("select inventory from commodity_categories_two_four where smallclassesid=%s and smallclassesattribute=%s and specification_id=%s", [cid, section, specificationid])
+        columns = [col[0] for col in cursor.description]
+        res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        print(res)
+        if res:
+            return JsonResponse(res, safe=False)
+
+
+def addinventory4(request):
+    if request.method == 'POST':
+        inventory = request.POST.get('add')
+        print(inventory)
+        cid = request.session.get('categoryid')
+        section = request.session.get('section')
+        specificationid = request.session.get('specificationid')
+        current_id = CommodityCategoriesTwo.objects.values('id').filter(smallclassesid=cid, smallclassesattribute=section, specification_id=specificationid)
+        id = current_id[0]['id']
+        current_good = CommodityCategoriesTwo.objects.get(pk=id)
+        current_good.inventory += int(inventory)
+        current_good.save()
+        return redirect(reverse('admin:productlist'))
+
+
 # 订单列表
-def orderlist(request):
+def orderlist(request, page=1):
 
     with connection.cursor() as cursor:
         cursor.execute("select o.id,o.uid_id,a.receiver,a.phone_number,e.express_name,a.location,a.detail_address,o.orderstatus from order_twenty o join user_address a on o.addressid=a.aid join express_company e on e.id=o.expressbrandid")
     columns = [col[0] for col in cursor.description]
     res = [dict(zip(columns, row)) for row in cursor.fetchall()]
 
+    paginator = Paginator(res, NUMOFPAGE)
+    page = int(page)
+    pagination = paginator.page(page)
+
+    if paginator.num_pages > 5:
+        # 如果当前页码-5小于0
+        if page - 2 <= 0:
+            customRange = range(1, 6)
+        elif page + 2 > paginator.num_pages:
+            customRange = range(paginator.num_pages - 4, paginator.num_pages + 1)
+        else:
+            customRange = range(page - 2, page + 2)
+    else:  # 页码总数小于10
+        customRange = paginator.page_range
     return render(request, 'admin/order_list.html', context={
-        'res': res
+        'res': pagination.object_list,
+        'pagerange': customRange,
+        'pagination': pagination,
     })
 
 
@@ -179,7 +367,7 @@ def userlist(request, page=1):
         cursor.execute("select * from user u right join user_account a on u.uid=a.uid")
     columns = [col[0] for col in cursor.description]
     res = [dict(zip(columns, row)) for row in cursor.fetchall()]
-    print(res)
+
     paginator = Paginator(res, NUMOFPAGE)
     page = int(page)
     pagination = paginator.page(page)
@@ -203,7 +391,7 @@ def userlist(request, page=1):
         'all_account': all_account,
         'pagerange': customRange,
         'pagination': pagination,
-        'res': res
+        'res': pagination.object_list
     })
 
 
@@ -304,10 +492,49 @@ def paylist(request):
 
 # 浏览量
 def pageviews(request):
-    view_count = Mobilecount.objects.all()
-    print(view_count)
+    res = Mobilecount.objects.values('view', 'time').order_by('-time')[:7]
+    day7 = res[0]
+    day7view = day7['view']
+    day7time = day7['time']
+
+    day6 = res[1]
+    day6view = day6['view']
+    day6time = day6['time']
+
+    day5 = res[2]
+    day5view = day5['view']
+    day5time = day5['time']
+
+    day4 = res[3]
+    day4view = day4['view']
+    day4time = day4['time']
+    #
+    # day3 = res[4]
+    # day3view = day3['view']
+    # day3time = day3['time']
+    #
+    # day2 = res[5]
+    # day2view = day2['view']
+    # day2time = day2['time']
+    #
+    # day1 = res[6]
+    # day1view = day1['view']
+    # day1time = day1['time']
     return render(request, 'admin/pageviews.html', context={
-        'view_count': view_count
+        'day7view': day7view,
+        'day7time': day7time,
+        'day6view': day6view,
+        'day6time': day6time,
+        'day5view': day5view,
+        'day5time': day5time,
+        'day4view': day4view,
+        'day4time': day4time,
+        # 'day3view': day3view,
+        # 'day3time': day3time,
+        # 'day2view': day2view,
+        # 'day2time': day2time,
+        # 'day1view': day1view,
+        # 'day1time': day1time
     })
 
 
@@ -322,7 +549,8 @@ def delpayway(request, id):
     return redirect(reverse('admin:paylist'))
 
 
-def choiceorder(request):
+# 按条件选择订单
+def choiceorder(request, page=1):
     if request.method == 'POST':
         way = request.POST.get('choice')
         if way == 'waitpay':
@@ -331,9 +559,25 @@ def choiceorder(request):
                     "select o.id,o.uid_id,a.receiver,a.phone_number,e.express_name,a.location,a.detail_address,o.orderstatus from order_twenty o join user_address a on o.addressid=a.aid join express_company e on e.id=o.expressbrandid where o.orderstatus = 0")
             columns = [col[0] for col in cursor.description]
             res = [dict(zip(columns, row)) for row in cursor.fetchall()]
-            print(2222, res)
+
+            paginator = Paginator(res, NUMOFPAGE)
+            page = int(page)
+            pagination = paginator.page(page)
+
+            if paginator.num_pages > 5:
+                # 如果当前页码-5小于0
+                if page - 2 <= 0:
+                    customRange = range(1, 6)
+                elif page + 2 > paginator.num_pages:
+                    customRange = range(paginator.num_pages - 4, paginator.num_pages + 1)
+                else:
+                    customRange = range(page - 2, page + 2)
+            else:  # 页码总数小于10
+                customRange = paginator.page_range
             return render(request, 'admin/order_list.html', context={
-                'res': res
+                'res': pagination.object_list,
+                'pagerange': customRange,
+                'pagination': pagination,
             })
         elif way == 'waitsend':
             with connection.cursor() as cursor:
@@ -341,8 +585,25 @@ def choiceorder(request):
                     "select o.id,o.uid_id,a.receiver,a.phone_number,e.express_name,a.location,a.detail_address,o.orderstatus from order_twenty o join user_address a on o.addressid=a.aid join express_company e on e.id=o.expressbrandid where o.orderstatus = 1")
             columns = [col[0] for col in cursor.description]
             res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+            paginator = Paginator(res, NUMOFPAGE)
+            page = int(page)
+            pagination = paginator.page(page)
+
+            if paginator.num_pages > 5:
+                # 如果当前页码-5小于0
+                if page - 2 <= 0:
+                    customRange = range(1, 6)
+                elif page + 2 > paginator.num_pages:
+                    customRange = range(paginator.num_pages - 4, paginator.num_pages + 1)
+                else:
+                    customRange = range(page - 2, page + 2)
+            else:  # 页码总数小于10
+                customRange = paginator.page_range
             return render(request, 'admin/order_list.html', context={
-                'res': res
+                'res': pagination.object_list,
+                'pagerange': customRange,
+                'pagination': pagination,
             })
         elif way == 'waitget':
             with connection.cursor() as cursor:
@@ -350,8 +611,25 @@ def choiceorder(request):
                     "select o.id,o.uid_id,a.receiver,a.phone_number,e.express_name,a.location,a.detail_address,o.orderstatus from order_twenty o join user_address a on o.addressid=a.aid join express_company e on e.id=o.expressbrandid where o.orderstatus = 2")
             columns = [col[0] for col in cursor.description]
             res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+            paginator = Paginator(res, NUMOFPAGE)
+            page = int(page)
+            pagination = paginator.page(page)
+
+            if paginator.num_pages > 5:
+                # 如果当前页码-5小于0
+                if page - 2 <= 0:
+                    customRange = range(1, 6)
+                elif page + 2 > paginator.num_pages:
+                    customRange = range(paginator.num_pages - 4, paginator.num_pages + 1)
+                else:
+                    customRange = range(page - 2, page + 2)
+            else:  # 页码总数小于10
+                customRange = paginator.page_range
             return render(request, 'admin/order_list.html', context={
-                'res': res
+                'res': pagination.object_list,
+                'pagerange': customRange,
+                'pagination': pagination,
             })
         elif way == 'waitsay':
             with connection.cursor() as cursor:
@@ -359,8 +637,25 @@ def choiceorder(request):
                     "select o.id,o.uid_id,a.receiver,a.phone_number,e.express_name,a.location,a.detail_address,o.orderstatus from order_twenty o join user_address a on o.addressid=a.aid join express_company e on e.id=o.expressbrandid where o.orderstatus = 3 or o.orderstatus = 4")
             columns = [col[0] for col in cursor.description]
             res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+            paginator = Paginator(res, NUMOFPAGE)
+            page = int(page)
+            pagination = paginator.page(page)
+
+            if paginator.num_pages > 5:
+                # 如果当前页码-5小于0
+                if page - 2 <= 0:
+                    customRange = range(1, 6)
+                elif page + 2 > paginator.num_pages:
+                    customRange = range(paginator.num_pages - 4, paginator.num_pages + 1)
+                else:
+                    customRange = range(page - 2, page + 2)
+            else:  # 页码总数小于10
+                customRange = paginator.page_range
             return render(request, 'admin/order_list.html', context={
-                'res': res
+                'res': pagination.object_list,
+                'pagerange': customRange,
+                'pagination': pagination,
             })
         else:
             with connection.cursor() as cursor:
@@ -368,8 +663,25 @@ def choiceorder(request):
                     "select o.id,o.uid_id,a.receiver,a.phone_number,e.express_name,a.location,a.detail_address,o.orderstatus from order_twenty o join user_address a on o.addressid=a.aid join express_company e on e.id=o.expressbrandid")
             columns = [col[0] for col in cursor.description]
             res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+            paginator = Paginator(res, NUMOFPAGE)
+            page = int(page)
+            pagination = paginator.page(page)
+
+            if paginator.num_pages > 5:
+                # 如果当前页码-5小于0
+                if page - 2 <= 0:
+                    customRange = range(1, 6)
+                elif page + 2 > paginator.num_pages:
+                    customRange = range(paginator.num_pages - 4, paginator.num_pages + 1)
+                else:
+                    customRange = range(page - 2, page + 2)
+            else:  # 页码总数小于10
+                customRange = paginator.page_range
             return render(request, 'admin/order_list.html', context={
-                'res': res
+                'res': pagination.object_list,
+                'pagerange': customRange,
+                'pagination': pagination,
             })
 
 

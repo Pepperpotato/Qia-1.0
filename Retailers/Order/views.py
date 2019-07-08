@@ -12,7 +12,7 @@ from django.db import connection
 from .models import *
 
 def home(request):
-    temp = loader.get_template('shop/home/home3.html')
+    # # temp = loader.get_template('shop/home/home3.html')
     dlb = CommodityCategories.objects.filter(parentid=0)  # 寻找大类别 3
     xlb = CommodityCategories.objects.exclude(parentid=0)  # 寻找小类别 3
     store = CommodityBrand.objects.all()  # 寻找品牌 2
@@ -35,8 +35,8 @@ def home(request):
         list1=list[:6]
         dic[i.id] = list1
 
-    res = temp.render(context={'dlb': dlb, 'xlb': xlb, 'store': store,'dic':dic,'price':price})
-    return HttpResponse(res)
+    return render(request,'shop/home/home3.html',context={'dlb': dlb, 'xlb': xlb, 'store': store,'dic':dic,'price':price})
+    # return HttpResponse(res)
     # return render(request,'shop/home/home3.html')
 
 
@@ -54,20 +54,16 @@ def intro(request,goodid):
     inven = CommodityCategoriesTwo.objects.get(gid=goodid,is_show=1)
     normall = Specification.objects.all()#所有规格
     print(norm[0]['specification_id'],normall[0].id)
-    temp = loader.get_template('shop/home/introduction.html')
+    # temp = loader.get_template('shop/home/introduction.html')
 
 
     print("attrnum",attrnum)
-    res = temp.render(context={'detail': detail, 'inven':inven,'num':1,'goods': goods, 'attr': attr, 'attrnum': attrnum, 'norm': norm, 'normall': normall})
-    return HttpResponse(res)
+    # res = temp.render(context={'detail': detail, 'inven':inven,'num':1,'goods': goods, 'attr': attr, 'attrnum': attrnum, 'norm': norm, 'normall': normall})
+    return render(request,'shop/home/introduction.html',context={'detail': detail, 'inven':inven,'num':1,'goods': goods, 'attr': attr, 'attrnum': attrnum, 'norm': norm, 'normall': normall})
 
 
-def verf(request,goodid):
-    province = request.GET.get('province')
-    city = request.GET.get('city')
-    block = request.GET.get('block')
-    print(province,city,block,'++++++++++++++++++++++')
-    return HttpResponse('ok')
+def purchase(request):
+    return render(request,'shop/home/pay.html')
 
 
 def price_change(request):

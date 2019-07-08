@@ -6,7 +6,7 @@
  <div class="rt_content">
       <div class="page_title">
        <h2 class="fl">支付方式</h2>
-       <a href="product_detail.html" class="fr top_rt_btn add_icon">添加支付方式</a>
+       <a href="addnewgood.html" class="fr top_rt_btn add_icon">添加支付方式</a>
       </div>
       <table class="table">
        <tr>
@@ -21,7 +21,7 @@
         <td style="text-align: center">{{ payway.pay_name }}</td>
         <td><p>{{ payway.pay_info }}</p></td>
         <td class="center">
-         <a href="product_detail.html" title="编辑" class="link_icon">&#101;</a>
+         <a href="addnewgood.html" title="编辑" class="link_icon">&#101;</a>
          <a href="{% url 'admin:delpayway' payway.id %}" title="删除" class="link_icon">&#100;</a>
         </td>
        </tr>
