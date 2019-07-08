@@ -52,7 +52,8 @@
             <div class="menu-hd"><a href="{% url 'order:home' %}" target="_top" class="h">商城首页</a></div>
         </div>
         <div class="topMessage my-shangcheng">
-            <div class="menu-hd MyShangcheng"><a href="{% url 'goods:index' %}" target="_top"><i class="am-icon-user am-icon-fw"></i>个人中心</a>
+            <div class="menu-hd MyShangcheng"><a href="{% url 'goods:index' %}" target="_top"><i
+                    class="am-icon-user am-icon-fw"></i>个人中心</a>
             </div>
         </div>
         <div class="topMessage mini-cart">
@@ -77,7 +78,7 @@
     <div class="search-bar pr">
         {#                    <a name="index_none_header_sysc" href="#"></a>#}
         <form action="{% url 'goods:search' %}" method="post">
-{#        <form action="" method="post">#}
+            {#        <form action="" method="post">#}
             {% csrf_token %}
             <input id="searchInput" name="index_none_header_sysc" type="text" placeholder="搜索" autocomplete="off">
             <input id="ai-topsearch" class="submit am-btn" value="搜索" index="1" type="submit">
@@ -146,14 +147,14 @@
                                 <div class="dd-conent">
                                     <dd class="select-all selected"><a href="#">全部</a></dd>
                                     {% for brand in brand %}
-                                         <dd><a href="#">{{ brand.brandname }}</a></dd>
+                                        <dd><a href="#">{{ brand.brandname }}</a></dd>
                                     {% endfor %}
-{#                                    <dd><a href="#">百草味</a></dd>#}
-{#                                    <dd><a href="#">良品铺子</a></dd>#}
-{#                                    <dd><a href="#">新农哥</a></dd>#}
-{#                                    <dd><a href="#">楼兰蜜语</a></dd>#}
-{#                                    <dd><a href="#">口水娃</a></dd>#}
-{#                                    <dd><a href="#">考拉兄弟</a></dd>#}
+                                    {#                                    <dd><a href="#">百草味</a></dd>#}
+                                    {#                                    <dd><a href="#">良品铺子</a></dd>#}
+                                    {#                                    <dd><a href="#">新农哥</a></dd>#}
+                                    {#                                    <dd><a href="#">楼兰蜜语</a></dd>#}
+                                    {#                                    <dd><a href="#">口水娃</a></dd>#}
+                                    {#                                    <dd><a href="#">考拉兄弟</a></dd>#}
                                 </div>
 
                             </dl>
@@ -163,10 +164,15 @@
                                 <dt class="am-badge am-round">种类</dt>
                                 <div class="dd-conent">
                                     <dd class="select-all selected"><a href="#">全部</a></dd>
-                                    <dd><a href="#">东北松子</a></dd>
-                                    <dd><a href="#">巴西松子</a></dd>
-                                    <dd><a href="#">夏威夷果</a></dd>
-                                    <dd><a href="#">松子</a></dd>
+                                    {% for commodity in commodity %}
+                                        <dd><a href="#">{{ commodity.categoryname }}</a></dd>
+                                    {% endfor %}
+
+
+                                    {#                                    <dd><a href="#">东北松子</a></dd>#}
+                                    {#                                    <dd><a href="#">巴西松子</a></dd>#}
+                                    {#                                    <dd><a href="#">夏威夷果</a></dd>#}
+                                    {#                                    <dd><a href="#">松子</a></dd>#}
                                 </div>
                             </dl>
                         </li>
@@ -207,9 +213,9 @@
                                             {{ good.price }}
                                         </strong>
                                     </p>
-{#                                    <p class="number fl">#}
-{#                                        销量<span>1110</span>#}
-{#                                    </p>#}
+                                    {#                                    <p class="number fl">#}
+                                    {#                                        销量<span>1110</span>#}
+                                    {#                                    </p>#}
                                 </div>
                             </li>
                         {% endfor %}
@@ -221,42 +227,41 @@
                 <ul class="am-pagination am-pagination-right">
 
 
-
-                        {% if pagination.has_previous %}
-                            <li>
-                                <a href="{% url 'goods:search1' pagination.previous_page_number %}"
-                                   aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
+                    {% if pagination.has_previous %}
+                        <li>
+                            <a href="{% url 'goods:search1' pagination.previous_page_number %}"
+                               aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="disabled">
+                            <a href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% for page in pagerange %}
+                        {% if page == pagination.number %}
+                            <li class="active"><a href="{% url 'goods:search1' page %}">{{ page }}</a></li>
                         {% else %}
-                            <li class="disabled">
-                                <a href="#" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
+                            <li><a href="{% url 'goods:search1' page %}">{{ page }}</a></li>
                         {% endif %}
-                        {% for page in pagerange %}
-                            {% if page == pagination.number %}
-                                <li class="active"><a href="{% url 'goods:search1' page %}">{{ page }}</a></li>
-                            {% else %}
-                                <li><a href="{% url 'goods:search1' page %}">{{ page }}</a></li>
-                            {% endif %}
-                        {% endfor %}
+                    {% endfor %}
 
-                        {% if pagination.has_next %}
-                            <li>
-                                <a href="{% url 'goods:search1' pagination.next_page_number %}" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        {% else %}
-                            <li class="disabled">
-                                <a href="#" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        {% endif %}
+                    {% if pagination.has_next %}
+                        <li>
+                            <a href="{% url 'goods:search1' pagination.next_page_number %}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="disabled">
+                            <a href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
                 </ul>
 
             </div>

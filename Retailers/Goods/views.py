@@ -21,6 +21,7 @@ from django.views.decorators.csrf import csrf_exempt
 from Goods.forms import UserForm1,UserForm2
 from Goods.models import Coupons, Goods, CommodityCategoriesTwo, CommodityBrand, CommodityCategories
 from Goods.sms import send_sms
+from Order.models import OrderTwenty, OrderchildTwentyone
 from Retailers import settings
 from Retailers.settings import SMSCONFIG, SMSCONFIGG, NUMOFPAGE
 from User.models import User, User_grade, User_address, User_account
@@ -92,9 +93,7 @@ def logistics(request):
 def news(request):
     return render(request,'shop/person/news.html')
 
-# 订单管理
-def order(request):
-    return render(request,'shop/person/order.html')
+
 
 # 订单详情
 def orderinfo(request):
@@ -918,7 +917,8 @@ def search(request,page=1):
     brand=CommodityBrand.objects.filter().all()
     # print(brand)
     # 种类
-    commodity=CommodityCategories.objects.filter()
+    commodity=CommodityCategories.objects.exclude(parentid=0)
+    # print(commodity)
     return render(request, 'shop/home/search.html', context={
         'data': search_data,
         # 'goods': goods,
@@ -927,4 +927,35 @@ def search(request,page=1):
         'pagerange': customRange,
         'pagination': pagination,
         'brand':brand,
+        'commodity':commodity,
+    })
+
+# 订单管理
+def order(request):
+    username=request.session.get('username')
+    user=User.objects.filter(username=username)[0]
+    # 用户所有订单
+    orders=user.ordertwenty_set.all()
+
+    # 用户订单详情
+    uid=User.objects.filter(username=username)[0].uid
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM order_twenty o RIGHT JOIN orderchild_twentyone c ON o.id=c.orderid  JOIN goodsone g ON c.goodid=g.gid JOIN express_company e  ON o.expressbrandid=e.id WHERE  o.uid_id={} AND o.id=c.orderid".format(uid))
+    columns = [col[0] for col in cursor.description]
+    orderchild = [dict(zip(columns, row)) for row in cursor.fetchall()]
+    count = 0
+    express_price=0
+    for money in orderchild:
+        print(money)
+        count+=int(money.get('goodmoneycount'))
+        express_price=money.get('express_price')
+        # count+=money.goodmoneycount
+    # print(orderchild)
+    # print(count)
+    return render(request,'shop/person/order.html',context={
+        'orders':orders,
+        'count':count,
+        'orderchild':orderchild,
+        'express_price':express_price,
     })
