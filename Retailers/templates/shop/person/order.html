@@ -140,7 +140,7 @@
                                                     </li>
                                                 </div>
                                             {% elif order.orderstatus == 3 %}
-<div class="move-right">
+                                                <div class="move-right">
                                                     <li class="td td-status">
                                                         <div class="item-status">
                                                             <p class="Mystatus">交易成功</p>
@@ -157,7 +157,7 @@
                                                     </li>
                                                 </div>
                                             {% elif order.orderstatus == 2 %}
- <div class="move-right">
+                                                <div class="move-right">
                                                     <li class="td td-status">
                                                         <div class="item-status">
                                                             <p class="Mystatus">卖家已发货</p>
@@ -173,7 +173,7 @@
                                                     </li>
                                                 </div>
                                             {% elif order.orderstatus == 1 %}
-<div class="move-right">
+                                                <div class="move-right">
                                                     <li class="td td-status">
                                                         <div class="item-status">
                                                             <p class="Mystatus">买家已付款</p>
@@ -260,42 +260,42 @@
                                         <div class="order-content">
                                             <div class="order-left">
                                                 {% for orderchild in orderchild %}
-                                                     {% if orderchild.orderid == order.id %}
-                                                    <ul class="item-list">
-                                                        <li class="td td-item">
-                                                            <div class="item-pic">
-                                                                <a href="#" class="J_MakePoint">
-                                                                    <img src="/static{{ orderchild.picture }}"
-                                                                         class="itempic J_ItemImg">
-                                                                </a>
-                                                            </div>
-                                                            <div class="item-info">
-                                                                <div class="item-basic-info">
-                                                                    <a href="#">
-                                                                        <p>{{ orderchild.gname }}</p>
-                                                                        <p class="info-little">颜色：12#川南玛瑙
-                                                                            <br/>包装：裸装 </p>
+                                                    {% if orderchild.orderid == order.id %}
+                                                        <ul class="item-list">
+                                                            <li class="td td-item">
+                                                                <div class="item-pic">
+                                                                    <a href="#" class="J_MakePoint">
+                                                                        <img src="/static{{ orderchild.picture }}"
+                                                                             class="itempic J_ItemImg">
                                                                     </a>
                                                                 </div>
-                                                            </div>
-                                                        </li>
-                                                        <li class="td td-price">
-                                                            <div class="item-price">
-                                                                {{ orderchild.goodmoney }}
-                                                            </div>
-                                                        </li>
-                                                        <li class="td td-number">
-                                                            <div class="item-number">
-                                                                <span>×</span>{{ orderchild.goodcount }}
-                                                            </div>
-                                                        </li>
-                                                        <li class="td td-operation">
-                                                            <div class="item-operation">
+                                                                <div class="item-info">
+                                                                    <div class="item-basic-info">
+                                                                        <a href="#">
+                                                                            <p>{{ orderchild.gname }}</p>
+                                                                            <p class="info-little">颜色：12#川南玛瑙
+                                                                                <br/>包装：裸装 </p>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li class="td td-price">
+                                                                <div class="item-price">
+                                                                    {{ orderchild.goodmoney }}
+                                                                </div>
+                                                            </li>
+                                                            <li class="td td-number">
+                                                                <div class="item-number">
+                                                                    <span>×</span>{{ orderchild.goodcount }}
+                                                                </div>
+                                                            </li>
+                                                            <li class="td td-operation">
+                                                                <div class="item-operation">
 
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                     {% endif %}
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    {% endif %}
                                                 {% endfor %}
                                             </div>
                                             <div class="order-right">
@@ -374,42 +374,42 @@
                                         <div class="order-content">
                                             <div class="order-left">
                                                 {% for orderchild in orderchild %}
-                                                     {% if orderchild.orderid == order.id %}
-                                                    <ul class="item-list">
-                                                        <li class="td td-item">
-                                                            <div class="item-pic">
-                                                                <a href="#" class="J_MakePoint">
-                                                                    <img src="/static{{ orderchild.picture }}"
-                                                                         class="itempic J_ItemImg">
-                                                                </a>
-                                                            </div>
-                                                            <div class="item-info">
-                                                                <div class="item-basic-info">
-                                                                    <a href="#">
-                                                                        <p>{{ orderchild.gname }}</p>
-                                                                        <p class="info-little">颜色：12#川南玛瑙
-                                                                            <br/>包装：裸装 </p>
+                                                    {% if orderchild.orderid == order.id %}
+                                                        <ul class="item-list">
+                                                            <li class="td td-item">
+                                                                <div class="item-pic">
+                                                                    <a href="#" class="J_MakePoint">
+                                                                        <img src="/static{{ orderchild.picture }}"
+                                                                             class="itempic J_ItemImg">
                                                                     </a>
                                                                 </div>
-                                                            </div>
-                                                        </li>
-                                                        <li class="td td-price">
-                                                            <div class="item-price">
-                                                                {{ orderchild.goodmoney }}
-                                                            </div>
-                                                        </li>
-                                                        <li class="td td-number">
-                                                            <div class="item-number">
-                                                                <span>×</span>{{ orderchild.goodcount }}
-                                                            </div>
-                                                        </li>
-                                                        <li class="td td-operation">
-                                                            <div class="item-operation">
+                                                                <div class="item-info">
+                                                                    <div class="item-basic-info">
+                                                                        <a href="#">
+                                                                            <p>{{ orderchild.gname }}</p>
+                                                                            <p class="info-little">颜色：12#川南玛瑙
+                                                                                <br/>包装：裸装 </p>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li class="td td-price">
+                                                                <div class="item-price">
+                                                                    {{ orderchild.goodmoney }}
+                                                                </div>
+                                                            </li>
+                                                            <li class="td td-number">
+                                                                <div class="item-number">
+                                                                    <span>×</span>{{ orderchild.goodcount }}
+                                                                </div>
+                                                            </li>
+                                                            <li class="td td-operation">
+                                                                <div class="item-operation">
 
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                     {% endif %}
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    {% endif %}
                                                 {% endfor %}
                                             </div>
                                             <div class="order-right">
@@ -437,7 +437,6 @@
                                     </div>
                                 {% endif %}
                             {% endfor %}
-
 
 
                         </div>
@@ -484,41 +483,41 @@
                                         <div class="order-content">
                                             <div class="order-left">
                                                 {% for orderchild in orderchild %}
-                                                     {% if orderchild.orderid == order.id %}
-                                                    <ul class="item-list">
-                                                        <li class="td td-item">
-                                                            <div class="item-pic">
-                                                                <a href="#" class="J_MakePoint">
-                                                                    <img src="/static{{ orderchild.picture }}"
-                                                                         class="itempic J_ItemImg">
-                                                                </a>
-                                                            </div>
-                                                            <div class="item-info">
-                                                                <div class="item-basic-info">
-                                                                    <a href="#">
-                                                                        <p>{{ orderchild.gname }}</p>
-                                                                        <p class="info-little">颜色：12#川南玛瑙
-                                                                            <br/>包装：裸装 </p>
+                                                    {% if orderchild.orderid == order.id %}
+                                                        <ul class="item-list">
+                                                            <li class="td td-item">
+                                                                <div class="item-pic">
+                                                                    <a href="#" class="J_MakePoint">
+                                                                        <img src="/static{{ orderchild.picture }}"
+                                                                             class="itempic J_ItemImg">
                                                                     </a>
                                                                 </div>
-                                                            </div>
-                                                        </li>
-                                                        <li class="td td-price">
-                                                            <div class="item-price">
-                                                                {{ orderchild.goodmoney }}
-                                                            </div>
-                                                        </li>
-                                                        <li class="td td-number">
-                                                            <div class="item-number">
-                                                                <span>×</span>{{ orderchild.goodcount }}
-                                                            </div>
-                                                        </li>
-                                                        <li class="td td-operation">
-                                                            <div class="item-operation">
+                                                                <div class="item-info">
+                                                                    <div class="item-basic-info">
+                                                                        <a href="#">
+                                                                            <p>{{ orderchild.gname }}</p>
+                                                                            <p class="info-little">颜色：12#川南玛瑙
+                                                                                <br/>包装：裸装 </p>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li class="td td-price">
+                                                                <div class="item-price">
+                                                                    {{ orderchild.goodmoney }}
+                                                                </div>
+                                                            </li>
+                                                            <li class="td td-number">
+                                                                <div class="item-number">
+                                                                    <span>×</span>{{ orderchild.goodcount }}
+                                                                </div>
+                                                            </li>
+                                                            <li class="td td-operation">
+                                                                <div class="item-operation">
 
-                                                            </div>
-                                                        </li>
-                                                    </ul>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
                                                     {% endif %}
                                                 {% endfor %}
                                             </div>
@@ -549,8 +548,6 @@
                                     </div>
                                 {% endif %}
                             {% endfor %}
-
-
 
 
                         </div>
@@ -598,41 +595,41 @@
                                         <div class="order-content">
                                             <div class="order-left">
                                                 {% for orderchild in orderchild %}
-                                                     {% if orderchild.orderid == order.id %}
-                                                    <ul class="item-list">
-                                                        <li class="td td-item">
-                                                            <div class="item-pic">
-                                                                <a href="#" class="J_MakePoint">
-                                                                    <img src="/static{{ orderchild.picture }}"
-                                                                         class="itempic J_ItemImg">
-                                                                </a>
-                                                            </div>
-                                                            <div class="item-info">
-                                                                <div class="item-basic-info">
-                                                                    <a href="#">
-                                                                        <p>{{ orderchild.gname }}</p>
-                                                                        <p class="info-little">颜色：12#川南玛瑙
-                                                                            <br/>包装：裸装 </p>
+                                                    {% if orderchild.orderid == order.id %}
+                                                        <ul class="item-list">
+                                                            <li class="td td-item">
+                                                                <div class="item-pic">
+                                                                    <a href="#" class="J_MakePoint">
+                                                                        <img src="/static{{ orderchild.picture }}"
+                                                                             class="itempic J_ItemImg">
                                                                     </a>
                                                                 </div>
-                                                            </div>
-                                                        </li>
-                                                        <li class="td td-price">
-                                                            <div class="item-price">
-                                                                {{ orderchild.goodmoney }}
-                                                            </div>
-                                                        </li>
-                                                        <li class="td td-number">
-                                                            <div class="item-number">
-                                                                <span>×</span>{{ orderchild.goodcount }}
-                                                            </div>
-                                                        </li>
-                                                        <li class="td td-operation">
-                                                            <div class="item-operation">
+                                                                <div class="item-info">
+                                                                    <div class="item-basic-info">
+                                                                        <a href="#">
+                                                                            <p>{{ orderchild.gname }}</p>
+                                                                            <p class="info-little">颜色：12#川南玛瑙
+                                                                                <br/>包装：裸装 </p>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li class="td td-price">
+                                                                <div class="item-price">
+                                                                    {{ orderchild.goodmoney }}
+                                                                </div>
+                                                            </li>
+                                                            <li class="td td-number">
+                                                                <div class="item-number">
+                                                                    <span>×</span>{{ orderchild.goodcount }}
+                                                                </div>
+                                                            </li>
+                                                            <li class="td td-operation">
+                                                                <div class="item-operation">
 
-                                                            </div>
-                                                        </li>
-                                                    </ul>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
                                                     {% endif %}
                                                 {% endfor %}
                                             </div>
@@ -664,10 +661,6 @@
                                     </div>
                                 {% endif %}
                             {% endfor %}
-
-
-
-
 
 
                         </div>

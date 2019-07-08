@@ -947,7 +947,7 @@ def order(request):
     count = 0
     express_price=0
     for money in orderchild:
-        print(money)
+        # print(money)
         count+=int(money.get('goodmoneycount'))
         express_price=money.get('express_price')
         # count+=money.goodmoneycount
