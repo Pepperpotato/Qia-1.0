@@ -31,9 +31,9 @@ class OrderTwenty(models.Model):
     ordertime = models.DateTimeField(null=True)#下单时间
     addressid = models.IntegerField(null=True)#收货地址id
     expressbrandid = models.IntegerField(default=1,null=True)#物流品牌id
-    paywayid = models.IntegerField(null=True)#支付id
+    paywayid = models.IntegerField(null=True, default=1)#支付id
     integral = models.IntegerField(null=True)#获得积分
-    orderstatus = models.IntegerField(null=True)#订单状态 0~4
+    orderstatus = models.IntegerField(null=True, default=0)#订单状态 0~4
     # 0     没付钱
     # 1   已付款未发货
     # 2   已发货未收货
@@ -53,9 +53,9 @@ class OrderchildTwentyone(models.Model):
     goodcount = models.IntegerField(null=True) #商品数量
     goodmoney = models.IntegerField(null=True) #商品单价
     goodmoneycount = models.IntegerField(null=True) #合计
+    cid = models.IntegerField()
 
     class Meta:
-
         db_table = 'orderchild_twentyone'
 
 
