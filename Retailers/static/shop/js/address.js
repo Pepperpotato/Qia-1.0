@@ -1,4 +1,5 @@
 /*! jQuery v1.7.1 jquery.com | jquery.org/license */
+var kkdd;
 (function (a, b) {
     function cy(a) {
         return f.isWindow(a) ? a : a.nodeType === 9 ? a.defaultView || a.parentWindow : !1
@@ -2949,7 +2950,11 @@
     })
 })(window);
 
-
+var commit_ad
+var commit_ex
+var commit_co
+var commit_num
+var commit_re
 $(document).ready(function () {
 
     $(function () {
@@ -2959,7 +2964,7 @@ $(document).ready(function () {
             num = $('#shuliang').val()
             danjia = document.querySelector('#danjia').innerHTML
             countprice = num*danjia;
-            total = countprice+10;
+            total = countprice+kkdd;
             console.log(num,danjia,countprice)
             $('#countprice').text(countprice)
             $('.pay-sum').text(total)
@@ -2968,15 +2973,18 @@ $(document).ready(function () {
         })
         $(".min").click(function () {
             var t = $(this).parent().find('input[class*=text_box]');
+
             t.val(parseInt(t.val()) - 1)
-            if (parseInt(t.val()) < 0) {
-                t.val(0);
+            if (parseInt(t.val()) < 1) {
+                t.val(1);
             }
              num = $('#shuliang').val()
             danjia = document.querySelector('#danjia').innerHTML
+            price = kkdd
+
             countprice = num*danjia;
-            total = countprice+10;
-            console.log(num,danjia,countprice)
+            total = countprice+kkdd;
+            console.log(num,danjia,countprice,price)
             $('#countprice').text(countprice)
             $('.pay-sum').text(total)
             $('#J_ActualFee').text(total)
@@ -3002,10 +3010,12 @@ $(document).ready(function () {
 
 
 //地址选择
+    kkdd =10
     $(function () {
         $(".user-addresslist").click(function () {
             $(this).addClass("defaultAddr").siblings().removeClass("defaultAddr")
             ad = $(this).attr('value')
+            commit_ad =ad
             $.ajax({
                 url: '/order/addre/',// 跳转到 action
                 data: {
@@ -3035,8 +3045,35 @@ $(document).ready(function () {
             p.click(function () {
                 if (!!$(this).hasClass("selected")) {
                     $(this).removeClass("selected");
+
                 } else {
                     $(this).addClass("selected").siblings("li").removeClass("selected");
+                    express_name = $(this).addClass("selected").text()
+                    commit_ex = express_name
+                    var price =$('#countprice').text()
+                    $.ajax({
+                url: '/order/express/',// 跳转到 action
+                data: {
+                    'express_name':express_name,
+                    'price':price
+                },
+                type: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data)
+                    var money = data.ex_money;
+                    kkdd = money
+                    $('.kuaidifeiyong').text(money)
+                    var price =$('#countprice').text()
+                    total = data.ex_price
+                    $('.pay-sum').text(total)
+                    $('#J_ActualFee').text(total)
+
+
+
+                }
+            });
+
                 }
             })
         })
@@ -3077,7 +3114,29 @@ $(document).ready(function ($) {
 
 });
 
- 
+
+function mycommit () {
+    commit_co =$('#sibiaoid').val()
+    commit_re =$('#liuyan').val()
+    commit_num = $('#shuliang').val()
+    console.log(commit_re,commit_num,commit_ex,commit_ad,commit_co)
+    $.ajax({
+        url: '/order/commit/',// 跳转到 action
+        data: {
+            'co':commit_co,
+            'ad':commit_ad,
+            'ex':commit_ex,
+            'num':commit_num,
+            're':commit_re
+        },
+        type: 'post',
+        dataType: 'json',
+        success: function (data) {
+            console.log(data)
+
+        }
+    })
+}
  
  
  

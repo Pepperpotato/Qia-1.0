@@ -168,7 +168,7 @@ def pay(request,commodityid,count):
                                         phone_number=user_phone, uid_id=uid)
 
 
-    return render(request,'shop/home/pay.html',context={'address':address,'goods':goods,'commodity':commodity,'count':count,'norm':norm,'total_price':total_price,'total':total})
+    return render(request,'shop/home/pay.html',context={'express':express,'address':address,'goods':goods,'commodity':commodity,'count':count,'norm':norm,'total_price':total_price,'total':total})
 
 
 def addre(request):
@@ -187,3 +187,46 @@ def addre(request):
         }
         return JsonResponse(data)
     return render(request,'shop/home/pay.html')
+
+
+def express(request):
+    if request.method == 'POST':
+        express_name= request.POST.get('express_name')
+        price = request.POST.get('price')
+        express = Express_company.objects.get(express_name = express_name)
+        ex_id = express.id
+        ex_money = express.express_price
+        ex_name = express.express_name
+        ex_price = int(price)+int(ex_money)
+        data = {
+            'ex_id':ex_id,
+            'ex_money':ex_money,
+            'ex_name':ex_name,
+            'ex_price':ex_price
+        }
+        return JsonResponse(data)
+    return render(request, 'shop/home/pay.html')
+
+
+def commit(request):
+    if request.method == 'POST':
+        user = User.objects.get(username=request.session.get('username'))
+        co = request.POST.get('co')
+        ad = request.POST.get('ad')
+        ex = request.POST.get('ex')
+        num = request.POST.get('num')
+        re = request.POST.get('re')
+        commodity = CommodityCategoriesTwo.objects.get(id=co)
+        express = Express_company.objects.get(express_name = ex)
+        order = OrderTwenty(addressid=ad,uid_id=user.uid,expressbrandid=express.id,remarks=re)
+        order.save()
+        ord =OrderTwenty.objects.last()
+        orderchild = OrderchildTwentyone(orderid=int(ord.id),goodid=int(commodity.gid),goodcount=int(num),goodmoney=int(commodity.price),goodmoneycount=int(num)*int(commodity.price),cid=int(commodity.id))
+        orderchild.save()
+        request.session['bianhao']=ord.id
+        request.session['jiage'] = int(num)*int(commodity.price)
+        data = {
+                'ok':'1'
+        }
+        return JsonResponse(data)
+    return render(request, 'shop/home/pay.html')
