@@ -63,7 +63,7 @@ class OrderchildTwentyone(models.Model):
 
 class ReturnTwentytwo(models.Model):
     orderid = models.IntegerField() #订单id
-    clientreturntime = models.DateTimeField() #买家退货时间
+    clientreturntime = models.DateTimeField(default=datetime.datetime.now) #买家退货时间
     retailersreturntime = models.DateTimeField(blank=True, null=True) #卖家退款时间
     bankdotime = models.DateTimeField(blank=True, null=True) #银行受理时间
     returnoktime = models.DateTimeField(blank=True, null=True) #退款成功实践
