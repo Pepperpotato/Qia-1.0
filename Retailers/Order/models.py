@@ -75,7 +75,6 @@ class ReturnTwentytwo(models.Model):
     picturepath3 = models.CharField(max_length=256, blank=True, null=True)
 
     class Meta:
-
         db_table = 'return_twentytwo'
 
 

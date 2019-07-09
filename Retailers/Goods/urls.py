@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^comment/$', views.comment, name='comment'),
     # 发表评论
     url(r'^commentlist/$', views.commentlist, name='commentlist'),
+    url(r'^commentlist/(\d+)$', views.commentlist, name='commentlist1'),
     # 商品咨询
     url(r'^consultation/$', views.consultation, name='consultation'),
     # 优惠券
@@ -55,6 +56,7 @@ urlpatterns = [
     url(r'^order/$', views.order, name='order'),
     # 订单详情
     url(r'^orderinfo/$', views.orderinfo, name='orderinfo'),
+    url(r'^orderinfo/(\d+)$', views.orderinfo, name='orderinfo1'),
     # 修改密码
     url(r'^password/$', views.password, name='password'),
     # 我的积分
@@ -67,6 +69,7 @@ urlpatterns = [
     url(r'^record/$', views.record, name='record'),
     # 退换货
     url(r'^refund/$', views.refund, name='refund'),
+    url(r'^refund/(\d+)$', views.refund, name='refund1'),
     # 安全设置
     url(r'^safety/$', views.safety, name='safety'),
     # 支付密码
