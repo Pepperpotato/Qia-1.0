@@ -3004,7 +3004,30 @@ $(document).ready(function () {
 //地址选择
     $(function () {
         $(".user-addresslist").click(function () {
-            $(this).addClass("defaultAddr").siblings().removeClass("defaultAddr");
+            $(this).addClass("defaultAddr").siblings().removeClass("defaultAddr")
+            ad = $(this).attr('value')
+            $.ajax({
+                url: '/order/addre/',// 跳转到 action
+                data: {
+                    'address':ad
+                },
+                type: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data)
+                    var loca = data.location;
+                    var info = data.info1;
+                    var receiver = data.reciever;
+                    var num = data.phone;
+                    console.log(loca,info,receiver,num)
+                    dizhi = loca+info
+                    $('#fasongdizhi').text(dizhi)
+                    $('#shoujianren').text(receiver)
+                    $('#dianhuahao').text(num)
+
+
+                }
+            });
         });
         $(".logistics").each(function () {
             var i = $(this);

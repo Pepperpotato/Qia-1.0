@@ -1,3 +1,4 @@
+from django.core.serializers import json
 from django.db.models import Count
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
@@ -5,7 +6,7 @@ from django.template import loader
 from django.urls import reverse
 
 from Goods.models import CommodityCategories, CommodityBrand, Goods, Goodsdetails, CommodityCategoriesTwo, Specification
-from User.models import User_address
+from User.models import User_address, Express_company
 
 from .models import Mobilecount
 from django.db import connection
@@ -126,30 +127,63 @@ def price_change(request):
 def pay(request,commodityid,count):
     userid = User.objects.get(username = request.session.get('username')).uid
     address = User_address.objects.filter(uid_id = userid)
-
+    express = Express_company.objects.all()
 
     commodity = CommodityCategoriesTwo.objects.get(id=commodityid)
     goods = Goods.objects.get(gid=commodity.gid)
     norm = Specification.objects.get(id=commodity.specification_id)
     total_price = int(commodity.price)*int(count)
     total=total_price+10
+    if request.method == 'POST':
+        username = request.session.get('username')
+        user = User.objects.filter(username=username)[0]
+        uid = User.objects.filter(username=username)[0].uid
+        address = user.user_address_set.all()
+        # print(address)
+        aid = request.GET.get('aid')
+        dell = request.GET.get('del')
+        if aid:
+            # 取消原有默认地址
+            userr = user.user_address_set.filter(default_address=1)[0]
+            userr.default_address = 0
+            userr.save()
+            # 设置新的默认地址
+            userr = user.user_address_set.filter(aid=aid)[0]
+            userr.default_address = 1
+            userr.save()
+        if dell:
+            useraddress = user.user_address_set.filter(pk=dell)
+            useraddress.delete()
+            return HttpResponse(json.dumps({'data': '删除成功'}), content_type='application/json')
+        if request.method == "POST":
+            user_name = request.POST.get('user-name')
+            user_phone = request.POST.get('user-phone')
+            cmbProvince = request.POST.get('cmbProvince')
+            cmbCity = request.POST.get('cmbCity')
+            cmbArea = request.POST.get('cmbArea')
+            detail_address = request.POST.get('user-intro')
+            location = cmbProvince + cmbCity + cmbArea
+            print(user_name, user_phone, cmbProvince, cmbCity, cmbArea)
+            User_address.objects.create(location=location, detail_address=detail_address, receiver=user_name,
+                                        phone_number=user_phone, uid_id=uid)
+
+
     return render(request,'shop/home/pay.html',context={'address':address,'goods':goods,'commodity':commodity,'count':count,'norm':norm,'total_price':total_price,'total':total})
 
 
 def addre(request):
     if request.method == 'POST':
-        receiver = request.POST.get('receiver')
-        phone = request.POST.get('phone')
-        province = request.POST.get('province')
-        city = request.POST.get('city')
-        area = request.POST.get('area')
-        intro = request.POST.get('intro')
-        address = province+city+area
-        userid = User.objects.get(username = request.session.get('username')).uid
-        user = User_address(uid=userid,default_address=0,location=address,detail_address=intro,receiver=receiver,phone_number=phone)
-        user.save()
+        address = request.POST.get('address')
+        myad = User_address.objects.get(aid = address)
+        reciever = myad.receiver
+        phone =myad.phone_number
+        location = myad.location
+        detail_info = myad.detail_address
         data = {
-            'ok':'ok'
+            'reciever':reciever,
+            'phone':phone,
+            'location':location,
+            'info1':detail_info
         }
         return JsonResponse(data)
     return render(request,'shop/home/pay.html')
