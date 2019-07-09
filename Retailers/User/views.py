@@ -1,10 +1,11 @@
-
+import time
 import hashlib
 import json
 import os
 from datetime import datetime
 from random import randint
 
+from alipay import AliPay
 from django.core.paginator import Paginator
 from django.db import connection
 from django.http import HttpResponse
@@ -14,12 +15,12 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic.base import View
 
 from Goods.models import Goods, CommodityBrand, CommodityCategories, Specification, CommodityCategoriesTwo
 from Order.models import OrderTwenty, OrderchildTwentyone, Mobilecount
 from Retailers import settings
 from Retailers.settings import NUMOFPAGE
-
 from User.forms import ChangeForm
 from User.models import User, Express_company, Pay_way, User_account, User_grade
 
@@ -62,7 +63,12 @@ def index(request):
         cursor.execute("select c.gid,g.gname,specification,inventory from goodsone g join commodity_categories_two_four c on g.gid=c.gid join specification s on s.id=c.specification_id where inventory<50")
     columns = [col[0] for col in cursor.description]
     res = [dict(zip(columns, row)) for row in cursor.fetchall()]
-    print(res)
+
+    with connection.cursor() as cursor:
+        cursor.execute("select * from orderchild_twentyone t join goodsone g on t.goodid=g.gid join order_twenty o on o.id=t.orderid")
+    columns = [col[0] for col in cursor.description]
+    res1 = [dict(zip(columns, row)) for row in cursor.fetchall()]
+    print(res1)
     return render(request, 'admin/index.html', context={
         'admin_info': admin_info,
         'admin': admin,
@@ -583,9 +589,9 @@ def pageviews(request):
     day3view = day3['view']
     day3time = day3['time']
     #
-    # day2 = res[5]
-    # day2view = day2['view']
-    # day2time = day2['time']
+    day2 = res[5]
+    day2view = day2['view']
+    day2time = day2['time']
     #
     # day1 = res[6]
     # day1view = day1['view']
@@ -601,8 +607,8 @@ def pageviews(request):
         'day4time': day4time,
         'day3view': day3view,
         'day3time': day3time,
-        # 'day2view': day2view,
-        # 'day2time': day2time,
+        'day2view': day2view,
+        'day2time': day2time,
         # 'day1view': day1view,
         # 'day1time': day1time
     })
@@ -754,4 +760,41 @@ def choiceorder(request, page=1):
                 'pagination': pagination,
             })
 
+
+class OrderPayView(View):
+    """订单支付"""
+    def post(self, request):
+
+        order_id = request.POST.get("order_id")
+        if not order_id:
+            return JsonResponse({"errno": 1, "error_msg": "参数不完整"})
+        try:
+            # order = OrderTwenty.objects.get(id=order_id, user=user, pay_method=3, order_status=1)
+            order = OrderTwenty.objects.get(id=order_id, paywayid=1, orderstatus=0)
+        except OrderTwenty.DoesNotExist:
+            return JsonResponse({"errno": 2, "error_msg": "无效订单"})
+
+        alipay = AliPay(
+            appid="2016101100659250",  # 应用id
+            app_notify_url=None,  # 默认回调url
+            app_private_key_path=os.path.join(settings.BASE_DIR, 'User/keys/app_private_key.pem'),
+            # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
+            alipay_public_key_path=os.path.join(settings.BASE_DIR, 'User/keys/alipay_public_key.pem'),
+            sign_type="RSA2",  # RSA 或者 RSA2
+            debug=True  # 默认False
+
+        )
+        # 电脑网站支付，需要跳转到https://openapi.alipay.com/gateway.do? + order_string
+        total_pay = order.total_price + order.transit_price
+        order_string = alipay.api_alipay_trade_page_pay(
+            out_trade_no=order_id,  # 订单编号
+            total_amount=str(total_pay),
+            subject=u"天天生鲜<%s>" % order_id,
+            return_url=None,
+            notify_url=None  # 可选, 不填则使用默认notify url
+        )
+        # 构造用户跳转的支付链接地址
+        pay_url = "https://openapi.alipaydev.com/gateway.do?" + order_string
+
+        return JsonResponse({"errno": "ok", "pay_url": pay_url})
 
