@@ -82,7 +82,7 @@
                                                     <ul class="item-list">
                                                         <li class="td td-item">
                                                             <div class="item-pic">
-                                                                <a href="#" class="J_MakePoint">
+                                                                <a href="{% url 'goods:orderinfo1' order.id  %}" class="J_MakePoint">
                                                                     <img src="/static{{ orderchild.picture }}"
                                                                          class="itempic J_ItemImg">
                                                                 </a>
@@ -91,8 +91,15 @@
                                                                 <div class="item-basic-info">
                                                                     <a href="#">
                                                                         <p>{{ orderchild.gname }}</p>
-                                                                        <p class="info-little">颜色：12#川南玛瑙
-                                                                            <br/>包装：裸装 </p>
+{#                                                                        <p class="info-little">颜色：12#川南玛瑙#}
+                                                                            <br/>
+                                                                            {#                                                                            {{ order.id }}#}
+                                                                            {#{{ dictmoney.4 }}#}
+
+
+                                                                            包装： {{ orderchild.smallclassesattribute }}
+
+                                                                        </p>
                                                                     </a>
                                                                 </div>
                                                             </div>
@@ -119,7 +126,12 @@
                                         <div class="order-right">
                                             <li class="td td-amount">
                                                 <div class="item-amount">
-                                                    合计：{{ count }}
+                                                    合计：
+                                                    {% for key,value in dictmoney.items %}
+                                                        {% if key == order.id %}
+                                                            {{ value }}
+                                                        {% endif %}
+                                                    {% endfor %}
                                                     <p>含运费：<span>{{ express_price }}</span></p>
                                                 </div>
                                             </li>
@@ -137,6 +149,29 @@
                                                         <div class="am-btn am-btn-danger anniu">
                                                             删除订单
                                                         </div>
+                                                        <div class="am-btn am-btn-danger anniu">
+                                                             <a href="{% url 'goods:refund1' order.id %} " style="color: white;">申请退货</a>
+                                                        </div>
+                                                    </li>
+                                                </div>
+                                                {% elif order.orderstatus == 5 %}
+                                                <div class="move-right">
+                                                    <li class="td td-status">
+                                                        <div class="item-status">
+                                                            <p class="Mystatus">已申请退货</p>
+                                                            <p class="order-info"><a href="">订单详情</a></p>
+                                                            <p class="order-info"><a href=""></a></p>
+                                                        </div>
+                                                    </li>
+                                                    <li class="td td-change">
+                                                        <a href="commentlist.html">
+{#                                                            <div class="am-btn am-btn-danger anniu">#}
+{##}
+{#                                                            </div>#}
+{#                                                            <div class="am-btn am-btn-danger anniu">#}
+{##}
+{#                                                            </div>#}
+                                                        </a>
                                                     </li>
                                                 </div>
                                             {% elif order.orderstatus == 3 %}
@@ -149,10 +184,13 @@
                                                         </div>
                                                     </li>
                                                     <li class="td td-change">
-                                                        <a href="commentlist.html">
+                                                        <a href="{% url 'goods:commentlist1' order.id %}">
                                                             <div class="am-btn am-btn-danger anniu">
                                                                 评价商品
                                                             </div>
+                                                            <div class="am-btn am-btn-danger anniu">
+                                                             <a href="{% url 'goods:refund1' order.id %} " style="color: white;">申请退货</a>
+                                                        </div>
                                                         </a>
                                                     </li>
                                                 </div>
@@ -170,6 +208,9 @@
                                                         <div class="am-btn am-btn-danger anniu">
                                                             确认收货
                                                         </div>
+                                                        <div class="am-btn am-btn-danger anniu">
+                                                             <a href="{% url 'goods:refund1' order.id %} " style="color: white;">申请退货</a>
+                                                        </div>
                                                     </li>
                                                 </div>
                                             {% elif order.orderstatus == 1 %}
@@ -184,6 +225,9 @@
                                                         <div class="am-btn am-btn-danger anniu">
                                                             提醒发货
                                                         </div>
+                                                        <div class="am-btn am-btn-danger anniu">
+                                                             <a href="{% url 'goods:refund1' order.id %} " style="color: white;">申请退货</a>
+                                                        </div>
                                                     </li>
                                                 </div>
                                             {% elif order.orderstatus == 0 %}
@@ -195,7 +239,7 @@
                                                         </div>
                                                     </li>
                                                     <li class="td td-change">
-                                                        <a href="pay.html">
+                                                        <a href="">
                                                             <div class="am-btn am-btn-danger anniu">
                                                                 一键支付
                                                             </div>
@@ -274,7 +318,7 @@
                                                                         <a href="#">
                                                                             <p>{{ orderchild.gname }}</p>
                                                                             <p class="info-little">颜色：12#川南玛瑙
-                                                                                <br/>包装：裸装 </p>
+                                                                                <br/>包装： {{ orderchild.smallclassesattribute }} </p>
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -301,7 +345,14 @@
                                             <div class="order-right">
                                                 <li class="td td-amount">
                                                     <div class="item-amount">
-                                                        合计：{{ count }}
+                                                        合计： {% for key,value in dictmoney.items %}
+
+                                                        {% if key == order.id %}
+                                                            {{ value }}
+                                                        {% endif %}
+
+
+                                                    {% endfor %}
                                                         <p>含运费：<span>{{ express_price }}</span></p>
                                                     </div>
                                                 </li>
@@ -388,7 +439,7 @@
                                                                         <a href="#">
                                                                             <p>{{ orderchild.gname }}</p>
                                                                             <p class="info-little">颜色：12#川南玛瑙
-                                                                                <br/>包装：裸装 </p>
+                                                                                <br/>包装： {{ orderchild.smallclassesattribute }} </p>
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -415,7 +466,14 @@
                                             <div class="order-right">
                                                 <li class="td td-amount">
                                                     <div class="item-amount">
-                                                        合计：{{ count }}
+                                                        合计： {% for key,value in dictmoney.items %}
+
+                                                        {% if key == order.id %}
+                                                            {{ value }}
+                                                        {% endif %}
+
+
+                                                    {% endfor %}
                                                         <p>含运费：<span>{{ express_price }}</span></p>
                                                     </div>
                                                 </li>
@@ -497,7 +555,7 @@
                                                                         <a href="#">
                                                                             <p>{{ orderchild.gname }}</p>
                                                                             <p class="info-little">颜色：12#川南玛瑙
-                                                                                <br/>包装：裸装 </p>
+                                                                                <br/>包装： {{ orderchild.smallclassesattribute }} </p>
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -524,7 +582,14 @@
                                             <div class="order-right">
                                                 <li class="td td-amount">
                                                     <div class="item-amount">
-                                                        合计：{{ count }}
+                                                        合计： {% for key,value in dictmoney.items %}
+
+                                                        {% if key == order.id %}
+                                                            {{ value }}
+                                                        {% endif %}
+
+
+                                                    {% endfor %}
                                                         <p>含运费：<span>{{ express_price }}</span></p>
                                                     </div>
                                                 </li>
@@ -609,7 +674,9 @@
                                                                         <a href="#">
                                                                             <p>{{ orderchild.gname }}</p>
                                                                             <p class="info-little">颜色：12#川南玛瑙
-                                                                                <br/>包装：裸装 </p>
+                                                                                <br/>包装： {{ orderchild.smallclassesattribute }}
+
+                                                                            </p>
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -636,7 +703,14 @@
                                             <div class="order-right">
                                                 <li class="td td-amount">
                                                     <div class="item-amount">
-                                                        合计：{{ count }}
+                                                        合计： {% for key,value in dictmoney.items %}
+
+                                                        {% if key == order.id %}
+                                                            {{ value }}
+                                                        {% endif %}
+
+
+                                                    {% endfor %}
                                                         <p>含运费：<span>{{ express_price }}</span></p>
                                                     </div>
                                                 </li>

@@ -21,7 +21,7 @@ from django.views.decorators.csrf import csrf_exempt
 from Goods.forms import UserForm1,UserForm2
 from Goods.models import Coupons, Goods, CommodityCategoriesTwo, CommodityBrand, CommodityCategories
 from Goods.sms import send_sms
-from Order.models import OrderTwenty, OrderchildTwentyone
+from Order.models import OrderTwenty, OrderchildTwentyone, ReturnTwentytwo
 from Retailers import settings
 from Retailers.settings import SMSCONFIG, SMSCONFIGG, NUMOFPAGE
 from User.models import User, User_grade, User_address, User_account
@@ -31,7 +31,6 @@ from django.core.mail import send_mail
 # 模板
 def frame(request):
     return render(request,'shop/frame.html')
-
 
 # 账单
 def bill(request):
@@ -58,10 +57,6 @@ def cardlist(request):
 def cardmethod(request):
     return render(request,'shop/person/cardmethod.html')
 
-# 退货管理
-def change(request):
-    return render(request,'shop/person/change.html')
-
 # 我的收藏
 def collection(request):
     return render(request,'shop/person/collection.html')
@@ -70,9 +65,6 @@ def collection(request):
 def comment(request):
     return render(request,'shop/person/comment.html')
 
-# 发表评论
-def commentlist(request):
-    return render(request,'shop/person/commentlist.html')
 # 商品咨询
 def consultation(request):
     return render(request,'shop/person/consultation.html')
@@ -93,13 +85,6 @@ def logistics(request):
 def news(request):
     return render(request,'shop/person/news.html')
 
-
-
-# 订单详情
-def orderinfo(request):
-    return render(request,'shop/person/orderinfo.html')
-
-
 # 我的积分
 def pointnew(request):
     return render(request,'shop/person/pointnew.html')
@@ -111,10 +96,6 @@ def points(request):
 # 钱款去向
 def record(request):
     return render(request,'shop/person/record.html')
-
-# 退换货
-def refund(request):
-    return render(request,'shop/person/refund.html')
 
 # 意见反馈
 def suggest(request):
@@ -941,21 +922,199 @@ def order(request):
     uid=User.objects.filter(username=username)[0].uid
     with connection.cursor() as cursor:
         cursor.execute(
-            "SELECT * FROM order_twenty o RIGHT JOIN orderchild_twentyone c ON o.id=c.orderid  JOIN goodsone g ON c.goodid=g.gid JOIN express_company e  ON o.expressbrandid=e.id WHERE  o.uid_id={} AND o.id=c.orderid".format(uid))
+            "SELECT * FROM order_twenty o RIGHT JOIN orderchild_twentyone c ON o.id=c.orderid  JOIN goodsone g ON c.goodid=g.gid JOIN express_company e  ON o.expressbrandid=e.id LEFT JOIN commodity_categories_two_four co ON co.id=c.cid WHERE  o.uid_id={} AND o.id=c.orderid".format(uid))
     columns = [col[0] for col in cursor.description]
     orderchild = [dict(zip(columns, row)) for row in cursor.fetchall()]
     count = 0
     express_price=0
+    dictmoney={}
     for money in orderchild:
-        # print(money)
+        # print(money.get('orderid'))
         count+=int(money.get('goodmoneycount'))
         express_price=money.get('express_price')
+        if dictmoney.get(money.get('orderid')):
+            dictmoney[money.get('orderid')]=dictmoney.get(money.get('orderid'))+int(money.get('goodmoneycount'))
+        else:
+            dictmoney[money.get('orderid')] =int(money.get('goodmoneycount'))
         # count+=money.goodmoneycount
     # print(orderchild)
-    # print(count)
+    # print(dictmoney)
     return render(request,'shop/person/order.html',context={
         'orders':orders,
         'count':count,
         'orderchild':orderchild,
         'express_price':express_price,
+        'dictmoney':dictmoney,
     })
+
+# 订单详情
+def orderinfo(request,orderr):
+    username=request.session.get('username')
+    uid=User.objects.filter(username=username)[0].uid
+    # 用户所有订单
+    user = User.objects.filter(username=username)[0]
+    orders = user.ordertwenty_set.all()
+    # print(orders)
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM order_twenty o RIGHT JOIN orderchild_twentyone c ON o.id=c.orderid  JOIN goodsone g ON c.goodid=g.gid JOIN express_company e  ON o.expressbrandid=e.id LEFT JOIN user_address u ON o.addressid=u.aid    LEFT JOIN commodity_categories_two_four co ON co.id=c.cid WHERE  o.uid_id={} AND o.id={}".format(uid,orderr))
+    columns = [col[0] for col in cursor.description]
+    orderchild = [dict(zip(columns, row)) for row in cursor.fetchall()]
+    # print(orderchild)
+    count = 0
+    express_price = 0
+    dictmoney = {}
+    for money in orderchild:
+        # print(money.get('orderid'))
+        count += int(money.get('goodmoneycount'))
+        express_price = money.get('express_price')
+        if dictmoney.get(money.get('orderid')):
+            dictmoney[money.get('orderid')] = dictmoney.get(money.get('orderid')) + int(money.get('goodmoneycount'))
+        else:
+            dictmoney[money.get('orderid')] = int(money.get('goodmoneycount'))
+    orderr=int(orderr)
+    return render(request,'shop/person/orderinfo.html',context={
+        'orders': orders,
+        'count': count,
+        'orderchild': orderchild,
+        'express_price': express_price,
+        'dictmoney': dictmoney,
+        'orderr':orderr,
+    })
+
+# 退换货
+def refund(request,orderr):
+    username = request.session.get('username')
+    uid = User.objects.filter(username=username)[0].uid
+    # 用户所有订单
+    user = User.objects.filter(username=username)[0]
+    orders = user.ordertwenty_set.all()
+    # print(orders)
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM order_twenty o RIGHT JOIN orderchild_twentyone c ON o.id=c.orderid  JOIN goodsone g ON c.goodid=g.gid JOIN express_company e  ON o.expressbrandid=e.id LEFT JOIN user_address u ON o.addressid=u.aid    LEFT JOIN commodity_categories_two_four co ON co.id=c.cid WHERE  o.uid_id={} AND o.id={}".format(
+                uid, orderr))
+    columns = [col[0] for col in cursor.description]
+    orderchild = [dict(zip(columns, row)) for row in cursor.fetchall()]
+    # print(orderchild)
+    count = 0
+    express_price = 0
+    dictmoney = {}
+    for money in orderchild:
+        # print(money.get('orderid'))
+        count += int(money.get('goodmoneycount'))
+        express_price = money.get('express_price')
+        if dictmoney.get(money.get('orderid')):
+            dictmoney[money.get('orderid')] = dictmoney.get(money.get('orderid')) + int(money.get('goodmoneycount'))
+        else:
+            dictmoney[money.get('orderid')] = int(money.get('goodmoneycount'))
+    orderr = int(orderr)
+
+    if request.method == "POST":
+        content=request.POST.get('content')
+        realcause=request.POST.get('realcause')
+        moneyy=request.POST.get('money')
+        refund_instructions=request.POST.get('refund_instructions')
+        picture=request.FILES.getlist('picture')
+        ReturnTwentytwo.objects.create(orderid=orderr,returntype=content,returnreason=realcause,returnmoney=moneyy,returndetails=refund_instructions)
+        returngoods=ReturnTwentytwo.objects.filter(orderid=orderr)[0]
+        if picture:
+            i=0
+            for file in picture[0:3]:
+                i+=1
+                # 文件路径
+                path = os.path.join(settings.MEDIA_ROOT, file.name)
+                # 文件类型过滤
+                ext = os.path.splitext(file.name)
+                if len(ext) < 1 or not ext[1] in settings.ALLOWED_FILEEXTS:
+                    return redirect(reverse('upload'))
+                # 解决文件重名
+                if os.path.exists(path):
+                    # 日期目录
+                    dir = datetime.today().strftime("%Y/%m/%d")
+                    dir = os.path.join(settings.MEDIA_ROOT, dir)
+                    if not os.path.exists(dir):
+                        os.makedirs(dir)  # 递归创建目录
+                    # list.png
+                    file_name = ext[0] + datetime.today().strftime("%Y%m%d%H%M%S") + str(randint(1, 1000)) + ext[1] if len(
+                        ext) > 1 else ''
+                    path = os.path.join(dir, file_name)
+                    # print(path)
+                    pathh = path.split('Retailers/static')
+                    # print(pathh[1])
+                    if i==1:
+                        returngoods.picturepath1 = pathh[1]
+                        returngoods.save()
+                    elif i==2:
+                        returngoods.picturepath2 = pathh[1]
+                        returngoods.save()
+                    elif i==3:
+                        returngoods.picturepath3 = pathh[1]
+                        returngoods.save()
+                # 创建新文件
+                with open(path, 'wb') as fp:
+                    # 如果文件超过2.5M,则分块读写
+                    if file.multiple_chunks():
+                        for block1 in file.chunks():
+                            fp.write(block1)
+                    else:
+                        fp.write(file.read())
+        ordertwenty=OrderTwenty.objects.filter(id=orderr)[0]
+        ordertwenty.orderstatus=5
+        ordertwenty.save()
+    return render(request,'shop/person/refund.html',context={
+        'orders': orders,
+        'count': count,
+        'orderchild': orderchild,
+        'express_price': express_price,
+        'dictmoney': dictmoney,
+        'orderr': orderr,
+    })
+
+# 退货管理
+def change(request):
+    username = request.session.get('username')
+    uid = User.objects.filter(username=username)[0].uid
+    # 用户所有订单
+    user = User.objects.filter(username=username)[0]
+    orders = user.ordertwenty_set.all()
+    # print(orders)
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM order_twenty o RIGHT JOIN orderchild_twentyone c ON o.id=c.orderid  JOIN goodsone g ON c.goodid=g.gid JOIN express_company e  ON o.expressbrandid=e.id LEFT JOIN user_address u ON o.addressid=u.aid    LEFT JOIN commodity_categories_two_four co ON co.id=c.cid JOIN return_twentytwo re ON re.orderid=o.id WHERE  o.uid_id={} AND o.orderstatus=5".format(uid,))
+    columns = [col[0] for col in cursor.description]
+    orderchild = [dict(zip(columns, row)) for row in cursor.fetchall()]
+    # print(orderchild)
+    return render(request,'shop/person/change.html',context={
+        'orderchild':orderchild,
+    })
+
+# 发表评论
+def commentlist(request,list):
+    print(list)
+    username = request.session.get('username')
+    uid = User.objects.filter(username=username)[0].uid
+    # 用户所有订单
+    user = User.objects.filter(username=username)[0]
+    orders = user.ordertwenty_set.all()
+    # print(orders)
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM order_twenty o RIGHT JOIN orderchild_twentyone c ON o.id=c.orderid  JOIN goodsone g ON c.goodid=g.gid JOIN express_company e  ON o.expressbrandid=e.id LEFT JOIN user_address u ON o.addressid=u.aid    LEFT JOIN commodity_categories_two_four co ON co.id=c.cid WHERE  o.uid_id={} AND o.id={}".format(
+                uid, list))
+    columns = [col[0] for col in cursor.description]
+    orderchild = [dict(zip(columns, row)) for row in cursor.fetchall()]
+    # print(orderchild)
+    count = 0
+    express_price = 0
+    dictmoney = {}
+    for money in orderchild:
+        # print(money.get('orderid'))
+        count += int(money.get('goodmoneycount'))
+        express_price = money.get('express_price')
+        if dictmoney.get(money.get('orderid')):
+            dictmoney[money.get('orderid')] = dictmoney.get(money.get('orderid')) + int(money.get('goodmoneycount'))
+        else:
+            dictmoney[money.get('orderid')] = int(money.get('goodmoneycount'))
+    orderr = int(list)
+    return render(request,'shop/person/commentlist.html')
