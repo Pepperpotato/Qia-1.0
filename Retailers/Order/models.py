@@ -26,9 +26,8 @@ class ConsultTwentyeight(models.Model):
 
 
 class OrderTwenty(models.Model):
-    uid = models.ForeignKey(User,models.CASCADE)
-
-    ordertime = models.DateTimeField(null=True)#下单时间
+    uid = models.ForeignKey(User, models.CASCADE)
+    ordertime = models.DateTimeField(auto_now_add=True)#下单时间
     addressid = models.IntegerField(null=True)#收货地址id
     expressbrandid = models.IntegerField(default=1,null=True)#物流品牌id
     paywayid = models.IntegerField(null=True, default=1)#支付id
@@ -63,7 +62,7 @@ class OrderchildTwentyone(models.Model):
 
 class ReturnTwentytwo(models.Model):
     orderid = models.IntegerField() #订单id
-    clientreturntime = models.DateTimeField() #买家退货时间
+    clientreturntime = models.DateTimeField(default=datetime.datetime.now) #买家退货时间
     retailersreturntime = models.DateTimeField(blank=True, null=True) #卖家退款时间
     bankdotime = models.DateTimeField(blank=True, null=True) #银行受理时间
     returnoktime = models.DateTimeField(blank=True, null=True) #退款成功实践

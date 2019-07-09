@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="{% static 'admin/js/jquery.min.js' %}"></script>
+</head>
+<body>
+<div>
+
+    <a href="#" class="oper_btn">去付款</a>
+</div>
+
+</body>
+</html>
+<script>
+
+    $('.oper_btn').click(function () {
+        // 获取页面上订单状态
+        {#status = $(this).attr('status')#}
+        {#if(status == 1){#}
+        {#    // 状态为1表示待支付状态#}
+        {#    // 获取订单id#}
+        {#    order_id = $(this).attr('order_id');#}
+        {#    csrf = $('input[name="csrfmiddlewaretoken"]').val();#}
+        {#    params = {"order_id":order_id, "csrfmiddlewaretoken":csrf};#}
+            params = {"order_id":1};
+            // 向后端接口/order/pay 发送ajax post请求
+            $.post('{% url 'admin:pay' %}', params, function (data) {
+                console.log(data);
+                if(data.errno=="ok"){
+                    // 引导客户到支付界面
+                    window.open(data.pay_url)
+                }
+                else {
+                    alert(data.error_msg)
+                }
+            })
+        });
+
+            $.post('{% url 'admin:checkpay'%}', params, function (data) {
+    // 判断用户是否支付成功
+    if(data.errno=="ok"){
+        alert("支付成功");
+        location.reload()
+    }
+    else {
+        alert(data.error_msg)
+    }
+})
+
+</script>

@@ -1,3 +1,4 @@
+import os
 
 from django.db import models
 
@@ -6,6 +7,10 @@ from django.db import models
 
 # 商品品牌表2
 from django.utils import timezone
+
+from Retailers import settings
+
+
 class CommodityBrand(models.Model):
     id = models.AutoField(primary_key=True)  #id
     brandname = models.CharField(max_length=20)  #品牌名称
@@ -124,3 +129,28 @@ class Productevaluation(models.Model):
         db_table='productevaluation_nine'
 
 
+def uploadpic(picture):
+
+    if not picture:
+        return False
+    # 文件路径
+    path = os.path.join(settings.MEDIA_ROOT, picture.name)
+
+    # # 文件类型过滤
+    # ext = os.path.splitext(picture.name)
+    # if len(ext) < 1 or not ext[1] in settings.ALLOWED_FILEEXTS:
+    #     return JsonResponse({'code': 2, 'data': '不允许的图片格式'})
+
+    pathh = path.split('Retailers/static')
+
+    picpath = pathh[1]
+
+    # 创建新文件
+    with open(path, 'wb') as fp:
+        # 如果文件超过2.5M,则分块读写
+        if picture.multiple_chunks():
+            for block1 in picture.chunks():
+                fp.write(block1)
+        else:
+            fp.write(picture.read())
+    return picpath
