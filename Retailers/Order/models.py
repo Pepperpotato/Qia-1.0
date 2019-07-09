@@ -53,7 +53,7 @@ class OrderchildTwentyone(models.Model):
     goodcount = models.IntegerField(null=True) #商品数量
     goodmoney = models.IntegerField(null=True) #商品单价
     goodmoneycount = models.IntegerField(null=True) #合计
-
+    cid = models.IntegerField()
     class Meta:
 
         db_table = 'orderchild_twentyone'
