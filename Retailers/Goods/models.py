@@ -128,8 +128,11 @@ class Productevaluation(models.Model):
     class Meta:
         db_table='productevaluation_nine'
 
+
 def uploadpic(picture):
 
+    if not picture:
+        return False
     # 文件路径
     path = os.path.join(settings.MEDIA_ROOT, picture.name)
 
