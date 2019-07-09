@@ -5,7 +5,7 @@ import re
 from datetime import datetime
 from random import randint
 
-from celery import chain
+# from celery import chain
 from django.core.paginator import Paginator
 from django.db import connection
 from django.http import HttpResponseRedirect, HttpResponse

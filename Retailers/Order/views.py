@@ -134,3 +134,22 @@ def pay(request,commodityid,count):
     total_price = int(commodity.price)*int(count)
     total=total_price+10
     return render(request,'shop/home/pay.html',context={'address':address,'goods':goods,'commodity':commodity,'count':count,'norm':norm,'total_price':total_price,'total':total})
+
+
+def addre(request):
+    if request.method == 'POST':
+        receiver = request.POST.get('receiver')
+        phone = request.POST.get('phone')
+        province = request.POST.get('province')
+        city = request.POST.get('city')
+        area = request.POST.get('area')
+        intro = request.POST.get('intro')
+        address = province+city+area
+        userid = User.objects.get(username = request.session.get('username')).uid
+        user = User_address(uid=userid,default_address=0,location=address,detail_address=intro,receiver=receiver,phone_number=phone)
+        user.save()
+        data = {
+            'ok':'ok'
+        }
+        return JsonResponse(data)
+    return render(request,'shop/home/pay.html')
