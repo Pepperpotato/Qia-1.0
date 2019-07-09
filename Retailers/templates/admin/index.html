@@ -64,10 +64,11 @@
                     <dt>商品管理</dt>
                     <!--当前链接则添加class:active-->
                     <dd><a href="{% url 'admin:productlist' %}" class="active" onclick="loading()">商品列表</a></dd>
-                    {#    <dd><a href="{% url 'admin:addnewgood' %}">添加新商品</a></dd>#}
                     <dd><a href="{% url 'admin:addbigcategory' %}">添加商品大类别</a></dd>
                     <dd><a href="{% url 'admin:addsmallcategory' %}">添加商品小类别</a></dd>
                     <dd><a href="{% url 'admin:addgood' %}">添加已有类别商品</a></dd>
+                    <dd><a href="{% url 'admin:addattrbute' %}">添加已有商品种类(属性)</a></dd>
+                    <dd><a href="{% url 'admin:addgoodetail' %}">添加已有商品详情</a></dd>
                     <dd><a href="{% url 'admin:addband' %}">添加品牌</a></dd>
                     <dd><a href="{% url 'admin:addinventory' %}">商品进货</a></dd>
                     <dd><a href="#">商品回收站示例</a></dd>

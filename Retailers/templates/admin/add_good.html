@@ -5,7 +5,7 @@
     <section class="rt_wrap content mCustomScrollbar">
         <div class="rt_content">
             <div class="page_title">
-                <h2 class="fl">添加已有类别商品</h2>
+                <h3>添加新的商品<span class="label label-default">New</span></h3>
             </div>
             <form action="{% url 'admin:addgood' %}" method="post" enctype="multipart/form-data" >
                 {% csrf_token %}
@@ -53,14 +53,17 @@
                         <input name="format" class="textbox textbox_225"/>
                     </li>
                     <li>
-                        <span class="item_name" style="width:120px;">商品单价：</span>
+                        <span class="item_name" style="width:120px;">商品出售价格：</span>
                         <input name="price" class="textbox textbox_225"/>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">商品采购价格：</span>
+                        <input name="stockprice" class="textbox textbox_225"/>
                     </li>
                     <li>
                         <span class="item_name" style="width:120px;">商品库存：</span>
                         <input name="inventory" class="textbox textbox_225"/>
                     </li>
-
                     <li>
                         <span class="item_name" style="width:120px;">上传图片：</span>
                             <label class="uploadImg">

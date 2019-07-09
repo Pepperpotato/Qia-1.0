@@ -17,7 +17,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import View
 
-from Goods.models import Goods, CommodityBrand, CommodityCategories, Specification, CommodityCategoriesTwo
+from Goods.models import Goods, CommodityBrand, CommodityCategories, Specification, CommodityCategoriesTwo, \
+    Goodsdetails, uploadpic
 from Order.models import OrderTwenty, OrderchildTwentyone, Mobilecount
 from Retailers import settings
 from Retailers.settings import NUMOFPAGE
@@ -68,7 +69,7 @@ def index(request):
         cursor.execute("select * from orderchild_twentyone t join goodsone g on t.goodid=g.gid join order_twenty o on o.id=t.orderid")
     columns = [col[0] for col in cursor.description]
     res1 = [dict(zip(columns, row)) for row in cursor.fetchall()]
-    print(res1)
+
     return render(request, 'admin/index.html', context={
         'admin_info': admin_info,
         'admin': admin,
@@ -140,8 +141,10 @@ def addgood(request):
         newsection = request.POST.get('newsection')
         # 规格
         format = request.POST.get('format')
-        # 单价
+        # 售价
         price = int(request.POST.get('price'))
+        # 采购价
+        stockprice = request.POST.get('stockprice')
         # 单位
         unit = request.POST.get('unit')
         # 库存
@@ -193,6 +196,7 @@ def addgood(request):
         newcategory.specification_id = sid
         newcategory.brandid = brand
         newcategory.price = price
+        newcategory.stockprice = stockprice
         newcategory.inventory = inventory
         newcategory.unit = unit
         newcategory.gid = gid
@@ -370,6 +374,137 @@ def addinventory4(request):
         current_good.inventory += int(inventory)
         current_good.save()
         return redirect(reverse('admin:productlist'))
+
+
+
+def addattrbute(request):
+    if request.method == 'POST':
+        category = request.POST.get('category')
+        brand = request.POST.get('brand')
+        goodid = request.POST.get('goodid')
+        specification = request.POST.get('specification')
+        unit = request.POST.get('unit')
+        attrbute = request.POST.get('attrbute')
+        price = request.POST.get('price')
+        ishow = request.POST.get('ishow')
+        stockprice = request.POST.get('stockprice')
+        inventory = request.POST.get('inventory')
+
+        new_atrr = CommodityCategoriesTwo()
+        new_specification = Specification()
+
+        new_atrr.smallclassesid = category
+        new_atrr.brandid = brand
+        new_specification.specification = specification
+        new_specification.save()
+        specification_id = new_specification.id
+        new_atrr.specification_id = specification_id
+        new_atrr.gid = goodid
+        new_atrr.unit = unit
+        new_atrr.smallclassesattribute = attrbute
+        new_atrr.price = int(price)
+        new_atrr.ishow = int(ishow)
+        new_atrr.stockprice = int(stockprice)
+        new_atrr.inventory = int(inventory)
+        new_atrr.save()
+        return redirect(reverse('admin:productlist'))
+
+
+
+    commodity_categories = CommodityCategories.objects.filter(parentid__gt=0)
+    commodity_brand = CommodityBrand.objects.all()
+    all_good = Goods.objects.all()
+    return render(request, 'admin/add_attrbute.html',context={
+        'commodity_brand': commodity_brand,
+        'commodity_categories': commodity_categories,
+        'all_goods': all_good
+    })
+
+
+def addgoodetail(request):
+    if request.method == 'POST':
+        gid = request.POST.get('good')
+        good_detail = Goodsdetails()
+        good_detail.Goodsid = gid
+        good_detail.productclass = request.POST.get('productclass')
+        good_detail.rawmaterial = request.POST.get('rawmaterial')
+        good_detail.origin = request.POST.get('origin')
+        good_detail.ingredients = request.POST.get('ingredients')
+        good_detail.productspecification = request.POST.get('productspecification')
+        good_detail.shelflife = request.POST.get('shelflife')
+        good_detail.productstandardnumber = request.POST.get('productstandardnumber')
+        good_detail.productionlicensenumber = request.POST.get('productionlicensenumber')
+        good_detail.storeway = request.POST.get('storeway')
+        good_detail.eatway = request.POST.get('eatway')
+
+        # 图片一上传
+        picture1 = request.FILES.get('picture1')
+        pathpic1 = uploadpic(picture1)
+        good_detail.picture1 = pathpic1
+
+        mpicture1 = request.FILES.get('mpicture1')
+        pathmpic1 = uploadpic(mpicture1)
+        good_detail.mpicture1 = pathmpic1
+
+        spicture1 = request.FILES.get('spicture1')
+        pathspic1 = uploadpic(spicture1)
+        good_detail.spicture1 = pathspic1
+
+        # 图片二上传
+        picture2 = request.FILES.get('picture2')
+        pathpic2 = uploadpic(picture2)
+        good_detail.picture2 = pathpic2
+
+        mpicture2 = request.FILES.get('mpicture2')
+        pathmpic2 = uploadpic(mpicture2)
+        good_detail.mpicture2 = pathmpic2
+
+        spicture2 = request.FILES.get('spicture2')
+        pathspic2 = uploadpic(spicture2)
+        good_detail.spicture2 = pathspic2
+
+        # 图片三上传
+        picture3 = request.FILES.get('picture3')
+        pathpic3 = uploadpic(picture3)
+        good_detail.picture3 = pathpic3
+
+        mpicture3 = request.FILES.get('mpicture3')
+        pathmpic3 = uploadpic(mpicture3)
+        good_detail.mpicture3 = pathmpic3
+
+        spicture3 = request.FILES.get('spicture3')
+        pathspic3 = uploadpic(spicture3)
+        good_detail.spicture3 = pathspic3
+
+        # 图片四上传
+        picture4 = request.FILES.get('picture4')
+        pathpic4 = uploadpic(picture4)
+        good_detail.picture4 = pathpic4
+
+        # 图片五上传
+        picture5 = request.FILES.get('picture5')
+        pathpic5 = uploadpic(picture5)
+        good_detail.picture5 = pathpic5
+
+        # 图片六上传
+        picture6 = request.FILES.get('picture6')
+        pathpic6 = uploadpic(picture6)
+        good_detail.picture6 = pathpic6
+
+        # 图片七上传
+        picture7 = request.FILES.get('picture7')
+        pathpic7 = uploadpic(picture7)
+        good_detail.picture7 = pathpic7
+
+        good_detail.save()
+
+        return redirect(reverse('admin:productlist'))
+
+    all_good = Goods.objects.all()
+    return render(request, 'admin/add_goodetail.html',context={
+
+        'all_good': all_good
+    })
 
 
 # 订单列表
@@ -760,19 +895,22 @@ def choiceorder(request, page=1):
                 'pagination': pagination,
             })
 
+@csrf_exempt
+# class OrderPayView(View):
+#     """订单支付"""
+#     def post(self, request):
 
-class OrderPayView(View):
-    """订单支付"""
-    def post(self, request):
+def pay(request):
 
-        order_id = request.POST.get("order_id")
-        if not order_id:
-            return JsonResponse({"errno": 1, "error_msg": "参数不完整"})
-        try:
-            # order = OrderTwenty.objects.get(id=order_id, user=user, pay_method=3, order_status=1)
-            order = OrderTwenty.objects.get(id=order_id, paywayid=1, orderstatus=0)
-        except OrderTwenty.DoesNotExist:
-            return JsonResponse({"errno": 2, "error_msg": "无效订单"})
+        # order_id = request.session.get("order_id")
+        order_id = 1
+        # if not order_id:
+        #     return JsonResponse({"errno": 1, "error_msg": "参数不完整"})
+        # try:
+        #     # order = OrderTwenty.objects.get(id=order_id, user=user, pay_method=3, order_status=1)
+        #     order = OrderTwenty.objects.get(id=order_id, paywayid=1, orderstatus=0)
+        # except OrderTwenty.DoesNotExist:
+        #     return JsonResponse({"errno": 2, "error_msg": "无效订单"})
 
         alipay = AliPay(
             appid="2016101100659250",  # 应用id
@@ -785,11 +923,13 @@ class OrderPayView(View):
 
         )
         # 电脑网站支付，需要跳转到https://openapi.alipay.com/gateway.do? + order_string
-        total_pay = order.total_price + order.transit_price
+        # total_pay = order.total_price + order.transit_price
+        # total_pay = request.session.get('total_price')
+        total_pay = 270
         order_string = alipay.api_alipay_trade_page_pay(
             out_trade_no=order_id,  # 订单编号
             total_amount=str(total_pay),
-            subject=u"天天生鲜<%s>" % order_id,
+            subject="辛姐的小吃铺<%s>" % order_id,
             return_url=None,
             notify_url=None  # 可选, 不填则使用默认notify url
         )
@@ -797,4 +937,48 @@ class OrderPayView(View):
         pay_url = "https://openapi.alipaydev.com/gateway.do?" + order_string
 
         return JsonResponse({"errno": "ok", "pay_url": pay_url})
+
+
+def test(request):
+    return render(request, 'admin/test.html')
+
+
+def checkpay(request):
+    order_id = request.POST.get("order_id")
+    alipay = AliPay(
+        appid="2016101100659250",  # 应用id
+        app_notify_url=None,  # 默认回调url
+        app_private_key_path=os.path.join(settings.BASE_DIR, 'User/keys/app_private_key.pem'),
+        # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
+        alipay_public_key_path=os.path.join(settings.BASE_DIR, 'User/keys/alipay_public_key.pem'),
+        sign_type="RSA2",  # RSA 或者 RSA2
+        debug=True  # 默认False
+
+    )
+
+    while True:
+        response = alipay.api_alipay_trade_query(order_id)
+        # 从支付宝返回的响应数据中获取code以及trade_status
+        code = response.get("code")
+        trade_status = response.get("trade_status")
+
+        if code == '10000' and trade_status == "TRADE_SUCCESS":
+            # 表示成功
+            # 获取支付宝交易号
+            trade_no = response.get("trade_no")
+            # 更新订单状态
+            # order.trade_no = trade_no
+            order.order_status = 4  # 待评价
+            order.save()
+            # 返回正确响应
+            return JsonResponse({"errno": "ok", "error_msg": "交易成功"})
+        elif code == '40004' or (code == '10000' and trade_status == "WAIT_BUYER_PAY"):
+            # 业务处理失败以及等待买家付款
+            import time
+            time.sleep(5)  # 休眠5秒再次调用支付宝交易查询接口，重新获取状态码以及支付状态信息
+            continue
+        else:
+            return JsonResponse({"errno": 4, "error_msg": "交易失败"})
+
+    return None
 

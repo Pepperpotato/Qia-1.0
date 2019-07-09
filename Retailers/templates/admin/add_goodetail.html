@@ -1,0 +1,173 @@
+{% extends 'admin/index.html' %}
+{% load static %}
+
+{% block content %}
+    <section class="rt_wrap content mCustomScrollbar">
+        <div class="rt_content">
+            <div class="page_title">
+                <h3>添加商品详情<span class="label label-default">ADD</span></h3>
+            </div>
+            <form action="{% url 'admin:addgoodetail' %}" method="post" enctype="multipart/form-data" >
+                {% csrf_token %}
+                <ul class="ulColumn2">
+                    <li>
+                        <span class="item_name" style="width:120px;">商品名称：</span>
+                        <select name="good" class="select">
+                            <option>选择已有商品名称</option>
+                            {% for good in all_good %}
+                                <option value="{{ good.gid }}">{{ good.gname }}</option>
+                            {% endfor %}
+                        </select>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">产品类别：</span>
+                        <input name="productclass" class="textbox textbox_225"/>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">原料产地：</span>
+                        <input name="rawmaterial" class="textbox textbox_225"/>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">产地：</span>
+                        <input name="origin" class="textbox textbox_225"/>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">配料：</span>
+                        <input name="ingredients" class="textbox textbox_225"/>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">保质期：</span>
+                        <input name="shelflife" class="textbox textbox_225"/>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">商品规格：</span>
+                        <input name="productspecification" class="textbox textbox_225"/>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">产品标准号：</span>
+                        <input name="productstandardnumber" class="textbox textbox_225"/>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">生产许可证编号：</span>
+                        <input name="productionlicensenumber" class="textbox textbox_225"/>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">储存方式：</span>
+                        <input name="storeway" class="textbox textbox_225"/>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">食用方法：</span>
+                        <input name="eatway" class="textbox textbox_225"/>
+                    </li>
+                    <div class="alert alert-success" role="alert">
+                        <p>图片一</p>
+                    </div>
+                    <li>
+                        <span class="item_name" style="width:120px;">上传大号图片1：</span>
+                            <label class="uploadImg">
+                                <input name="picture1" type="file"/>
+                            </label>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">上传中号图片1：</span>
+                            <label class="uploadImg">
+                                <input name="mpicture1" type="file"/>
+                            </label>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">上传小号图片1：</span>
+                            <label class="uploadImg">
+                                <input name="spicture1" type="file"/>
+                            </label>
+                    </li>
+                    <div class="alert alert-success" role="alert">
+                        <p>图片二</p>
+                    </div>
+                    <li>
+                        <span class="item_name" style="width:120px;">上传大号图片2：</span>
+                            <label class="uploadImg">
+                                <input name="picture2" type="file"/>
+                            </label>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">上传中号图片2：</span>
+                            <label class="uploadImg">
+                                <input name="mpicture2" type="file"/>
+                            </label>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">上传小号图片2：</span>
+                            <label class="uploadImg">
+                                <input name="spicture2" type="file"/>
+                            </label>
+                    </li>
+                    <div class="alert alert-success" role="alert">
+                        <p>图片三</p>
+                    </div>
+                    <li>
+                        <span class="item_name" style="width:120px;">上传大号图片3：</span>
+                            <label class="uploadImg">
+                                <input name="picture3" type="file"/>
+                            </label>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">上传中号图片3：</span>
+                            <label class="uploadImg">
+                                <input name="mpicture3" type="file"/>
+                            </label>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">上传小号图片3：</span>
+                            <label class="uploadImg">
+                                <input name="spicture3" type="file"/>
+                            </label>
+                    </li>
+                    <div class="alert alert-success" role="alert">
+                        <p>图片四</p>
+                    </div>
+                    <li>
+                        <span class="item_name" style="width:120px;">上传大号图片4：</span>
+                            <label class="uploadImg">
+                                <input name="picture4" type="file"/>
+                            </label>
+                    </li>
+                    <div class="alert alert-success" role="alert">
+                        <p>图片五</p>
+                    </div>
+                    <li>
+                        <span class="item_name" style="width:120px;">上传大号图片5：</span>
+                            <label class="uploadImg">
+                                <input name="picture5" type="file"/>
+                            </label>
+                    </li>
+                    <div class="alert alert-success" role="alert">
+                        <p>图片六</p>
+                    </div>
+                    <li>
+                        <span class="item_name" style="width:120px;">上传大号图片6：</span>
+                            <label class="uploadImg">
+                                <input name="picture6" type="file"/>
+                            </label>
+                    </li>
+                    <div class="alert alert-success" role="alert">
+                        <p>图片七</p>
+                    </div>
+                    <li>
+                        <span class="item_name" style="width:120px;">上传大号图片7：</span>
+                            <label class="uploadImg">
+                                <input name="picture7" type="file"/>
+                            </label>
+                    </li>
+                    <li>
+                        <input type="submit" value="提交">
+                    </li>
+                </ul>
+            </form>
+
+        </div>
+    </section>
+{% endblock content %}
+
+{% block foot %}
+{% endblock foot %}
+

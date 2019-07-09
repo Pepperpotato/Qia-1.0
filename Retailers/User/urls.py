@@ -3,7 +3,7 @@ from django.conf.urls import url
 
 
 from User import views
-from User.views import OrderPayView
+# from User.views import OrderPayView
 
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
@@ -18,11 +18,13 @@ urlpatterns = [
     url(r'^addband/$', views.addband, name='addband'),
     url(r'^addbigcategory/$', views.addbigcategory, name='addbigcategory'),
     url(r'^addsmallcategory/$', views.addsmallcategory, name='addsmallcategory'),
+    url(r'^addattrbute/$', views.addattrbute, name='addattrbute'),
     url(r'^addinventory/$', views.addinventory, name='addinventory'),
     url(r'^addinventory1/$', views.addinventory1, name='addinventory1'),
     url(r'^addinventory2/$', views.addinventory2, name='addinventory2'),
     url(r'^addinventory3/$', views.addinventory3, name='addinventory3'),
     url(r'^addinventory4/$', views.addinventory4, name='addinventory4'),
+    url(r'^addgoodetail/$', views.addgoodetail, name='addgoodetail'),
     url(r'^orderlist/$', views.orderlist, name='orderlist'),
     url(r'^orderlist/(\d+)$', views.orderlist, name='orderlist1'),
     url(r'^choiceorder/(\d+)$', views.choiceorder, name='choiceorder1'),
@@ -42,6 +44,10 @@ urlpatterns = [
     url(r'^delpayway/(\d)/$', views.delpayway, name='delpayway'),
     url(r'^pageviews/$', views.pageviews, name='pageviews'),
     url(r'^sales/$', views.sales, name='sales'),
-    url(r"^pay/$", OrderPayView.as_view(), name='pay'),
+    # url(r"^pay/$", OrderPayView.as_view(), name='pay'),
+    url(r"^pay/$", views.pay, name='pay'),
+    url(r'^checkpay/$', views.checkpay, name='checkpay'),
+    url(r'^test/$', views.test, name='test'),
+
 ]
 
