@@ -212,15 +212,49 @@
                         </div>
                         <div class="form-group">
                             <label for="recipient-name" class="control-label">商品名称:</label>
-                            <input type="text" class="form-control" id="recipient-name" name="gname">
+                            <select name="goodid" class="select">
+                                <option value="">请选择商品名称</option>
+                                {% for good in all_goods %}
+                                    <option value="{{ good.gid }}">{{ good.gname }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label for="recipient-name" class="control-label">搜索关键字:</label>
-                            <input type="text" class="form-control" id="recipient-name" name="keyword">
+                            <label for="recipient-name" class="control-label">修改商品属性:</label>
+                            <input type="text" class="form-control" id="recipient-name" name="attr">
                         </div>
                         <div class="form-group">
-                            <label for="message-text" class="control-label">新的大板块图片:</label>
-                            <input type="file" class="control-label" name="picture">
+                            <label for="recipient-name" class="control-label">商品规格:</label>
+                            <select name="specificationid" class="select">
+                                <option value="">请选择商品规格</option>
+                                {% for specification in all_specification %}
+                                    <option value="{{ specification.id }}">{{ specification.specification }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">单位:</label>
+                            <input type="text" class="form-control" id="recipient-name"  name="unit">
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">售价:</label>
+                            <input type="text" class="form-control" id="recipient-name"  name="prcie">
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">是否在首页显示:</label>
+                            <select name="is_show" class="select">
+                                <option value="">请选择</option>
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">采购价:</label>
+                            <input type="text" class="form-control" id="recipient-name"  name="stockprice">
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">补货数量:</label>
+                            <input type="text" class="form-control" id="recipient-name"  name="inventory">
                         </div>
                     </form>
                 </div>
@@ -263,6 +297,53 @@
 
         }
 
+        function alter() {
+            $.ajax({
+
+                cache: false,
+                contentType: false,
+
+                type: "POST",
+
+                dataType: "json",//返回的数据类型为Json对象
+
+                url: "{% url 'admin:alterattrbute' %}", //发送请求到后台的地址
+
+                data: new FormData(document.getElementById("form1")), //发送的数据是id="for"的表单中的数据,其中document.getElementById()函数的功能是根据对象的名称获取对象
+                processData: false,//不希望自动转换
+
+                async: false,//请求设为异步
+
+                error: function (request) {//发送请求失败执行的函数
+
+                    alert("发送请求失败！");
+
+                },
+
+                success: function (data) {//发送请求成功执行的函数
+
+                    if (data['code'] == 1) {
+                        alert(data['msg'])
+                        location.reload()
+                    }
+                    else {
+                        alert('未成功保存')
+                    }
+                }
+
+            });
+        }
+
+        function del(id) {
+            $.post('{% url 'admin:delattrbute'%}', {'aid': id}, function (data) {
+                console.log(data['data'])
+                if (data['code'] == 1) {
+                    alert(data['data'])
+                }
+
+            })
+
+        }
     </script>
 {% endblock content %}
 
