@@ -225,7 +225,6 @@ def addbigcategory(request):
         category = CommodityCategories()
 
         file = request.FILES.get('newpicture')
-
         if file:
             # 文件路径
             path = os.path.join(settings.MEDIA_ROOT, file.name)
@@ -252,7 +251,19 @@ def addbigcategory(request):
         category.parentid = 0
         category.save()
         return JsonResponse({'code': 1, 'data': '新大类别已添加'})
-    return render(request, 'admin/add_bigcategory.html')
+    all_bigcategory = CommodityCategories.objects.filter(parentid=0)
+    return render(request, 'admin/add_bigcategory.html', context={
+        'all_bigcategory': all_bigcategory
+    })
+
+
+def alterbigcategory(request):
+    if request.is_ajax():
+        name = request.POST.get('name')
+        print(name)
+        category_id = request.POST.get('cid')
+        print(category_id)
+        return redirect(reverse('admin:addattrbute'))
 
 
 # 添加商品小类别
@@ -300,9 +311,7 @@ def addinventory(request):
             cursor.execute("select gname,gid from commodity_categories_three c join goodsone g on g.smallclassesid=c.id where parentid>0 and  smallclassesid=%s", [categoryid])
         columns = [col[0] for col in cursor.description]
         res1 = [dict(zip(columns, row)) for row in cursor.fetchall()]
-
-        if res1:
-            return JsonResponse(res1, safe=False)
+        return JsonResponse(res1, safe=False)
 
     commodity_categories = CommodityCategories.objects.filter(parentid__gt=0)
     commodity_brand = CommodityBrand.objects.all()
@@ -325,8 +334,7 @@ def addinventory1(request):
         columns = [col[0] for col in cursor.description]
         res = [dict(zip(columns, row)) for row in cursor.fetchall()]
 
-        if res:
-            return JsonResponse(res, safe=False)
+        return JsonResponse(res, safe=False)
 
 @csrf_exempt
 def addinventory2(request):
@@ -341,8 +349,7 @@ def addinventory2(request):
         columns = [col[0] for col in cursor.description]
         res = [dict(zip(columns, row)) for row in cursor.fetchall()]
 
-        if res:
-            return JsonResponse(res, safe=False)
+        return JsonResponse(res, safe=False)
 
 @csrf_exempt
 def addinventory3(request):
@@ -357,8 +364,7 @@ def addinventory3(request):
         columns = [col[0] for col in cursor.description]
         res = [dict(zip(columns, row)) for row in cursor.fetchall()]
 
-        if res:
-            return JsonResponse(res, safe=False)
+        return JsonResponse(res, safe=False)
 
 
 def addinventory4(request):
@@ -378,7 +384,34 @@ def addinventory4(request):
 
 
 def addattrbute(request):
+
+    if request.is_ajax():
+
+        categoryid = request.POST.get('categoryid')
+        if categoryid:
+            # 小类别id 松子
+            request.session['categoryid'] = categoryid
+        with connection.cursor() as cursor:
+            cursor.execute("select gname,gid from commodity_categories_three c join goodsone g on g.smallclassesid=c.id where parentid>0 and  smallclassesid=%s",[categoryid])
+        columns = [col[0] for col in cursor.description]
+        res1 = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        if res1:
+            return JsonResponse(res1, safe=False)
+
+        brandid = request.POST.get('brandid')
+        if brandid:
+            # 品牌id 良品铺子
+            request.session['brandid'] = brandid
+        cid = int(request.session['categoryid'])
+        with connection.cursor() as cursor:
+            cursor.execute("select distinct smallclassesattribute from goodsone g join commodity_categories_two_four c on g.gid=c.gid where c.smallclassesid=%s",[cid])
+        columns = [col[0] for col in cursor.description]
+        res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+        return JsonResponse(res, safe=False)
+
     if request.method == 'POST':
+        print(111111)
         category = request.POST.get('category')
         brand = request.POST.get('brand')
         goodid = request.POST.get('goodid')
@@ -440,61 +473,74 @@ def addgoodetail(request):
         # 图片一上传
         picture1 = request.FILES.get('picture1')
         pathpic1 = uploadpic(picture1)
-        good_detail.picture1 = pathpic1
+        if pathpic1:
+            good_detail.picture1 = pathpic1
 
         mpicture1 = request.FILES.get('mpicture1')
         pathmpic1 = uploadpic(mpicture1)
-        good_detail.mpicture1 = pathmpic1
+        if pathmpic1:
+            good_detail.mpicture1 = pathmpic1
 
         spicture1 = request.FILES.get('spicture1')
         pathspic1 = uploadpic(spicture1)
-        good_detail.spicture1 = pathspic1
+        if pathspic1:
+            good_detail.spicture1 = pathspic1
 
         # 图片二上传
         picture2 = request.FILES.get('picture2')
         pathpic2 = uploadpic(picture2)
-        good_detail.picture2 = pathpic2
+        if pathpic2:
+            good_detail.picture2 = pathpic2
 
         mpicture2 = request.FILES.get('mpicture2')
         pathmpic2 = uploadpic(mpicture2)
-        good_detail.mpicture2 = pathmpic2
+        if pathmpic2:
+            good_detail.mpicture2 = pathmpic2
 
         spicture2 = request.FILES.get('spicture2')
         pathspic2 = uploadpic(spicture2)
-        good_detail.spicture2 = pathspic2
+        if pathspic2:
+            good_detail.spicture2 = pathspic2
 
         # 图片三上传
         picture3 = request.FILES.get('picture3')
         pathpic3 = uploadpic(picture3)
-        good_detail.picture3 = pathpic3
+        if pathpic3:
+            good_detail.picture3 = pathpic3
 
         mpicture3 = request.FILES.get('mpicture3')
         pathmpic3 = uploadpic(mpicture3)
-        good_detail.mpicture3 = pathmpic3
+        if pathmpic3:
+            good_detail.mpicture3 = pathmpic3
 
         spicture3 = request.FILES.get('spicture3')
         pathspic3 = uploadpic(spicture3)
-        good_detail.spicture3 = pathspic3
+        if pathspic3:
+            good_detail.spicture3 = pathspic3
 
         # 图片四上传
         picture4 = request.FILES.get('picture4')
         pathpic4 = uploadpic(picture4)
-        good_detail.picture4 = pathpic4
+        if pathpic4:
+            good_detail.picture4 = pathpic4
 
         # 图片五上传
         picture5 = request.FILES.get('picture5')
         pathpic5 = uploadpic(picture5)
-        good_detail.picture5 = pathpic5
+        if pathpic5:
+            good_detail.picture5 = pathpic5
 
         # 图片六上传
         picture6 = request.FILES.get('picture6')
         pathpic6 = uploadpic(picture6)
-        good_detail.picture6 = pathpic6
+        if pathpic6:
+            good_detail.picture6 = pathpic6
 
         # 图片七上传
         picture7 = request.FILES.get('picture7')
         pathpic7 = uploadpic(picture7)
-        good_detail.picture7 = pathpic7
+        if pathpic7:
+            good_detail.picture7 = pathpic7
 
         good_detail.save()
 
@@ -728,9 +774,9 @@ def pageviews(request):
     day2view = day2['view']
     day2time = day2['time']
     #
-    # day1 = res[6]
-    # day1view = day1['view']
-    # day1time = day1['time']
+    day1 = res[6]
+    day1view = day1['view']
+    day1time = day1['time']
     return render(request, 'admin/pageviews.html', context={
         'day7view': day7view,
         'day7time': day7time,
@@ -744,8 +790,8 @@ def pageviews(request):
         'day3time': day3time,
         'day2view': day2view,
         'day2time': day2time,
-        # 'day1view': day1view,
-        # 'day1time': day1time
+        'day1view': day1view,
+        'day1time': day1time
     })
 
 
@@ -901,9 +947,9 @@ def choiceorder(request, page=1):
 #     def post(self, request):
 
 def pay(request):
-
-        # order_id = request.session.get("order_id")
-        order_id = 1
+        print(1111111)
+        order_id = request.session.get('bianhao')
+        # order_id = 1
         # if not order_id:
         #     return JsonResponse({"errno": 1, "error_msg": "参数不完整"})
         # try:
@@ -925,7 +971,7 @@ def pay(request):
         # 电脑网站支付，需要跳转到https://openapi.alipay.com/gateway.do? + order_string
         # total_pay = order.total_price + order.transit_price
         # total_pay = request.session.get('total_price')
-        total_pay = 270
+        total_pay = request.session.get('jiage')
         order_string = alipay.api_alipay_trade_page_pay(
             out_trade_no=order_id,  # 订单编号
             total_amount=str(total_pay),
@@ -944,7 +990,9 @@ def test(request):
 
 
 def checkpay(request):
-    order_id = request.POST.get("order_id")
+    print(22222222222)
+    order_id = request.session.get("bianhao")
+    order = OrderTwenty.objects.get(pk=int(order_id))
     alipay = AliPay(
         appid="2016101100659250",  # 应用id
         app_notify_url=None,  # 默认回调url
@@ -965,10 +1013,11 @@ def checkpay(request):
         if code == '10000' and trade_status == "TRADE_SUCCESS":
             # 表示成功
             # 获取支付宝交易号
-            trade_no = response.get("trade_no")
+            # trade_no = response.get("trade_no")
             # 更新订单状态
             # order.trade_no = trade_no
-            order.order_status = 4  # 待评价
+            order.orderstatus = 1  # 待评价
+            order.integral = int(request.session.get('jiage'))
             order.save()
             # 返回正确响应
             return JsonResponse({"errno": "ok", "error_msg": "交易成功"})
@@ -980,5 +1029,5 @@ def checkpay(request):
         else:
             return JsonResponse({"errno": 4, "error_msg": "交易失败"})
 
-    return None
+
 

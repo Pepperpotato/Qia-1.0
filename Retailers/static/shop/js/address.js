@@ -2963,9 +2963,9 @@ $(document).ready(function () {
             t.val(parseInt(t.val()) + 1);
             num = $('#shuliang').val()
             danjia = document.querySelector('#danjia').innerHTML
-            countprice = num*danjia;
-            total = countprice+kkdd;
-            console.log(num,danjia,countprice)
+            countprice = num * danjia;
+            total = countprice + kkdd;
+            console.log(num, danjia, countprice)
             $('#countprice').text(countprice)
             $('.pay-sum').text(total)
             $('#J_ActualFee').text(total)
@@ -2978,18 +2978,17 @@ $(document).ready(function () {
             if (parseInt(t.val()) < 1) {
                 t.val(1);
             }
-             num = $('#shuliang').val()
+            num = $('#shuliang').val()
             danjia = document.querySelector('#danjia').innerHTML
             price = kkdd
 
-            countprice = num*danjia;
-            total = countprice+kkdd;
-            console.log(num,danjia,countprice,price)
+            countprice = num * danjia;
+            total = countprice + kkdd;
+            console.log(num, danjia, countprice, price)
             $('#countprice').text(countprice)
             $('.pay-sum').text(total)
             $('#J_ActualFee').text(total)
         })
-
 
 
     })
@@ -3010,16 +3009,16 @@ $(document).ready(function () {
 
 
 //地址选择
-    kkdd =10
+    kkdd = 10
     $(function () {
         $(".user-addresslist").click(function () {
             $(this).addClass("defaultAddr").siblings().removeClass("defaultAddr")
             ad = $(this).attr('value')
-            commit_ad =ad
+            commit_ad = ad
             $.ajax({
                 url: '/order/addre/',// 跳转到 action
                 data: {
-                    'address':ad
+                    'address': ad
                 },
                 type: 'post',
                 dataType: 'json',
@@ -3029,8 +3028,8 @@ $(document).ready(function () {
                     var info = data.info1;
                     var receiver = data.reciever;
                     var num = data.phone;
-                    console.log(loca,info,receiver,num)
-                    dizhi = loca+info
+                    console.log(loca, info, receiver, num)
+                    dizhi = loca + info
                     $('#fasongdizhi').text(dizhi)
                     $('#shoujianren').text(receiver)
                     $('#dianhuahao').text(num)
@@ -3050,29 +3049,28 @@ $(document).ready(function () {
                     $(this).addClass("selected").siblings("li").removeClass("selected");
                     express_name = $(this).addClass("selected").text()
                     commit_ex = express_name
-                    var price =$('#countprice').text()
+                    var price = $('#countprice').text()
                     $.ajax({
-                url: '/order/express/',// 跳转到 action
-                data: {
-                    'express_name':express_name,
-                    'price':price
-                },
-                type: 'post',
-                dataType: 'json',
-                success: function (data) {
-                    console.log(data)
-                    var money = data.ex_money;
-                    kkdd = money
-                    $('.kuaidifeiyong').text(money)
-                    var price =$('#countprice').text()
-                    total = data.ex_price
-                    $('.pay-sum').text(total)
-                    $('#J_ActualFee').text(total)
+                        url: '/order/express/',// 跳转到 action
+                        data: {
+                            'express_name': express_name,
+                            'price': price
+                        },
+                        type: 'post',
+                        dataType: 'json',
+                        success: function (data) {
+                            console.log(data)
+                            var money = data.ex_money;
+                            kkdd = money
+                            $('.kuaidifeiyong').text(money)
+                            var price = $('#countprice').text()
+                            total = data.ex_price
+                            $('.pay-sum').text(total)
+                            $('#J_ActualFee').text(total)
 
 
-
-                }
-            });
+                        }
+                    });
 
                 }
             })
@@ -3115,25 +3113,46 @@ $(document).ready(function ($) {
 });
 
 
-function mycommit () {
-    commit_co =$('#sibiaoid').val()
-    commit_re =$('#liuyan').val()
+function mycommit() {
+    commit_co = $('#sibiaoid').val()
+    commit_re = $('#liuyan').val()
     commit_num = $('#shuliang').val()
-    console.log(commit_re,commit_num,commit_ex,commit_ad,commit_co)
+    console.log(commit_re, commit_num, commit_ex, commit_ad, commit_co)
     $.ajax({
         url: '/order/commit/',// 跳转到 action
         data: {
-            'co':commit_co,
-            'ad':commit_ad,
-            'ex':commit_ex,
-            'num':commit_num,
-            're':commit_re
+            'co': commit_co,
+            'ad': commit_ad,
+            'ex': commit_ex,
+            'num': commit_num,
+            're': commit_re
         },
         type: 'post',
         dataType: 'json',
         success: function (data) {
             console.log(data)
+            if (data.ok = '1') {
+                $.post('/admin/pay/', function (data) {
+                    if (data.errno == "ok") {
+                        // 引导客户到支付界面
+                        window.open(data.pay_url)
+                    }
+                    else {
+                        alert(data.error_msg)
+                    }
+                $.post('/admin/checkpay/', function (data) {
+                    console.log(data)
+                    if (data.errno == "ok") {
+                        alert("支付成功");
+                        location.reload()
+                    }
+                    else {
+                        alert(data.error_msg)
+                    }
+                })
 
+                })
+            }
         }
     })
 }

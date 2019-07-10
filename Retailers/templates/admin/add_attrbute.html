@@ -7,12 +7,12 @@
             <div class="page_title">
                 <h3>添加已有商品种类(属性) <span class="label label-default">ADD</span></h3>
             </div>
-            <form action="{% url 'admin:addinventory4' %}" method="post" enctype="multipart/form-data">
+            <form action="{% url 'admin:addattrbute' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <ul class="ulColumn2">
                     <li>
                         <span class="item_name" style="width:120px;">分类：</span>
-                        <select name="category" class="select"  style="width: 120px;">
+                        <select name="category" class="select"  style="width: 120px;" id="category" >
                             <option>选择已有产品分类</option>
                             {% for commodity_category in commodity_categories %}
                                 <option value="{{ commodity_category.id }}">{{ commodity_category.categoryname }}</option>
@@ -21,7 +21,7 @@
                     </li>
                     <li>
                         <span class="item_name" style="width:120px;">品牌：</span>
-                        <select name="brand" class="select" >
+                        <select name="brand" class="select" id="brand" >
                             <option>选择品牌</option>
                             {% for commodity in commodity_brand %}
                                 <option value="{{ commodity.id }}">{{ commodity.brandname }}</option>
@@ -32,10 +32,9 @@
                         <span class="item_name" style="width:120px;">商品名称：</span>
                         <select name="goodid" class="select" id="goodname" style="width: 120px">
                             <option>请选择商品</option>
-                            {% for good in all_goods %}
-                                   <option value="{{ good.gid }}">{{ good.gname }}</option>
-                            {% endfor %}
-
+{#                            {% for good in all_goods %}#}
+{#                                   <option value="{{ good.gid }}">{{ good.gname }}</option>#}
+{#                            {% endfor %}#}
                         </select>
                     </li>
                     <li>
@@ -54,8 +53,9 @@
                         <span class="item_name" style="width:120px;">售价：</span>
                         <input  name="price" class="textbox textbox_225" type="text"   />
                     </li>
+                        <span class="item_name" style="width:120px;">在首页显示该价格：</span>
                         <select name="ishow" class="select" id="goodname" style="width: 120px">
-                            <option>请选择商品</option>
+                            <option>请选择</option>
                             <option value="1">是</option>
                             <option value="0">否</option>
                         </select>
@@ -68,73 +68,74 @@
                         <input  name="inventory" class="textbox textbox_225" type="text"   />
                     </li>
                     <li>
-                        <input type="submit" value="提交">
+                        <span class="item_name" style="width:45px;"></span>
+                        <input type="submit" value="提交" >
                     </li>
                 </ul>
             </form>
 
         </div>
     </section>
-{#    <script>#}
-{##}
-{#        var Brand = $('#brand');#}
-{#        var Category = $('#category');#}
-{#        var Goodname = $('#goodname');#}
-{#        var Section = $('#section');#}
-{#        var Inventory = $('#inventory');#}
-{#        console.log(Inventory.val());#}
-{#        var Specification = $('#specification');#}
-{#        Category.change(function () {#}
-{#            $.post('{% url 'admin:addinventory' %}', {'categoryid': this.value}, function (data) {#}
-{#                Goodname.empty();#}
-{#                Section.empty();#}
-{#                Specification.empty();#}
-{#                Goodname.append("<option value=''>请选择商品类别</option>");#}
-{#                Section.append("<option value=''>请选择商品种类</option>");#}
-{#                Specification.append("<option value=''>请选择商品规格</option>");#}
-{#                for (var i = 0; i < data.length; i++) {#}
-{#                    var option = "<option value='" + data[i].gid + "'>" + data[i].gname + "</option>";#}
-{#                    Goodname.append(option)#}
-{#                }#}
-{##}
-{#            });#}
-{#        });#}
-{##}
-{#        Brand.change(function () {#}
-{#            $.post('{% url 'admin:addinventory1' %}', {'brandid': this.value}, function(data){#}
-{#                Section.empty();#}
-{#                Specification.empty();#}
-{#                Section.append("<option value=''>请选择商品种类</option>");#}
-{#                Specification.append("<option value=''>请选择商品规格</option>");#}
-{#                for (var i = 0; i < data.length; i++) {#}
-{#                    var option = "<option value='" + data[i].smallclassesattribute + "'>" + data[i].smallclassesattribute + "</option>";#}
-{#                    Section.append(option)#}
-{#                }#}
-{#            })#}
-{#        });#}
-{##}
-{#        Section.change(function () {#}
-{##}
-{#            $.post('{% url 'admin:addinventory2' %}', {'section': this.value}, function(data){#}
-{#                Specification.empty();#}
-{#                console.log(data);#}
-{#                Specification.empty();#}
-{#                Specification.append("<option value=''>请选择商品规格</option>");#}
-{#                for (var i = 0; i < data.length; i++) {#}
-{#                    var option = "<option value='" + data[i].id + "'>" + data[i].specification + "</option>";#}
-{#                    Specification.append(option)#}
-{#                }#}
-{#            })#}
-{#        });#}
-{##}
-{#        Specification.change(function () {#}
-{#            $.post('{% url 'admin:addinventory3' %}', {'specificationid': this.value}, function(data){#}
-{##}
-{#                Inventory.val(data[0].inventory)#}
-{#            })#}
-{#        })#}
-{##}
-{#    </script>#}
+    <script>
+
+        var Brand = $('#brand');
+        var Category = $('#category');
+        var Goodname = $('#goodname');
+        {#var Section = $('#section');#}
+        {#var Inventory = $('#inventory');#}
+        {#console.log(Inventory.val());#}
+        {#var Specification = $('#specification');#}
+        Category.change(function () {
+            $.post('{% url 'admin:addinventory' %}', {'categoryid': this.value}, function (data) {
+                Goodname.empty();
+                {#Section.empty();#}
+                {#Specification.empty();#}
+                Goodname.append("<option value=''>请选择商品类别</option>");
+                {#Section.append("<option value=''>请选择商品种类</option>");#}
+                {#Specification.append("<option value=''>请选择商品规格</option>");#}
+                for (var i = 0; i < data.length; i++) {
+                    var option = "<option value='" + data[i].gid + "'>" + data[i].gname + "</option>";
+                    Goodname.append(option)
+                }
+
+            });
+        });
+
+        {#Brand.change(function () {#}
+        {#    $.post('{% url 'admin:addinventory1' %}', {'brandid': this.value}, function(data){#}
+        {#        Section.empty();#}
+                {#Specification.empty();#}
+        {#        Section.append("<option value=''>请选择商品种类</option>");#}
+        {#        Specification.append("<option value=''>请选择商品规格</option>");#}
+        {#        for (var i = 0; i < data.length; i++) {#}
+        {#            var option = "<option value='" + data[i].smallclassesattribute + "'>" + data[i].smallclassesattribute + "</option>";#}
+        {#            Section.append(option)#}
+        {#        }#}
+        {#    })#}
+       // });
+      {##}
+      {# // Section.change(function () {#}
+      {##}
+      {#   //   $.post('{% url 'admin:addinventory2' %}', {'section': this.value}, function(data){#}
+      {#    //      Specification.empty();#}
+      {#     //     console.log(data);#}
+      {#     //     Specification.empty();#}
+      {#       //   Specification.append("<option value=''>请选择商品规格</option>");#}
+      {#     //     for (var i = 0; i < data.length; i++) {#}
+      {#    //          var option = "<option value='" + data[i].id + "'>" + data[i].specification + "</option>";#}
+      {#      //        Specification.append(option)#}
+      {#        //  }#}
+      {#    //  })#}
+      {# // });#}
+      {##}
+      {# // Specification.change(function () {#}
+      {#   //   $.post('{% url 'admin:addinventory3' %}', {'specificationid': this.value}, function(data){#}
+      {##}
+      {#     //     Inventory.val(data[0].inventory)#}
+      {#     // })#}
+      {#//  })#}
+
+    </script>
 {% endblock content %}
 
 {% block foot %}
