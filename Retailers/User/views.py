@@ -137,80 +137,64 @@ def addgood(request):
         category = int(request.POST.get('category'))
         # 商品名称
         goodname = request.POST.get('goodname')
-        # 类型
-        newsection = request.POST.get('newsection')
-        # 规格
-        format = request.POST.get('format')
-        # 售价
-        price = int(request.POST.get('price'))
-        # 采购价
-        stockprice = request.POST.get('stockprice')
-        # 单位
-        unit = request.POST.get('unit')
-        # 库存
-        inventory = int(request.POST.get('inventory'))
         # 关键字'
         keyword = request.POST.get('keyword')
         # 图片
         file = request.FILES.get('picture')
-        if file:
-
-            # 文件路径
-            path = os.path.join(settings.MEDIA_ROOT, file.name)
-
-            # 文件类型过滤
-            ext = os.path.splitext(file.name)
-            if len(ext) < 1 or not ext[1] in settings.ALLOWED_FILEEXTS:
-                return redirect(reverse('admin:addgood'))
-
-            pathh = path.split('Retailers/static')
-
-            goodphoto = pathh[1]
-
-            # 创建新文件
-            with open(path, 'wb') as fp:
-                # 如果文件超过2.5M,则分块读写
-                if file.multiple_chunks():
-                    for block1 in file.chunks():
-                        fp.write(block1)
-                else:
-                    fp.write(file.read())
+        pathpic = uploadpic(file)
 
         newgood = Goods()
         newgood.gname = goodname
-        newgood.picture = goodphoto
+        if pathpic:
+            newgood.picture = pathpic
         newgood.keyword = keyword
         newgood.brandid = brand
         newgood.smallclassesid = category
         newgood.save()
-        gid = newgood.gid
-
-        newspecification = Specification()
-        newspecification.specification = format
-        newspecification.save()
-        sid = newspecification.id
-
-        newcategory = CommodityCategoriesTwo()
-        newcategory.smallclassesid = category
-        newcategory.smallclassesattribute = newsection
-        newcategory.specification_id = sid
-        newcategory.brandid = brand
-        newcategory.price = price
-        newcategory.stockprice = stockprice
-        newcategory.inventory = inventory
-        newcategory.unit = unit
-        newcategory.gid = gid
-        newcategory.save()
-
         return redirect(reverse('admin:productlist'))
 
     commodity_brand = CommodityBrand.objects.all()
     commodity_categories = CommodityCategories.objects.filter(parentid__gt=0)
-
+    with connection.cursor() as cursor:
+        cursor.execute("select * from commodity_categories_three c join goodsone g on g.smallclassesid=c.id join commodity_brand_two b on b.id=g.brandid ")
+    columns = [col[0] for col in cursor.description]
+    all_goods = [dict(zip(columns, row)) for row in cursor.fetchall()]
     return render(request, 'admin/add_good.html', context={
         'commodity_brand': commodity_brand,
-        'commodity_categories': commodity_categories
+        'commodity_categories': commodity_categories,
+        'all_goods': all_goods
     })
+
+# 修改商品
+def altergood(request):
+    if request.is_ajax():
+        if request.is_ajax():
+            good_id = request.POST.get('gid')
+            brandid = request.POST.get('brandid')
+            categoryid = request.FILES.get('categoryid')
+            gname = request.POST.get('gname')
+            keyword = request.POST.get('keyword')
+            picture = request.FILES.get('picture')
+            new_picture = uploadpic(picture)
+
+            current_good = Goods.objects.get(pk=int(good_id))
+            current_good.brandid = brandid
+            current_good.smallclassesid = categoryid
+            current_good.gname = gname
+            current_good.keyword = keyword
+            if new_picture:
+                current_good.picture = new_picture
+            current_good.save()
+            return JsonResponse({'code': 1, 'msg': '修改以保存'})
+
+# 删除商品
+def delgood(request):
+    if request.is_ajax():
+        current_id = request.POST.get('gid')
+        current_good = Goods.objects.get(pk=int(current_id))
+        current_good.delete()
+        print(current_good.gname)
+        return JsonResponse({'code': 1, 'data': '已删除'})
 
 
 # 添加新的商品大类别
@@ -256,7 +240,7 @@ def addbigcategory(request):
         'all_bigcategory': all_bigcategory
     })
 
-
+# 修改大类别
 def alterbigcategory(request):
     if request.is_ajax():
         category_id = request.POST.get('cid')
@@ -271,6 +255,15 @@ def alterbigcategory(request):
         return JsonResponse({'code': 1, 'msg': '修改以保存'})
 
         # return redirect(reverse('admin:addattrbute'))
+
+
+# 删除大类别
+def delbigcategory(request):
+    if request.is_ajax():
+        current_id = request.POST.get('bid')
+        current_bicategory = CommodityCategories.objects.get(pk=int(current_id))
+        current_bicategory.delete()
+        return JsonResponse({'code': 1, 'data': '已删除'})
 
 
 # 添加商品小类别
@@ -288,9 +281,31 @@ def addsmallcategory(request):
         category.save()
         return JsonResponse({'code': 1, 'data': '新商品小类别已储存'})
     res = CommodityCategories.objects.filter(parentid=0)
+    res1 = CommodityCategories.objects.filter(parentid__gt=0)
     return render(request, 'admin/add_smallcategory.html', context={
-        'res': res
+        'res': res,
+        'res1': res1
     })
+
+
+#  修改小类别
+def altersmallcategory(request):
+    if request.is_ajax():
+        category_id = request.POST.get('cid')
+        name = request.POST.get('name')
+        current_smaillcategory = CommodityCategories.objects.get(pk=int(category_id))
+        current_smaillcategory.categoryname = name
+        current_smaillcategory.save()
+        return JsonResponse({'code': 1, 'msg': '修改以保存'})
+
+
+# 删除小类别
+def delsmallcategory(request):
+    if request.is_ajax():
+        current_id = request.POST.get('sid')
+        current_smallategory = CommodityCategories.objects.get(pk=int(current_id))
+        current_smallategory.delete()
+        return JsonResponse({'code': 1, 'data': '已删除'})
 
 
 # 添加商品品牌
@@ -302,7 +317,32 @@ def addband(request):
         newband.save()
         return redirect(reverse('admin:productlist'))
 
-    return render(request, 'admin/add_band.html')
+    all_brand = CommodityBrand.objects.all()
+    return render(request, 'admin/add_band.html',context={
+        'all_brand': all_brand
+    })
+
+
+# 修改品牌
+def alterband(request):
+    if request.is_ajax():
+        brand_id = request.POST.get('bid')
+        name = request.POST.get('name')
+        current_brand = CommodityBrand.objects.get(pk=int(brand_id))
+        current_brand.brandname = name
+        current_brand.save()
+        return JsonResponse({'code': 1, 'msg': '修改已保存'})
+
+
+#  删除品牌
+def delband(request):
+    if request.is_ajax():
+        current_id = request.POST.get('bid')
+        current_brand = CommodityBrand.objects.get(pk=int(current_id))
+        current_brand.delete()
+        print(current_brand.brandname)
+        return JsonResponse({'code': 1, 'data': '已删除'})
+
 
 
 @csrf_exempt
@@ -389,7 +429,7 @@ def addinventory4(request):
         return redirect(reverse('admin:productlist'))
 
 
-
+# 添加商品属性
 def addattrbute(request):
 
     if request.is_ajax():
@@ -449,16 +489,32 @@ def addattrbute(request):
         new_atrr.save()
         return redirect(reverse('admin:productlist'))
 
-
-
     commodity_categories = CommodityCategories.objects.filter(parentid__gt=0)
     commodity_brand = CommodityBrand.objects.all()
     all_good = Goods.objects.all()
-    return render(request, 'admin/add_attrbute.html',context={
+    with connection.cursor() as cursor:
+        cursor.execute("select f.id,c.categoryname,b.brandname,g.gname,f.is_show,f.smallclassesattribute,s.specification,f.unit,f.price,f.stockprice,f.inventory from commodity_categories_two_four f join commodity_categories_three c on f.smallclassesid=c.id join goodsone g on g.gid=f.gid join commodity_brand_two b on b.id=f.brandid join specification s on f.specification_id=s.id")
+    columns = [col[0] for col in cursor.description]
+    good_attr = [dict(zip(columns, row)) for row in cursor.fetchall()]
+    print(good_attr)
+    return render(request, 'admin/add_attrbute.html', context={
         'commodity_brand': commodity_brand,
         'commodity_categories': commodity_categories,
-        'all_goods': all_good
+        'all_goods': all_good,
+        'good_attr': good_attr
     })
+
+
+# 修改属性
+def alterattrbute(request):
+
+    return None
+
+
+def delattrbute(request):
+    return None
+
+
 
 
 def addgoodetail(request):
@@ -1035,6 +1091,5 @@ def checkpay(request):
             continue
         else:
             return JsonResponse({"errno": 4, "error_msg": "交易失败"})
-
 
 

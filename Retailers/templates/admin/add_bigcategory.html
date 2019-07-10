@@ -32,7 +32,7 @@
 
         <div class="rt_content">
             <div class="page_title">
-                <h3>修改已有商品大类别 <span class="label label-default">ALTER</span></h3>
+                <h3>修改/删除已有商品大类别 <span class="label label-default">ALTER/DELETE</span></h3>
             </div>
             <div class="container-fluid">
                 <div class="row-fluid">
@@ -58,14 +58,14 @@
 
                             {% for bigcategory in all_bigcategory %}
                             <tr>
-                                <td>
+                                <td id="bid">
                                     {{ bigcategory.id }}
                                 </td>
                                 <td>
                                     {{ bigcategory.categoryname }}
                                 </td>
                                 <td>
-                                    <a onclick="update('{{ bigcategory.id  }}')">修改</a>
+                                    <a onclick="update('{{ bigcategory.id  }}')">修改</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="del('{{ bigcategory.id  }}')">删除</a>
                                 </td>
 
                             </tr>
@@ -85,7 +85,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="exampleModalLabel">修改大板块</h4>
+        <h4 class="modal-title" id="exampleModalLabel">修改大类别名称</h4>
       </div>
       <div class="modal-body">
         <form action="{% url 'admin:alterbigcategory' %}" method="post" id="form1" >
@@ -107,6 +107,7 @@
     </div>
   </div>
 </div>
+
 
     <script>
 
@@ -153,7 +154,7 @@
             $('#exampleModal').modal('show')
 
         }
-
+        
         function alter() {
             $.ajax({
 
@@ -180,7 +181,7 @@
                 success: function (data) {//发送请求成功执行的函数
 
                     if (data['code'] == 1) {
-                        alert(data['msg'])
+                        alert(data['msg']);
                         location.reload()
                     }
                     else {
@@ -190,6 +191,18 @@
 
             });
         }
+        
+        function del(id) {
+            $.post('{% url 'admin:delbigcategory'%}', {'bid': id}, function(data){
+                console.log(data['data'])
+                if (data['code'] == 1) {
+                    alert(data['data'])
+                }
+
+            })
+
+        }
+
     </script>
 {% endblock content %}
 

@@ -21,7 +21,7 @@ from django.views.decorators.csrf import csrf_exempt
 from Goods.forms import UserForm1,UserForm2
 from Goods.models import Coupons, Goods, CommodityCategoriesTwo, CommodityBrand, CommodityCategories
 from Goods.sms import send_sms
-from Order.models import OrderTwenty, OrderchildTwentyone, ReturnTwentytwo
+from Order.models import OrderTwenty, OrderchildTwentyone, ReturnTwentytwo, ShopcartTwentyfour
 from Retailers import settings
 from Retailers.settings import SMSCONFIG, SMSCONFIGG, NUMOFPAGE
 from User.models import User, User_grade, User_address, User_account
@@ -866,6 +866,8 @@ def address(request):
 search_data=None
 # 搜索页面
 def search(request,page=1):
+    user = User.objects.get(username=request.session.get('username'))
+    shop = ShopcartTwentyfour.objects.filter(uid=user.uid).count()
     dataa=request.POST.get('index_none_header_sysc')
     # print(dataa)
     if dataa:
@@ -909,6 +911,7 @@ def search(request,page=1):
         'pagination': pagination,
         'brand':brand,
         'commodity':commodity,
+        'shopnum':shop,
     })
 
 # 订单管理
@@ -1090,9 +1093,14 @@ def change(request):
     })
 
 # 发表评论
+@csrf_exempt # 请求这个方法时不需加csrf验证
 def commentlist(request,list=4):
-    a=request.GET.get('code')
-    print(a)
+    # ids=request.GET[dict]
+    # ids="".join(ids) {'评论0': ['123答复'], '评论1': ['123阿斯蒂芬'], '评分3': ['好评'], '评分*********
+    dic=request.POST
+    print(dic)
+    # file_obj = request.FILES
+    # print(file_obj)
     # return HttpResponse(json.dumps({'data': '修改成功'}), content_type='application/json')
     # print(list)
     username = request.session.get('username')
@@ -1107,8 +1115,8 @@ def commentlist(request,list=4):
                 uid, list))
     columns = [col[0] for col in cursor.description]
     orderchild = [dict(zip(columns, row)) for row in cursor.fetchall()]
-    print(orderchild)
-    print(len(orderchild))
+    # print(orderchild)
+    # print(len(orderchild))
     count = 0
     express_price = 0
     dictmoney = {}
@@ -1124,4 +1132,5 @@ def commentlist(request,list=4):
     return render(request,'shop/person/commentlist.html',context={
         'orderchild':orderchild,
         'dictmoney':dictmoney,
+        'orderr':orderr,
     })

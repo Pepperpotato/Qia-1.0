@@ -7,7 +7,7 @@
             <div class="page_title">
                 <h3>添加新的商品<span class="label label-default">New</span></h3>
             </div>
-            <form action="{% url 'admin:addgood' %}" method="post" enctype="multipart/form-data" >
+            <form action="{% url 'admin:addgood' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <ul class="ulColumn2">
                     <li>
@@ -36,39 +36,11 @@
                         <span class="item_name" style="width:120px;">搜索关键字：</span>
                         <input name="keyword" class="textbox textbox_225"/>
                     </li>
-                    <li id="a1">
-                        <span class="item_name" style="width:120px;">商品类别：</span>
-                        <input name="newsection" class="textbox textbox_225"/>
-                    </li>
-                    <li>
-                        <span class="item_name" style="width:120px;"></span>
-                        <input type="button" onclick="add(this.form,this.parentNode)" value="继续添加商品类别">
-                    </li>
-                    <li>
-                        <span class="item_name" style="width:120px;">商品单位：</span>
-                        <input name="unit" class="textbox textbox_225"/>
-                    </li>
-                    <li>
-                        <span class="item_name" style="width:120px;">商品规格：</span>
-                        <input name="format" class="textbox textbox_225"/>
-                    </li>
-                    <li>
-                        <span class="item_name" style="width:120px;">商品出售价格：</span>
-                        <input name="price" class="textbox textbox_225"/>
-                    </li>
-                    <li>
-                        <span class="item_name" style="width:120px;">商品采购价格：</span>
-                        <input name="stockprice" class="textbox textbox_225"/>
-                    </li>
-                    <li>
-                        <span class="item_name" style="width:120px;">商品库存：</span>
-                        <input name="inventory" class="textbox textbox_225"/>
-                    </li>
                     <li>
                         <span class="item_name" style="width:120px;">上传图片：</span>
-                            <label class="uploadImg">
-                                <input name="picture" type="file"/>
-                            </label>
+                        <label class="uploadImg">
+                            <input name="picture" type="file"/>
+                        </label>
                     </li>
                     <li>
                         <span class="item_name" style="width:45px;"></span>
@@ -78,7 +50,189 @@
             </form>
 
         </div>
+
+        <div class="rt_content">
+            <div class="page_title">
+                <h3>修改/删除已有商品 <span class="label label-default">ALTER/DELETE</span></h3>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span6">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>
+                                    ID
+                                </th>
+                                <th>
+                                    品牌
+                                </th>
+                                <th>
+                                    分类
+                                </th>
+                                <th>
+                                    商品名称
+                                </th>
+                                <th>
+                                    搜索关键字
+                                </th>
+                                <th>
+                                    图片
+                                </th>
+                                <th>
+                                    操作
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for good in all_goods %}
+                                <tr>
+                                    <td>
+                                        {{ good.gid }}
+                                    </td>
+
+                                    <td>
+                                        {{ good.brandname }}
+                                    </td>
+
+                                    <td>
+                                        {{ good.categoryname }}
+                                    </td>
+                                    <td>
+                                        {{ good.gname }}
+                                    </td>
+                                    <td>
+                                        {{ good.keyword }}
+                                    </td>
+                                    <td class="center"><img src="{% static good.picture %}" width="100" height="100"/>
+                                    </td>
+                                    <td>
+                                        <a onclick="update('{{ good.gid }}')">修改</a>&nbsp;&nbsp;&nbsp;&nbsp;<a
+                                            onclick="del('{{ good.gid }}')">删除</a>
+                                    </td>
+
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="span6">
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </section>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">修改已有商品信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'admin:altergood' %}" method="post" id="form1">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">品牌:</label>
+                            <select name="brandid" class="select">
+                                <option value="">请选择商品品牌</option>
+                                {% for commodity in commodity_brand %}
+                                    <option value="{{ commodity.id }}">{{ commodity.brandname }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">分类:</label>
+                            <select name="categoryid" class="select">
+                                <option>选择已有产品分类</option>
+                                {% for commodity_category in commodity_categories %}
+                                    <option value="{{ commodity_category.id }}">{{ commodity_category.categoryname }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">商品名称:</label>
+                            <input type="text" class="form-control" id="recipient-name" name="gname">
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">搜索关键字:</label>
+                            <input type="text" class="form-control" id="recipient-name" name="keyword">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="control-label">新的大板块图片:</label>
+                            <input type="file" class="control-label" name="picture">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" onclick="alter()">提交修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        function update(id) {
+            $('input[name="gid"]').remove()
+            console.log($('#form1').append("<input type=hidden name='gid' value=" + id + ">"))
+            $('#exampleModal').modal('show')
+
+        }
+
+        function alter() {
+            $.ajax({
+
+                cache: false,
+                contentType: false,
+
+                type: "POST",
+
+                dataType: "json",//返回的数据类型为Json对象
+
+                url: "{% url 'admin:altergood' %}", //发送请求到后台的地址
+
+                data: new FormData(document.getElementById("form1")), //发送的数据是id="for"的表单中的数据,其中document.getElementById()函数的功能是根据对象的名称获取对象
+                processData: false,//不希望自动转换
+
+                async: false,//请求设为异步
+
+                error: function (request) {//发送请求失败执行的函数
+
+                    alert("发送请求失败！");
+
+                },
+
+                success: function (data) {//发送请求成功执行的函数
+
+                    if (data['code'] == 1) {
+                        alert(data['msg'])
+                        location.reload()
+                    }
+                    else {
+                        alert('未成功保存')
+                    }
+                }
+
+            });
+        }
+
+        function del(id) {
+            $.post('{% url 'admin:delgood'%}', {'gid': id}, function (data) {
+                console.log(data['data'])
+                if (data['code'] == 1) {
+                    alert(data['data'])
+                }
+
+            })
+
+        }
+    </script>
 {% endblock content %}
 
 {% block foot %}
