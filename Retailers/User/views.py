@@ -151,7 +151,7 @@ def addgood(request):
         newgood.brandid = brand
         newgood.smallclassesid = category
         newgood.save()
-        return redirect(reverse('admin:productlist'))
+        return redirect(reverse('admin:addgood'))
 
     commodity_brand = CommodityBrand.objects.all()
     commodity_categories = CommodityCategories.objects.filter(parentid__gt=0)
@@ -344,7 +344,6 @@ def delband(request):
         return JsonResponse({'code': 1, 'data': '已删除'})
 
 
-
 @csrf_exempt
 # 添加库存
 def addinventory(request):
@@ -485,6 +484,7 @@ def addattrbute(request):
         new_atrr.price = int(price)
         new_atrr.is_show = int(ishow)
         new_atrr.stockprice = int(stockprice)
+        new_atrr.historicalprices = int(stockprice) + 10
         new_atrr.inventory = int(inventory)
         new_atrr.save()
         return redirect(reverse('admin:productlist'))
@@ -541,7 +541,7 @@ def alterattrbute(request):
         current_attr.save()
         return JsonResponse({'code': 1, 'msg': '修改已保存'})
 
-
+# 删除已有商品
 def delattrbute(request):
     if request.is_ajax():
         current_id = request.POST.get('aid')

@@ -37,7 +37,7 @@ def home(request):
             if len(a):
                 for num in a:
                     list.append(num)
-        list.sort(reverse=True)
+        # list.sort(reverse=True)
         list1=list[:6]
         dic[i.id] = list1
 
