@@ -35,7 +35,7 @@
                         </select>
                     </li>
 
-                    <li id="a1">
+                    <li>
                         <span class="item_name" style="width:120px;">商品类别：</span>
                         <select name="section" class="select" id="section" style="width: 120px">
                             <option>请选择类别</option>
@@ -57,6 +57,7 @@
                         <input type="text" name="add" value="" >
                     </li>
                     <li>
+                        <span class="item_name" style="width:45px;"></span>
                         <input type="submit" value="提交">
                     </li>
                 </ul>
@@ -75,6 +76,7 @@
         var Specification = $('#specification');
         Category.change(function () {
             $.post('{% url 'admin:addinventory' %}', {'categoryid': this.value}, function (data) {
+                               console.log(data)
                 Goodname.empty();
                 Section.empty();
                 Specification.empty();
@@ -91,6 +93,7 @@
 
         Brand.change(function () {
             $.post('{% url 'admin:addinventory1' %}', {'brandid': this.value}, function(data){
+
                 Section.empty();
                 Specification.empty();
                 Section.append("<option value=''>请选择商品种类</option>");

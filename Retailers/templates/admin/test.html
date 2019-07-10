@@ -39,15 +39,7 @@
             })
         });
 
-            $.post('{% url 'admin:checkpay'%}', params, function (data) {
-    // 判断用户是否支付成功
-    if(data.errno=="ok"){
-        alert("支付成功");
-        location.reload()
-    }
-    else {
-        alert(data.error_msg)
-    }
+
 })
 
 </script>
