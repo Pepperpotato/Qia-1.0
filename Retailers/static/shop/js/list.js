@@ -1,8 +1,56 @@
 // JavaScript Document
 
 //商品规格选择
+var checkkucun
+var updatanum
+var commodityid
+
+updatanum=$("#text_box").val()
+$(document).ready(function() {
+	//优惠券
+	$(".hot span").click(function() {
+		$(".shopPromotion.gold .coupon").toggle();
+	})
+
+
+
+
+	//获得文本框对象
+	var t = $("#text_box");
+	//初始化数量为1,并失效减
+	$('#min').attr('disabled', true);
+	//数量增加操作
+	$("#add").click(function() {
+			t.val(parseInt(t.val()) + 1)
+			if (parseInt(t.val()) != 1) {
+				$('#min').attr('disabled', false);
+			}
+			if (parseInt(t.val())>= parseInt(checkkucun)) {
+				t.val(parseInt(checkkucun))
+				$('#add').attr('disabled', true);
+
+			}
+			updatanum=t.val()
+             $('#LikBuy').attr('href','/order/pay/'+commodityid+'/'+parseInt(updatanum)+'/')
+
+		})
+		//数量减少操作
+	$("#min").click(function() {
+		t.val(parseInt(t.val()) - 1);
+		if (parseInt(t.val()) == 1) {
+			$('#min').attr('disabled', true);
+		}
+		updatanum=t.val()
+        $('#LikBuy').attr('href','/order/pay/'+commodityid+'/'+parseInt(updatanum)+'/')
+
+	})
+
+})
+
+
 $(function() {
 	$(".theme-options").each(function() {
+
 		var i = $(this);
 		var p = i.find("ul>li");
 		p.click(function() {
@@ -13,6 +61,8 @@ $(function() {
 				$(this).addClass("selected").siblings("li").removeClass("selected");
 
 			}
+            $('#add').attr('disabled', false);
+			$('#min').attr('disabled', false);
 
 			var fenliang = document.getElementById("fenliang").getElementsByClassName("selected");
 			var kouwei = document.getElementById("kouwei").getElementsByClassName("selected");
@@ -49,13 +99,16 @@ $(function() {
 						$("#cuxiaojia").text(total_price);
 						// $("#cuxiaojia").val(total_price);
 						$("#kucunliang").text(total_count);
-						var commodityid = data.goods;
+						checkkucun = total_count
+                        $("#text_box").val(1)
+						commodityid = data.goods;
 					 	var count = $("#text_box").val();
+					 	updatanum=$("#text_box").val()
 					 	// $('#LikBuy').click(function (ev) {
 						// 	ev.preventDefault()
 						//
 						// })
-						 $('#LikBuy').attr('href','/order/pay/'+commodityid+'/'+count+'/')
+						 $('#LikBuy').attr('href','/order/pay/'+commodityid+'/'+parseInt(updatanum)+'/')
 						// $("#kucunliang").val(total_count);
 				 }
 				})
@@ -128,14 +181,14 @@ $(document).ready(function() {
 		$(window).scroll(function() {
 			st = Math.max(document.body.scrollTop || document.documentElement.scrollTop);
 			if (st >= tp) {
-             
+
 					if (dv.css('position') != 'fixed') dv.css({
 						'position': 'fixed',
 						top: 0,
 						'z-index': 998
 					});
 
-				//滚动条复位	
+				//滚动条复位
 				$('.introduceMain ul li').click(function() {
 					sts = tp-35;
 					$(document).scrollTop(sts);
@@ -152,35 +205,24 @@ $(document).ready(function() {
 });
 
 
+function add_cart() {
+    console.log('+++++++++++++++++++')
+    console.log(updatanum,commodityid)
+    $.ajax({
+					url:'/order/add_cart/',// 跳转到 action
+					data:{
+					    'updatanum' :updatanum
+					  },
+					type:'post',
+					dataType:'json',
+				 success:function(data) {
 
-$(document).ready(function() {
-	//优惠券
-	$(".hot span").click(function() {
-		$(".shopPromotion.gold .coupon").toggle();
-	})
+						console.log("------");
+						console.log(data);
 
+						 // $('#LikBuy').attr('href','/order/pay/'+commodityid+'/'+parseInt(updatanum)+'/')
 
+				 }
+				})
 
-
-	//获得文本框对象
-	var t = $("#text_box");
-	//初始化数量为1,并失效减
-	$('#min').attr('disabled', true);
-	//数量增加操作
-	$("#add").click(function() {
-			t.val(parseInt(t.val()) + 1)
-			if (parseInt(t.val()) != 1) {
-				$('#min').attr('disabled', false);
-			}
-
-		})
-		//数量减少操作
-	$("#min").click(function() {
-		t.val(parseInt(t.val()) - 1);
-		if (parseInt(t.val()) == 1) {
-			$('#min').attr('disabled', true);
-		}
-
-	})
-
-})
+}

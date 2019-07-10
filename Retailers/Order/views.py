@@ -116,16 +116,13 @@ def price_change(request):
             return JsonResponse(data)
 
 
-# def add_cart(request):
-#     if request.method == "POST":
-#         fenliang_value = request.POST.get("fenliang_value")
-#         kouwei_value = request.POST.get("kouwei_value")
-#         goodid = request.POST.get("goodid")
-#         count = request.POST.get("count")
-#         data = {
-#             'emm':count
-#         }
-#         return JsonResponse(data)
+def add_cart(request):
+    if request.method == "POST":
+        a=request.POST.get('updatanum')
+        data = {
+            'emm':a
+        }
+        return JsonResponse(data)
 
 
 def pay(request,commodityid,count):
@@ -262,6 +259,12 @@ def commit(request):
         ord =OrderTwenty.objects.last()
         orderchild = OrderchildTwentyone(orderid=int(ord.id),goodid=int(commodity.gid),goodcount=int(num),goodmoney=int(commodity.price),goodmoneycount=int(num)*int(commodity.price),cid=int(commodity.id))
         orderchild.save()
+
+        ordchild = OrderchildTwentyone.objects.last()
+        commod = CommodityCategoriesTwo.objects.get(id=ordchild.cid)
+        commod.inventory = int(commod.inventory) - int(num)
+        commod.save()
+
         request.session['bianhao']=ord.id
         request.session['jiage'] = int(num)*int(commodity.price)
         data = {

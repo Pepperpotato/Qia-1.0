@@ -205,7 +205,8 @@
                         {% for good in goods %}
                             <li>
                                 <div class="i-pic limit">
-                                    <img src="/static{{ good.picture }}"/>
+                                    <a href="{% url 'order:intro' good.gid %}">
+                                    <img src="/static{{ good.picture }}"/></a>
                                     <p class="title fl">{{ good.gname }}</p>
                                     <p class="price fl">
                                         <b>¥</b>
