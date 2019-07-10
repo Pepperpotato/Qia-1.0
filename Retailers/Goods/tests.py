@@ -1,4 +1,5 @@
 import  hashlib
-a='ll'
-b=hashlib.sha1(a.encode('utf8')).hexdigest()
+a=['', '', '', '好评', '', '', '好评']
+b="".join(a)
 print(b)
+

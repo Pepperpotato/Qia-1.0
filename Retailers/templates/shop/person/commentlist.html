@@ -44,15 +44,15 @@
                     </div>
                     <div class="clear"></div>
                     <div class="item-comment">
-                        <textarea placeholder="请写下对宝贝的感受吧，对他人帮助很大哦！"></textarea>
+                        <textarea placeholder="请写下对宝贝的感受吧，对他人帮助很大哦！" required="required"></textarea>
                     </div>
                     <div class="filePic" style="width: 220px;">
                         {#                    <input type="file" class="inputPic" allowexts="gif,jpeg,jpg,png,bmp" accept="image/*">#}
-                        <input name="picture" type="file" id="picture" multiple/>
+                        <input name="picture" type="file" id="{{ forloop.counter }}" multiple/>
                         {#                    <span>晒照片</span>#}
                         <img src="{% static 'shop/images/image.jpg' %}" alt="">
                     </div>
-                    <div class="item-opinion">
+                    <div class="item-opinion" id="{{ orderchild.orderid }}">
                         <li><i class="op1"></i>好评</li>
                         <li><i class="op2"></i>中评</li>
                         <li><i class="op3"></i>差评</li>
@@ -152,33 +152,83 @@
                         $(this).prevAll().children('i').removeClass("active");
                         $(this).nextAll().children('i').removeClass("active");
                         $(this).children('i').addClass("active");
-
                     });
                     $("#danger").click(function () {
-                        {#alert('123');#}
-                        var shici = document.getElementsByClassName('item-opinion');
-                        {#console.log(shici[0].getElementsByTagName('i'));#}
-                        a=shici[0].getElementsByTagName('i');
-                        {#console.log(a.length);#}
-                        for (i=0;i<a.length;i++) {
-                            {#console.log(i);#}
-                            var b=String(a[i].getAttribute('class'));
-                            {#console.log(a[i].getAttribute('class'));#}
-                            {#alert(i)#}
-                            if (b.search(/active/) != -1){
-                                console.log(b.search(/active/));
-                             }
-                         }
-                        {#$.get("{% url 'goods:commentlist' %}", {#}
-                        {#    'code': shici,#}
+                        var dic = {};
+                        a = document.getElementsByTagName('i');
+                        textarea = document.getElementsByTagName('textarea');
+                        for (i = 0; i < textarea.length; i++) {
+                            dic['评论' + i] = textarea[i].value
+                        }
+                        for (i = 3; i < a.length - 6; i++) {
+                            var b = String(a[i].getAttribute('class'));
+                            if (b.search(/active/) != -1) {
+                                if (i % 3 == 0) {
+                                    dic['评分' + i] = '好评'
+                                }
+                                if (i % 3 == 1) {
+                                    dic['评分' + i] = '中评'
+                                }
+                                if (i % 3 == 2) {
+                                    dic['评分' + i] = '差评'
+                                }
+                            }
+                        }
+                        {#console.log(dic);#}
+                        {#traditional:true#}
+                        {#$.get("{% url 'goods:commentlist1'  orderr  %}", {#}
+                        {#    'code': dic,#}
                         {# }, function (ret) {#}
-                            {#$('#result').append(ret.data + '<br>');#}
-                        {# })#}
+                        {#$('#result').append(ret.data + '<br>');#}
+                        {# });#}
+                        {#console.log($("#1")[0].files.length);#}
+                        {#console.log($("#1")[0].files[0]);#}
 
-                    })
+                        /*Ajax上传至后台并返回图片的url*/
+                        {#var csrf = $("input[name='csrfmiddlewaretoken']").val();#}
+                        {#formData = new FormData();#}
+                        {#listt = [];#}
+                        {#formData.append("csrfmiddlewaretoken", csrf);#}
+                        {#for (i = 0; i < $("#1")[0].files.length; i++) {#}
+                        {#console.log(listt)#}
+                        {#    listt.push($("#1")[0].files[i])#}
+                        {# }#}
+                        {#formData.append('avatar', '1');  /*获取上传的图片对象*/#}
+                        {#/*获取上传的图片对象*/#}
+                        {#console.log(formData);#}
+                        {#$.ajax({#}
+                        {#    url: '{% url 'goods:commentlist1'  orderr  %}',#}
+                        {#    type: 'POST',#}
+                        {#    data: formData,#}
+                        {#    contentType: false,#}
+                        {#    processData: false,#}
+                        {#    success: function (args) {#}
+                        {#console.log(args);  /*服务器端的图片地址*/#}
+                        {#$("#avatarPreview").attr('src', '/' + args);  /*预览图片*/#}
+                        {#$("#avatar").val('/' + args);  /*将服务端的图片url赋值给form表单的隐藏input标签*/#}
+                        {#    }#}
+                        {# });#}
 
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: "{% url 'goods:commentlist1'  orderr  %}",
+                            {#traditional: true,  //加上此项可以传数组#}
+                            dataType: 'json',
+                            async: true,
+                            data: dic,
+                            success: function (data) {
+
+                            },
+                            beforeSend: function (xhr, settings) {
+                                {#xhr.setRequestHeader("X-CSRFToken", csrftoken);#}
+                            }
+                        });
+
+
+                    }
+                    )
                 })
-
             </script>
 
 
