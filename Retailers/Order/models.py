@@ -85,6 +85,8 @@ class ShopcartTwentyfour(models.Model):
     goodscount = models.IntegerField() #加入购物车商品数量
     goodsaddtime = models.DateTimeField(auto_now_add=True)#加入购物车时间
     discount = models.IntegerField(default=0)#优惠种类
+    price = models.IntegerField()  # 单价
+    totalprice = models.IntegerField()     # 总价
 
     class Meta:
 
