@@ -24,6 +24,11 @@ def home(request):
     store = CommodityBrand.objects.all()  # 寻找品牌 2
     price = CommodityCategoriesTwo.objects.all()
     dic = {}
+    if request.session.get('username'):
+        user = User.objects.get(username=request.session.get('username'))
+        shop = ShopcartTwentyfour.objects.filter(uid=user.uid).count()
+    else:
+        shop = 0
 
 
     for i in dlb:
@@ -41,7 +46,7 @@ def home(request):
         list1=list[:6]
         dic[i.id] = list1
 
-    return render(request,'shop/home/home3.html',context={'dlb': dlb, 'xlb': xlb, 'store': store,'dic':dic,'price':price})
+    return render(request,'shop/home/home3.html',context={'dlb': dlb,'shopnum':shop ,'xlb': xlb, 'store': store,'dic':dic,'price':price})
     # return HttpResponse(res)
     # return render(request,'shop/home/home3.html')
 
@@ -61,11 +66,17 @@ def intro(request,goodid):
     normall = Specification.objects.all()#所有规格
     print(norm[0]['specification_id'],normall[0].id)
     # temp = loader.get_template('shop/home/introduction.html')
+    if request.session.get('username'):
+        user = User.objects.get(username=request.session.get('username'))
+        shop = ShopcartTwentyfour.objects.filter(uid=user.uid).count()
+    else:
+        shop = 0
+
 
 
     print("attrnum",attrnum)
     # res = temp.render(context={'detail': detail, 'inven':inven,'num':1,'goods': goods, 'attr': attr, 'attrnum': attrnum, 'norm': norm, 'normall': normall})
-    return render(request,'shop/home/introduction.html',context={'detail': detail, 'inven':inven,'num':1,'goods': goods, 'attr': attr, 'attrnum': attrnum, 'norm': norm, 'normall': normall})
+    return render(request,'shop/home/introduction.html',context={'detail': detail,'shopnum':shop, 'inven':inven,'num':1,'goods': goods, 'attr': attr, 'attrnum': attrnum, 'norm': norm, 'normall': normall})
 
 
 # def purchase(request):
@@ -118,18 +129,43 @@ def price_change(request):
 
 def add_cart(request):
     if request.method == "POST":
+        user =User.objects.get(username=request.session.get('username'))
         a=request.POST.get('updatanum')
-        data = {
-            'emm':a
-        }
-        return JsonResponse(data)
+        b=request.POST.get('commodityid')
+        commodity = CommodityCategoriesTwo.objects.get(id = int(b))
+
+
+
+        shop1 = ShopcartTwentyfour.objects.filter(cid=commodity.id,uid=user.uid).exists()
+        if shop1:
+            shop = ShopcartTwentyfour.objects.get(cid=commodity.id, uid=user.uid)
+            shop.goodscount = shop.goodscount + int(a)
+            shop.save()
+            num = ShopcartTwentyfour.objects.filter(uid=user.uid).count()
+            data = {
+            'num':num
+            }
+            return JsonResponse(data)
+        else:
+            myshopcart = ShopcartTwentyfour(uid=user.uid, goodscount=int(a), cid=commodity.id)
+            myshopcart.save()
+            num = ShopcartTwentyfour.objects.filter(uid=user.uid).count()
+            data = {
+            'num': num
+            }
+            return JsonResponse(data)
+    # return render(request,'shop/home/introduction.html')
 
 
 def pay(request,commodityid,count):
     userid = User.objects.get(username = request.session.get('username')).uid
     address = User_address.objects.filter(uid_id = userid)
     express = Express_company.objects.all()
-
+    if request.session.get('username'):
+        user = User.objects.get(username=request.session.get('username'))
+        shop = ShopcartTwentyfour.objects.filter(uid=user.uid).count()
+    else:
+        shop = 0
     commodity = CommodityCategoriesTwo.objects.get(id=commodityid)
     goods = Goods.objects.get(gid=commodity.gid)
     norm = Specification.objects.get(id=commodity.specification_id)
@@ -169,7 +205,7 @@ def pay(request,commodityid,count):
                                         phone_number=user_phone, uid_id=uid)
 
 
-    return render(request,'shop/home/pay.html',context={'express':express,'address':address,'goods':goods,'commodity':commodity,'count':count,'norm':norm,'total_price':total_price,'total':total})
+    return render(request,'shop/home/pay.html',context={'shopnum':shop,'express':express,'address':address,'goods':goods,'commodity':commodity,'count':count,'norm':norm,'total_price':total_price,'total':total})
 
 
 def addre(request):
@@ -187,7 +223,7 @@ def addre(request):
             'info1':detail_info
         }
         return JsonResponse(data)
-    return render(request,'shop/home/pay.html')
+    # return render(request,'shop/home/pay.html')
 
 
 def express(request):
@@ -206,7 +242,7 @@ def express(request):
             'ex_price':ex_price
         }
         return JsonResponse(data)
-    return render(request, 'shop/home/pay.html')
+    # return render(request, 'shop/home/pay.html')
 
 
 def commit(request):
@@ -272,3 +308,25 @@ def commit(request):
         }
         return JsonResponse(data)
     return render(request, 'shop/home/pay.html')
+
+
+def shopcart(request):
+    if request.session.get('username'):
+        user = User.objects.get(username=request.session.get('username'))
+        shop = ShopcartTwentyfour.objects.filter(uid=user.uid).count()
+    else:
+        shop = 0
+    user = User.objects.get(username=request.session.get('username'))
+    myshop =ShopcartTwentyfour.objects.filter(uid=user.uid)
+    goods =Goods.objects.all()
+    commodity = CommodityCategoriesTwo.objects.all()
+    norm = Specification.objects.all()
+    print(shop)
+
+    for sho in myshop:
+        for commod in commodity:
+            if sho.cid==commod.id:
+                for good in goods:
+                    if good.gid == commod.gid:
+                        print(sho.id,good.gname,commod.id,')))))))))))))))))))))))))))))')
+    return render(request,'shop/home/shopcart.html',context={'shopnum':shop,'myshop':myshop,'goods':goods,'commodity':commodity,'norm':norm})
