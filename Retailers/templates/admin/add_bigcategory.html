@@ -41,7 +41,7 @@
                             <thead>
                             <tr>
                                 <th>
-                                    大类别id
+                                    ID
                                 </th>
                                 <th>
                                     大类别名称
@@ -65,7 +65,7 @@
                                     {{ bigcategory.categoryname }}
                                 </td>
                                 <td>
-                                    <a onclick="update()">修改</a>
+                                    <a onclick="update('{{ bigcategory.id  }}')">修改</a>
                                 </td>
 
                             </tr>
@@ -90,7 +90,6 @@
       <div class="modal-body">
         <form action="{% url 'admin:alterbigcategory' %}" method="post" id="form1" >
             {% csrf_token %}
-          <input type="hidden" value="{{ bigcategory.id }}" name="cid" >
           <div class="form-group">
             <label for="recipient-name" class="control-label">新的大板块名称:</label>
             <input type="text" class="form-control" id="recipient-name" name="name">
@@ -148,7 +147,9 @@
         }
         
 
-        function update() {
+        function update(id) {
+            $('input[name="cid"]').remove()
+            console.log($('#form1').append("<input type=hidden name='cid' value="+id+">"))
             $('#exampleModal').modal('show')
 
         }
@@ -179,10 +180,11 @@
                 success: function (data) {//发送请求成功执行的函数
 
                     if (data['code'] == 1) {
-                        alert('新大类别已添加')
+                        alert(data['msg'])
+                        location.reload()
                     }
                     else {
-                        alert('大类别已存在，请重新输入')
+                        alert('未成功保存')
                     }
                 }
 

@@ -104,91 +104,94 @@
         </div>
 
         <div class="refund-main">
-            <form action="{% url 'goods:refund1'  orderchild.0.orderid  %}" method="post" enctype="multipart/form-data" >
-            {% csrf_token %}
-            <div class="item-comment">
-                <div class="am-form-group">
-                    <label for="refund-type" class="am-form-label">退款类型</label>
-                    <div class="am-form-content">
-                        <select data-am-selected="" name="content">
-                            <option value="0" selected>退款</option>
-                            <option value="1">退货</option>
-                        </select>
+            <form action="{% url 'goods:refund1'  orderchild.0.orderid %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="item-comment">
+                    <div class="am-form-group">
+                        <label for="refund-type" class="am-form-label">退款类型</label>
+                        <div class="am-form-content">
+                            <select data-am-selected="" name="content">
+                                <option value="0" selected>退款</option>
+                                <option value="1">退货</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
 
-                <div class="am-form-group">
-                    <label for="refund-reason" class="am-form-label">退款原因</label>
-                    <div class="am-form-content">
-                        <select data-am-selected="" name="realcause">
-                            <option value="a" selected>请选择退款原因</option>
-                            <option value="不想要了">不想要了</option>
-                            <option value="买错了">买错了</option>
-                            <option value="没收到货">没收到货</option>
-                            <option value="与说明不符">与说明不符</option>
-                        </select>
+                    <div class="am-form-group">
+                        <label for="refund-reason" class="am-form-label">退款原因</label>
+                        <div class="am-form-content">
+                            <select data-am-selected="" name="realcause">
+                                <option value="a" selected>请选择退款原因</option>
+                                <option value="不想要了">不想要了</option>
+                                <option value="买错了">买错了</option>
+                                <option value="没收到货">没收到货</option>
+                                <option value="与说明不符">与说明不符</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
 
-                <div class="am-form-group">
-                    <label for="refund-money" class="am-form-label">退款金额<span>（不可修改）</span></label>
-                    <div class="am-form-content">
-                        <input  type="text" id="refund-money" name="money" readonly="readonly"   placeholder="{% for order in orders %}{% for key,value in dictmoney.items %}{% if key == order.id %}{{ value }}{% endif %}{% endfor %}{% endfor %}" value="{% for order in orders %}{% for key,value in dictmoney.items %}{% if key == order.id %}{{ value }}{% endif %}{% endfor %}{% endfor %}" >
+                    <div class="am-form-group">
+                        <label for="refund-money" class="am-form-label">退款金额<span>（不可修改）</span></label>
+                        <div class="am-form-content">
+                            <input type="text" id="refund-money" name="money" readonly="readonly" placeholder="
+                                    {% for order in orders %}{% for key,value in dictmoney.items %}{% if key == order.id %}{{ value }}{% endif %}{% endfor %}{% endfor %}"
+                                   value="
+                                           {% for order in orders %}{% for key,value in dictmoney.items %}{% if key == order.id %}{{ value }}{% endif %}{% endfor %}{% endfor %}">
+                        </div>
                     </div>
-                </div>
-                <div class="am-form-group">
-                    <label for="refund-info" class="am-form-label">退款说明<span>（可不填）</span></label>
-                    <div class="am-form-content">
-                        <textarea placeholder="请输入退款说明" name="refund_instructions"></textarea>
+                    <div class="am-form-group">
+                        <label for="refund-info" class="am-form-label">退款说明<span>（可不填）</span></label>
+                        <div class="am-form-content">
+                            <textarea placeholder="请输入退款说明" name="refund_instructions"></textarea>
+                        </div>
                     </div>
+
                 </div>
-
-            </div>
-            <div class="refund-tip">
-{#                <div class="filePic">#}
-{#                    <input type="file" class="inputPic" value="选择凭证图片" name="file" max="5" maxsize="5120"#}
-{#                           allowexts="gif,jpeg,jpg,png,bmp" accept="image/*">#}
-{#                    <img src="/static/shop/images/image.jpg" alt="">#}
-{#                </div>#}
+                <div class="refund-tip">
+                    {#                <div class="filePic">#}
+                    {#                    <input type="file" class="inputPic" value="选择凭证图片" name="file" max="5" maxsize="5120"#}
+                    {#                           allowexts="gif,jpeg,jpg,png,bmp" accept="image/*">#}
+                    {#                    <img src="/static/shop/images/image.jpg" alt="">#}
+                    {#                </div>#}
 
 
-                <div>
-                <label>图片</label>
-                <input name="picture" type="file" id="picture" multiple/>
-            </div>
-            <div id="previewImg">
-            </div>
-                <span class="desc">上传凭证&nbsp;最多三张</span>
-            </div>
-            <div class="info-btn">
-{#                <div class="am-btn am-btn-danger"></div>#}
-                <input type="submit" value="提交申请" class="am-btn am-btn-danger">
-            </div>
+                    <div>
+                        <label>图片</label>
+                        <input name="picture" type="file" id="picture" multiple/>
+                    </div>
+                    <div id="previewImg">
+                    </div>
+                    <span class="desc">上传凭证&nbsp;最多三张</span>
+                </div>
+                <div class="info-btn">
+                    {#                <div class="am-btn am-btn-danger"></div>#}
+                    <input type="submit" value="提交申请" class="am-btn am-btn-danger">
+                </div>
             </form>
         </div>
     </div>
     <div class="clear"></div>
 
-{#    <script>#}
-{#       $('#picture').on('change', function(){#}
-{#                var imgFiles = $(this)[0].files#}
-{#                for (i=0;i<imgFiles.length;i++){#}
-{#                    filePath = imgFiles[i].name#}
-{#                    fileFormat = filePath.split('.')[1].toLowerCase()#}
-{#                    src = window.URL.createObjectURL(imgFiles[i])#}
-{#                    if( !fileFormat.match(/png|jpg|jpeg/) ) {#}
-{#                        alert('上传错误,文件格式必须为：png/jpg/jpeg')#}
-{#                        return#}
-{#                    }#}
-{#                    var preview = document.getElementById("previewImg")#}
-{#                    var img = document.createElement('img')#}
-{#                    img.width = 200#}
-{#                    img.height = 200#}
-{#                    img.src = src#}
-{#                    preview.appendChild(img)#}
-{#                }#}
-{#            })#}
-{#    </script>#}
+    {#    <script>#}
+    {#       $('#picture').on('change', function(){#}
+    {#                var imgFiles = $(this)[0].files#}
+    {#                for (i=0;i<imgFiles.length;i++){#}
+    {#                    filePath = imgFiles[i].name#}
+    {#                    fileFormat = filePath.split('.')[1].toLowerCase()#}
+    {#                    src = window.URL.createObjectURL(imgFiles[i])#}
+    {#                    if( !fileFormat.match(/png|jpg|jpeg/) ) {#}
+    {#                        alert('上传错误,文件格式必须为：png/jpg/jpeg')#}
+    {#                        return#}
+    {#                    }#}
+    {#                    var preview = document.getElementById("previewImg")#}
+    {#                    var img = document.createElement('img')#}
+    {#                    img.width = 200#}
+    {#                    img.height = 200#}
+    {#                    img.src = src#}
+    {#                    preview.appendChild(img)#}
+    {#                }#}
+    {#            })#}
+    {#    </script>#}
 {% endblock %}
 
 

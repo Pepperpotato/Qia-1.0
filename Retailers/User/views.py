@@ -259,11 +259,18 @@ def addbigcategory(request):
 
 def alterbigcategory(request):
     if request.is_ajax():
-        name = request.POST.get('name')
-        print(name)
         category_id = request.POST.get('cid')
-        print(category_id)
-        return redirect(reverse('admin:addattrbute'))
+        name = request.POST.get('name')
+        picture = request.FILES.get('newpicture')
+        new_picture = uploadpic(picture)
+        current_bigcategory = CommodityCategories.objects.get(pk=int(category_id))
+        current_bigcategory.categoryname = name
+        if new_picture:
+            current_bigcategory.picture = new_picture
+        current_bigcategory.save()
+        return JsonResponse({'code': 1, 'msg': '修改以保存'})
+
+        # return redirect(reverse('admin:addattrbute'))
 
 
 # 添加商品小类别
@@ -436,7 +443,7 @@ def addattrbute(request):
         new_atrr.unit = unit
         new_atrr.smallclassesattribute = attrbute
         new_atrr.price = int(price)
-        new_atrr.ishow = int(ishow)
+        new_atrr.is_show = int(ishow)
         new_atrr.stockprice = int(stockprice)
         new_atrr.inventory = int(inventory)
         new_atrr.save()

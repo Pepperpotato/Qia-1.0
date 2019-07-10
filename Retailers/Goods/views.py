@@ -1090,8 +1090,11 @@ def change(request):
     })
 
 # 发表评论
-def commentlist(request,list):
-    print(list)
+def commentlist(request,list=4):
+    a=request.GET.get('code')
+    print(a)
+    # return HttpResponse(json.dumps({'data': '修改成功'}), content_type='application/json')
+    # print(list)
     username = request.session.get('username')
     uid = User.objects.filter(username=username)[0].uid
     # 用户所有订单
@@ -1104,7 +1107,8 @@ def commentlist(request,list):
                 uid, list))
     columns = [col[0] for col in cursor.description]
     orderchild = [dict(zip(columns, row)) for row in cursor.fetchall()]
-    # print(orderchild)
+    print(orderchild)
+    print(len(orderchild))
     count = 0
     express_price = 0
     dictmoney = {}
@@ -1117,4 +1121,7 @@ def commentlist(request,list):
         else:
             dictmoney[money.get('orderid')] = int(money.get('goodmoneycount'))
     orderr = int(list)
-    return render(request,'shop/person/commentlist.html')
+    return render(request,'shop/person/commentlist.html',context={
+        'orderchild':orderchild,
+        'dictmoney':dictmoney,
+    })

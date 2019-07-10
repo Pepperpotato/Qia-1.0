@@ -31,7 +31,7 @@ class OrderTwenty(models.Model):
     addressid = models.IntegerField(null=True)#收货地址id
     expressbrandid = models.IntegerField(default=1,null=True)#物流品牌id
     paywayid = models.IntegerField(null=True, default=1)#支付id
-    integral = models.IntegerField(null=True)#获得积分
+    integral = models.IntegerField(null=True,default=0)#获得积分
     orderstatus = models.IntegerField(null=True, default=0)#订单状态 0~4
     # 0     没付钱
     # 1   已付款未发货
@@ -81,11 +81,10 @@ class ReturnTwentytwo(models.Model):
 
 class ShopcartTwentyfour(models.Model):
     uid = models.IntegerField() #用户id
-    goodsid = models.IntegerField() #商品id
+    cid = models.IntegerField(null=True) #4表主键
     goodscount = models.IntegerField() #加入购物车商品数量
-    goodsprice = models.IntegerField()#商品价格
-    goodsaddtime = models.DateTimeField()#加入购物车时间
-    discount = models.IntegerField()#优惠种类
+    goodsaddtime = models.DateTimeField(auto_now_add=True)#加入购物车时间
+    discount = models.IntegerField(default=0)#优惠种类
 
     class Meta:
 
