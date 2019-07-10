@@ -5,33 +5,115 @@
     <section class="rt_wrap content mCustomScrollbar">
         <div class="rt_content">
             <div class="page_title">
-                <h3>添加新的商品小类别 <span class="label label-default">New</span>
+                <h3>添加新的商品小类别 <span class="label label-default">New</span></h3>
             </div>
-            <form action="{% url 'admin:addsmallcategory' %}" method="post" id="form1" >
+            <form action="{% url 'admin:addsmallcategory' %}" method="post" id="form1">
                 {% csrf_token %}
-            <ul class="ulColumn2">
+                <ul class="ulColumn2">
 
-                <li>
-                    <span class="item_name" style="width:190px;">请选择商品的大类别：</span>
-                    <select name="bigcategoryid" class="select" style="width: 120px">
-                        <option>请选择</option>
-                        {% for re in res %}
-                            <option value="{{ re.id }}">{{ re.categoryname }}</option>
-                        {% endfor %}
-                    </select>
-                </li>
-                <li>
-                    <span class="item_name" style="width:120px;">商品小类别</span>
-                    <input type="text" name="smallcategory" placeholder="请输入商品的小类别">
-                </li>
-                <li>
-                    <span class="item_name" style="width:45px;"></span>
-                    <input type="button" value="提交" onclick="big()" >
-                </li>
-            </ul>
+                    <li>
+                        <span class="item_name" style="width:190px;">请选择商品的大类别：</span>
+                        <select name="bigcategoryid" class="select" style="width: 120px">
+                            <option>请选择</option>
+                            {% for re in res %}
+                                <option value="{{ re.id }}">{{ re.categoryname }}</option>
+                            {% endfor %}
+                        </select>
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:120px;">商品小类别</span>
+                        <input type="text" name="smallcategory" placeholder="请输入商品的小类别">
+                    </li>
+                    <li>
+                        <span class="item_name" style="width:45px;"></span>
+                        <input type="button" value="提交" onclick="big()">
+                    </li>
+                </ul>
             </form>
         </div>
+        <div class="rt_content">
+            <div class="page_title">
+                <h3>修改/删除已有商品小类别 <span class="label label-default">ALTER/DELETE</span></h3>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span6">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>
+                                    ID
+                                </th>
+                                <th>
+                                    对应大类别名称
+                                </th>
+                                <th>
+                                    小类别名称
+                                </th>
+                                <th>
+                                    操作
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for re1 in res1 %}
+                                <tr>
+                                    <td>
+                                        {{ re1.id }}
+                                    </td>
+                                    {% for re in res %}
+                                        {% if re.id == re1.parentid %}
+                                            <td>
+                                                {{ re.categoryname }}
+                                            </td>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <td>
+                                        {{ re1.categoryname }}
+                                    </td>
+                                    <td>
+                                        <a onclick="update('{{ re1.id }}')">修改</a>&nbsp;&nbsp;&nbsp;&nbsp;<a
+                                            onclick="del('{{ re1.id }}')">删除</a>
+                                    </td>
+
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="span6">
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </section>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">修改小类别名称</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'admin:alterbigcategory' %}" method="post" id="form2">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">新的小类别名称:</label>
+                            <input type="text" class="form-control" id="recipient-name" name="name">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" onclick="alter()">提交修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
 
         function big(e) {
@@ -64,8 +146,7 @@
                     if (data['code'] == 1) {
                         alert(data['data'])
                     }
-                    else
-                    {
+                    else {
                         alert(data['data'])
                     }
                 }
@@ -73,6 +154,60 @@
             });
         }
 
+        function update(id) {
+            $('input[name="cid"]').remove()
+            console.log($('#form2').append("<input type=hidden name='cid' value=" + id + ">"))
+            $('#exampleModal').modal('show')
+
+        }
+
+        function alter() {
+            $.ajax({
+
+                cache: false,
+                contentType: false,
+
+                type: "POST",
+
+                dataType: "json",//返回的数据类型为Json对象
+
+                url: "{% url 'admin:altersmallcategory' %}", //发送请求到后台的地址
+
+                data: new FormData(document.getElementById("form2")), //发送的数据是id="for"的表单中的数据,其中document.getElementById()函数的功能是根据对象的名称获取对象
+                processData: false,//不希望自动转换
+
+                async: false,//请求设为异步
+
+                error: function (request) {//发送请求失败执行的函数
+
+                    alert("发送请求失败！");
+
+                },
+
+                success: function (data) {//发送请求成功执行的函数
+
+                    if (data['code'] == 1) {
+                        alert(data['msg'])
+                        location.reload()
+                    }
+                    else {
+                        alert('未成功保存')
+                    }
+                }
+
+            });
+        }
+
+        function del(id) {
+            $.post('{% url 'admin:delsmallcategory'%}', {'sid': id}, function (data) {
+                console.log(data['data'])
+                if (data['code'] == 1) {
+                    alert(data['data'])
+                }
+
+            })
+
+        }
     </script>
 {% endblock content %}
 

@@ -7,7 +7,7 @@
             <div class="page_title">
                 <h3>添加新的品牌 <span class="label label-default">New</span></h3>
             </div>
-            <form action="{% url 'admin:addband'%}" method="post">
+            <form action="{% url 'admin:addband' %}" method="post">
                 {% csrf_token %}
                 <ul>
                     <li>
@@ -21,7 +21,135 @@
                 </ul>
             </form>
         </div>
+
+        <div class="rt_content">
+            <div class="page_title">
+                <h3>修改/删除已有品牌 <span class="label label-default">ALTER/DELETE</span></h3>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span6">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>
+                                    ID
+                                </th>
+                                <th>
+                                    品牌名称
+                                </th>
+                                <th>
+                                    操作
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for brand in all_brand %}
+                                <tr>
+                                    <td id="bid">
+                                        {{ brand.id }}
+                                    </td>
+                                    <td>
+                                        {{ brand.brandname }}
+                                    </td>
+                                    <td>
+                                        <a onclick="update('{{ brand.id }}')">修改</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="del('{{ brand.id }}')">删除</a>
+                                    </td>
+
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="span6">
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </section>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">修改品牌名称</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'admin:alterband' %}" method="post" id="form1">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">新的品牌名称:</label>
+                            <input type="text" class="form-control" id="recipient-name" name="name">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" onclick="alter()">提交修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function update(id) {
+            $('input[name="bid"]').remove()
+            console.log($('#form1').append("<input type=hidden name='bid' value=" + id + ">"))
+            $('#exampleModal').modal('show')
+
+        }
+
+        function alter() {
+            $.ajax({
+
+                cache: false,
+                contentType: false,
+
+                type: "POST",
+
+                dataType: "json",//返回的数据类型为Json对象
+
+                url: "{% url 'admin:alterband' %}", //发送请求到后台的地址
+
+                data: new FormData(document.getElementById("form1")), //发送的数据是id="for"的表单中的数据,其中document.getElementById()函数的功能是根据对象的名称获取对象
+                processData: false,//不希望自动转换
+
+                async: false,//请求设为异步
+
+                error: function (request) {//发送请求失败执行的函数
+
+                    alert("发送请求失败！");
+
+                },
+
+                success: function (data) {//发送请求成功执行的函数
+
+                    if (data['code'] == 1) {
+                        alert(data['msg'])
+                        location.reload()
+                    }
+                    else {
+                        alert('未成功保存')
+                    }
+                }
+
+            });
+        }
+
+        function del(id) {
+            $.post('{% url 'admin:delband'%}', {'bid': id}, function (data) {
+                console.log(data['data']);
+                if (data['code'] == 1) {
+                    alert(data['data'])
+                }
+
+            })
+
+        }
+    </script>
 {% endblock content %}
 
 {% block foot %}
