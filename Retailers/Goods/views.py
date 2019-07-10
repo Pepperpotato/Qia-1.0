@@ -19,7 +19,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.csrf import csrf_exempt
 
 from Goods.forms import UserForm1,UserForm2
-from Goods.models import Coupons, Goods, CommodityCategoriesTwo, CommodityBrand, CommodityCategories
+from Goods.models import Coupons, Goods, CommodityCategoriesTwo, CommodityBrand, CommodityCategories, Productevaluation
 from Goods.sms import send_sms
 from Order.models import OrderTwenty, OrderchildTwentyone, ReturnTwentytwo, ShopcartTwentyfour
 from Retailers import settings
@@ -61,9 +61,7 @@ def cardmethod(request):
 def collection(request):
     return render(request,'shop/person/collection.html')
 
-# 评价管理
-def comment(request):
-    return render(request,'shop/person/comment.html')
+
 
 # 商品咨询
 def consultation(request):
@@ -85,13 +83,8 @@ def logistics(request):
 def news(request):
     return render(request,'shop/person/news.html')
 
-# 我的积分
-def pointnew(request):
-    return render(request,'shop/person/pointnew.html')
 
-# 积分明细
-def points(request):
-    return render(request,'shop/person/points.html')
+
 
 # 钱款去向
 def record(request):
@@ -412,6 +405,38 @@ def index(request):
                     user.user_account.goodoffer_id=goodoffer+str(2)
                     user.user_account.save()
 
+
+
+
+            username = request.session.get('username')
+            uid = User.objects.filter(username=username)[0].uid
+            # 用户所有订单
+            user = User.objects.filter(username=username)[0]
+            orders = user.ordertwenty_set.all()
+            # print(orders)
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT * FROM order_twenty o RIGHT JOIN orderchild_twentyone c ON o.id=c.orderid  JOIN goodsone g ON c.goodid=g.gid JOIN express_company e  ON o.expressbrandid=e.id LEFT JOIN user_address u ON o.addressid=u.aid    LEFT JOIN commodity_categories_two_four co ON co.id=c.cid WHERE  o.uid_id={} ".format(
+                        uid))
+            columns = [col[0] for col in cursor.description]
+            orderchild = [dict(zip(columns, row)) for row in cursor.fetchall()]
+            # print(orderchild)
+
+            count = 0
+            express_price = 0
+            dictmoney = {}
+            for money in orderchild:
+                # print(money.get('orderid'))
+                count += int(money.get('goodmoneycount'))
+                express_price = money.get('express_price')
+                if dictmoney.get(money.get('orderid')):
+                    dictmoney[money.get('orderid')] = dictmoney.get(money.get('orderid')) + int(
+                        money.get('goodmoneycount'))
+                else:
+                    dictmoney[money.get('orderid')] = int(money.get('goodmoneycount'))
+
+
+
             return render(request,'shop/person/index.html',context={
             'user':user,
             'coupons':coupons,
@@ -422,6 +447,12 @@ def index(request):
             'safety':safety,
             'articleyellow':articleyellow,
             'goodscoupons':goodscoupons,
+            'orders': orders,
+            'count': count,
+            'orderchild': orderchild,
+            'express_price': express_price,
+            'dictmoney': dictmoney,
+
         })
     return render(request, 'shop/person/index.html',context={
         'coupons': 0,
@@ -867,8 +898,15 @@ search_data=None
 # 搜索页面
 def search(request,page=1):
     user = User.objects.get(username=request.session.get('username'))
-    shop = ShopcartTwentyfour.objects.filter(uid=user.uid).count()
+
     dataa=request.POST.get('index_none_header_sysc')
+
+    if request.session.get('username'):
+        user = User.objects.get(username=request.session.get('username'))
+        shop = ShopcartTwentyfour.objects.filter(uid=user.uid).count()
+    else:
+        shop = 0
+
     # print(dataa)
     if dataa:
         global search_data
@@ -1097,8 +1135,10 @@ def change(request):
 def commentlist(request,list=4):
     # ids=request.GET[dict]
     # ids="".join(ids) {'评论0': ['123答复'], '评论1': ['123阿斯蒂芬'], '评分3': ['好评'], '评分*********
-    dic=request.POST
-    print(dic)
+
+    # print(dic)
+    # for i  in dic:
+    #     print(i,dic[i])
     # file_obj = request.FILES
     # print(file_obj)
     # return HttpResponse(json.dumps({'data': '修改成功'}), content_type='application/json')
@@ -1111,17 +1151,17 @@ def commentlist(request,list=4):
     # print(orders)
     with connection.cursor() as cursor:
         cursor.execute(
-            "SELECT * FROM order_twenty o RIGHT JOIN orderchild_twentyone c ON o.id=c.orderid  JOIN goodsone g ON c.goodid=g.gid JOIN express_company e  ON o.expressbrandid=e.id LEFT JOIN user_address u ON o.addressid=u.aid    LEFT JOIN commodity_categories_two_four co ON co.id=c.cid WHERE  o.uid_id={} AND o.id={}".format(
-                uid, list))
+            "SELECT * FROM order_twenty o RIGHT JOIN orderchild_twentyone c ON o.id=c.orderid  JOIN goodsone g ON c.goodid=g.gid JOIN express_company e  ON o.expressbrandid=e.id LEFT JOIN user_address u ON o.addressid=u.aid    LEFT JOIN commodity_categories_two_four co ON co.id=c.cid WHERE  o.uid_id={} AND o.id={}".format(uid, list))
     columns = [col[0] for col in cursor.description]
     orderchild = [dict(zip(columns, row)) for row in cursor.fetchall()]
     # print(orderchild)
-    # print(len(orderchild))
+    global goodslen
+    goodslen=len(orderchild)
     count = 0
     express_price = 0
     dictmoney = {}
     for money in orderchild:
-        # print(money.get('orderid'))
+        # print(money)
         count += int(money.get('goodmoneycount'))
         express_price = money.get('express_price')
         if dictmoney.get(money.get('orderid')):
@@ -1129,8 +1169,63 @@ def commentlist(request,list=4):
         else:
             dictmoney[money.get('orderid')] = int(money.get('goodmoneycount'))
     orderr = int(list)
+    if request.method == "POST":
+        dic = request.POST
+        list = int(list)
+        # print(dic)
+        if dic:
+            goodsid = []
+            goodcontent=[]
+            rating=[]
+            for g in dic:
+                if re.match('评论',g):
+                    goodsid.append(g[-1])
+                    goodcontent.append(dic[g])
+                if re.match('评分',g):
+                    rating.append(dic[g])
+            # print(goodsid,goodcontent,rating)
+            for i in range(goodslen):
+                Productevaluation.objects.create(goodsid=goodsid[i],userid=uid,rating=rating[i],anonymous=0,evaluationimage=0,content=goodcontent[i] )
+            ordertwenty = OrderTwenty.objects.filter(id=list)[0]
+            ordertwenty.orderstatus = 4
+            ordertwenty.save()
     return render(request,'shop/person/commentlist.html',context={
         'orderchild':orderchild,
         'dictmoney':dictmoney,
         'orderr':orderr,
+    })
+
+# 评价管理
+def comment(request):
+    username=request.session.get('username')
+    uid=User.objects.filter(username=username)[0].uid
+    evaluation=Productevaluation.objects.filter(userid=uid)
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM productevaluation_nine p  JOIN goodsone g ON p.goodsid=g.gid  WHERE  p.userid={} ".format(uid))
+    columns = [col[0] for col in cursor.description]
+    orderchild = [dict(zip(columns, row)) for row in cursor.fetchall()]
+    # print(orderchild)
+    # for order in orderchild:
+    #     print(order)
+    return render(request,'shop/person/comment.html',context={
+        'orderchild':orderchild,
+    })
+
+# 我的积分
+def pointnew(request):
+
+    return render(request,'shop/person/pointnew.html',context={
+
+    })
+
+# 积分明细
+def points(request):
+    username = request.session.get('username')
+    user = User.objects.filter(username=username)[0]
+    user_grade = user.user_grade_set.all()
+    print(user_grade)
+    return render(request,'shop/person/points.html',context={
+        'user': user,
+        'user_grade': user_grade,
     })
