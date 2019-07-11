@@ -2,7 +2,7 @@ import os
 
 from alipay import AliPay
 from django.core.serializers import json
-from django.db.models import Count
+from django.db.models import Count, Sum
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.template import loader
@@ -24,6 +24,11 @@ def home(request):
     store = CommodityBrand.objects.all()  # 寻找品牌 2
     price = CommodityCategoriesTwo.objects.all()
     dic = {}
+    if request.session.get('username'):
+        user = User.objects.get(username=request.session.get('username'))
+        shop = ShopcartTwentyfour.objects.filter(uid=user.uid).count()
+    else:
+        shop = 0
 
 
     for i in dlb:
@@ -37,11 +42,12 @@ def home(request):
             if len(a):
                 for num in a:
                     list.append(num)
-        # list.sort(reverse=True)
-        list1=list[:6]
+
+        list1=list[-6:]
+
         dic[i.id] = list1
 
-    return render(request,'shop/home/home3.html',context={'dlb': dlb, 'xlb': xlb, 'store': store,'dic':dic,'price':price})
+    return render(request,'shop/home/home3.html',context={'dlb': dlb,'shopnum':shop ,'xlb': xlb, 'store': store,'dic':dic,'price':price})
     # return HttpResponse(res)
     # return render(request,'shop/home/home3.html')
 
@@ -61,11 +67,17 @@ def intro(request,goodid):
     normall = Specification.objects.all()#所有规格
     print(norm[0]['specification_id'],normall[0].id)
     # temp = loader.get_template('shop/home/introduction.html')
+    if request.session.get('username'):
+        user = User.objects.get(username=request.session.get('username'))
+        shop = ShopcartTwentyfour.objects.filter(uid=user.uid).count()
+    else:
+        shop = 0
+
 
 
     print("attrnum",attrnum)
     # res = temp.render(context={'detail': detail, 'inven':inven,'num':1,'goods': goods, 'attr': attr, 'attrnum': attrnum, 'norm': norm, 'normall': normall})
-    return render(request,'shop/home/introduction.html',context={'detail': detail, 'inven':inven,'num':1,'goods': goods, 'attr': attr, 'attrnum': attrnum, 'norm': norm, 'normall': normall})
+    return render(request,'shop/home/introduction.html',context={'detail': detail,'shopnum':shop, 'inven':inven,'num':1,'goods': goods, 'attr': attr, 'attrnum': attrnum, 'norm': norm, 'normall': normall})
 
 
 # def purchase(request):
@@ -118,18 +130,45 @@ def price_change(request):
 
 def add_cart(request):
     if request.method == "POST":
+        user =User.objects.get(username=request.session.get('username'))
         a=request.POST.get('updatanum')
-        data = {
-            'emm':a
-        }
-        return JsonResponse(data)
+        b=request.POST.get('commodityid')
+        commodity = CommodityCategoriesTwo.objects.get(id = int(b))
+
+
+
+        shop1 = ShopcartTwentyfour.objects.filter(cid=commodity.id,uid=user.uid).exists()
+        if shop1:
+            shop = ShopcartTwentyfour.objects.get(cid=commodity.id, uid=user.uid)
+            shop.goodscount = shop.goodscount + int(a)
+            shop.totalprice = shop.price*int(a)+shop.totalprice
+            shop.save()
+            num = ShopcartTwentyfour.objects.filter(uid=user.uid).count()
+            data = {
+            'num':num
+            }
+            return JsonResponse(data)
+        else:
+
+            myshopcart = ShopcartTwentyfour(uid=user.uid, goodscount=int(a), cid=commodity.id,price=commodity.price,totalprice=int(a)*int(commodity.price))
+            myshopcart.save()
+            num = ShopcartTwentyfour.objects.filter(uid=user.uid).count()
+            data = {
+            'num': num
+            }
+            return JsonResponse(data)
+    # return render(request,'shop/home/introduction.html')
 
 
 def pay(request,commodityid,count):
     userid = User.objects.get(username = request.session.get('username')).uid
     address = User_address.objects.filter(uid_id = userid)
     express = Express_company.objects.all()
-
+    if request.session.get('username'):
+        user = User.objects.get(username=request.session.get('username'))
+        shop = ShopcartTwentyfour.objects.filter(uid=user.uid).count()
+    else:
+        shop = 0
     commodity = CommodityCategoriesTwo.objects.get(id=commodityid)
     goods = Goods.objects.get(gid=commodity.gid)
     norm = Specification.objects.get(id=commodity.specification_id)
@@ -169,7 +208,7 @@ def pay(request,commodityid,count):
                                         phone_number=user_phone, uid_id=uid)
 
 
-    return render(request,'shop/home/pay.html',context={'express':express,'address':address,'goods':goods,'commodity':commodity,'count':count,'norm':norm,'total_price':total_price,'total':total})
+    return render(request,'shop/home/pay.html',context={'shopnum':shop,'express':express,'address':address,'goods':goods,'commodity':commodity,'count':count,'norm':norm,'total_price':total_price,'total':total})
 
 
 def addre(request):
@@ -187,7 +226,7 @@ def addre(request):
             'info1':detail_info
         }
         return JsonResponse(data)
-    return render(request,'shop/home/pay.html')
+    # return render(request,'shop/home/pay.html')
 
 
 def express(request):
@@ -206,45 +245,11 @@ def express(request):
             'ex_price':ex_price
         }
         return JsonResponse(data)
-    return render(request, 'shop/home/pay.html')
+    # return render(request, 'shop/home/pay.html')
 
 
 def commit(request):
     if request.method == 'POST':
-        order_id = request.session.get('bianhao')
-        # order_id = 1
-        # if not order_id:
-        #     return JsonResponse({"errno": 1, "error_msg": "参数不完整"})
-        # try:
-        #     # order = OrderTwenty.objects.get(id=order_id, user=user, pay_method=3, order_status=1)
-        #     order = OrderTwenty.objects.get(id=order_id, paywayid=1, orderstatus=0)
-        # except OrderTwenty.DoesNotExist:
-        #     return JsonResponse({"errno": 2, "error_msg": "无效订单"})
-
-        alipay = AliPay(
-            appid="2016101100659250",  # 应用id
-            app_notify_url=None,  # 默认回调url
-            app_private_key_path=os.path.join(settings.BASE_DIR, 'User/keys/app_private_key.pem'),
-            # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
-            alipay_public_key_path=os.path.join(settings.BASE_DIR, 'User/keys/alipay_public_key.pem'),
-            sign_type="RSA2",  # RSA 或者 RSA2
-            debug=True  # 默认False
-
-        )
-        # 电脑网站支付，需要跳转到https://openapi.alipay.com/gateway.do? + order_string
-        # total_pay = order.total_price + order.transit_price
-        # total_pay = request.session.get('total_price')
-        total_pay = request.session.get('jiage')
-        order_string = alipay.api_alipay_trade_page_pay(
-            out_trade_no=order_id,  # 订单编号
-            total_amount=str(total_pay),
-            subject="辛姐的小吃铺<%s>" % order_id,
-            return_url=None,
-            notify_url=None  # 可选, 不填则使用默认notify url
-        )
-        # 构造用户跳转的支付链接地址
-        pay_url = "https://openapi.alipaydev.com/gateway.do?" + order_string
-
 
         user = User.objects.get(username=request.session.get('username'))
         co = request.POST.get('co')
@@ -272,3 +277,38 @@ def commit(request):
         }
         return JsonResponse(data)
     return render(request, 'shop/home/pay.html')
+
+
+def shopcart(request):
+    if request.session.get('username'):
+        user = User.objects.get(username=request.session.get('username'))
+        shop = ShopcartTwentyfour.objects.filter(uid=user.uid).count()
+    else:
+        shop = 0
+    user = User.objects.get(username=request.session.get('username'))
+    myshop =ShopcartTwentyfour.objects.filter(uid=user.uid)
+    goods =Goods.objects.all()
+    commodity = CommodityCategoriesTwo.objects.all()
+    norm = Specification.objects.all()
+    print(shop)
+    heji = ShopcartTwentyfour.objects.filter(uid=user.uid).aggregate(Sum('totalprice'))
+    he=heji['totalprice__sum']
+    print(he)
+    return render(request,'shop/home/shopcart.html',context={'heji':he,'shopnum':shop,'myshop':myshop,'goods':goods,'commodity':commodity,'norm':norm})
+
+
+def check_cart(request):
+    if request.method == 'POST':
+        cid = request.POST.get('cid')
+        num = request.POST.get('num')
+        total_price = request.POST.get('total_price')
+        print('+++++++++++',cid,num,total_price)
+        user =User.objects.get(username =request.session.get('username') )
+        shop=ShopcartTwentyfour.objects.get(uid=user.uid,cid=int(cid))
+        shop.goodscount=num
+        shop.totalprice=total_price
+        shop.save()
+        data = {
+            'ex_price':'1'
+        }
+        return JsonResponse(data)

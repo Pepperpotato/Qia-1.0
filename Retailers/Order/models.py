@@ -23,8 +23,6 @@ class ConsultTwentyeight(models.Model):
         db_table = 'consult_twentyeight'
 
 
-
-
 class OrderTwenty(models.Model):
     uid = models.ForeignKey(User, models.CASCADE)
     ordertime = models.DateTimeField(auto_now_add=True)#下单时间

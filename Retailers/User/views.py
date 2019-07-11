@@ -61,14 +61,16 @@ def index(request):
 
     # 库存不足产品
     with connection.cursor() as cursor:
-        cursor.execute("select c.gid,g.gname,specification,inventory from goodsone g join commodity_categories_two_four c on g.gid=c.gid join specification s on s.id=c.specification_id where inventory<50")
+        cursor.execute("select c.gid,g.gname,specification,inventory from goodsone g join commodity_categories_two_four c on g.gid=c.gid join specification s on s.id=c.specification_id where inventory<70")
     columns = [col[0] for col in cursor.description]
     res = [dict(zip(columns, row)) for row in cursor.fetchall()]
 
+    # 营业额
     with connection.cursor() as cursor:
-        cursor.execute("select * from orderchild_twentyone t join goodsone g on t.goodid=g.gid join order_twenty o on o.id=t.orderid")
+        cursor.execute("select (sum(goodmoneycount)-sum((goodcount*stockprice))) as profit from order_twenty o join orderchild_twentyone t on o.id=t.orderid join commodity_categories_two_four c on c.id=t.cid where o.orderstatus>0;")
     columns = [col[0] for col in cursor.description]
-    res1 = [dict(zip(columns, row)) for row in cursor.fetchall()]
+    res2 = [dict(zip(columns, row)) for row in cursor.fetchall()]
+    print(res2)
 
     return render(request, 'admin/index.html', context={
         'admin_info': admin_info,
@@ -76,7 +78,8 @@ def index(request):
         'user_count': user_count,
         'order_count': order_count,
         'lastorder_count': lastorder_count,
-        'res': res
+        'res': res,
+        'res2': res2[0]
     })
 
 
@@ -701,10 +704,10 @@ def orderdetail(request, id):
 
 
     with connection.cursor() as cursor:
-        cursor.execute("select * from orderchild_twentyone t join goodsone g on t.goodid=g.gid where t.orderid=%s", [id])
+        cursor.execute("select * from orderchild_twentyone t join goodsone g on t.goodid=g.gid join commodity_categories_two_four c on c.id=t.cid join specification s on s.id=c.specification_id  where t.orderid=%s", [id])
     columns = [col[0] for col in cursor.description]
     buy_what = [dict(zip(columns, row)) for row in cursor.fetchall()]
-
+    print(buy_what)
 
     with connection.cursor() as cursor:
         cursor.execute("select sum(goodmoneycount) as sum1 from orderchild_twentyone t join goodsone g on t.goodid=g.gid where t.orderid=%s", [id])
@@ -1115,7 +1118,7 @@ def checkpay(request):
             # trade_no = response.get("trade_no")
             # 更新订单状态
             # order.trade_no = trade_no
-            order.orderstatus = 1  # 待评价
+            order.orderstatus = 1  #
             order.integral = int(request.session.get('jiage'))
             order.save()
             # 返回正确响应
@@ -1129,3 +1132,7 @@ def checkpay(request):
             return JsonResponse({"errno": 4, "error_msg": "交易失败"})
 
 
+def turn(request):
+    if request.is_ajax():
+        print(88888888888888888888888)
+        return redirect(reverse('goods:order'))

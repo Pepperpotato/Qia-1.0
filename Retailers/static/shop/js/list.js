@@ -207,11 +207,19 @@ $(document).ready(function() {
 
 function add_cart() {
     console.log('+++++++++++++++++++')
-    console.log(updatanum,commodityid)
+
+	var commod = commodityid
+	var num =updatanum
+	var shopnum= $('#J_MiniCartNum').text()
+
+	console.log(shopnum)
+	console.log(updatanum,commodityid)
     $.ajax({
-					url:'/order/add_cart/',// 跳转到 action
+					url:'/order/add_cart',// 跳转到 action
 					data:{
-					    'updatanum' :updatanum
+						'commodityid':commod,
+					    'updatanum' :num,
+						'shopnum':shopnum
 					  },
 					type:'post',
 					dataType:'json',
@@ -219,6 +227,7 @@ function add_cart() {
 
 						console.log("------");
 						console.log(data);
+						$('#J_MiniCartNum').text(data.num)
 
 						 // $('#LikBuy').attr('href','/order/pay/'+commodityid+'/'+parseInt(updatanum)+'/')
 

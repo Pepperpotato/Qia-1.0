@@ -11,5 +11,7 @@ urlpatterns = [
     url(r'^pay/(?P<commodityid>\d+)/(?P<count>\d+)/$',views.pay,name='pay'),
     url(r'^addre/$',views.addre,name='addre'),
     url(r'^express/$',views.express,name='express'),
-    url(r'^commit/$',views.commit,name='commit')
+    url(r'^commit/$',views.commit,name='commit'),
+    url(r'^shopcart/$',views.shopcart,name='shopcart'),
+    url(r'^check_cart$', views.check_cart, name='check_cart')
 ]
