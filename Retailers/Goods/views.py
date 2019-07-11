@@ -1224,7 +1224,19 @@ def points(request):
     username = request.session.get('username')
     user = User.objects.filter(username=username)[0]
     user_grade = user.user_grade_set.all()
-    print(user_grade)
+    # print(user_grade)
+    # 最新记录
+    maxchanged_grade=int(user_grade[len(user_grade)-1].changed_grade)
+    maxgrowth_value=int(user_grade[len(user_grade)-1].growth_value)
+    # 判断当天是否签到
+    data=user.user_grade_set.filter(change_source='每日签到').order_by('-gid').first().change_time.date()
+    # print(data)
+    if request.method == 'POST':
+        res = request.POST.get('Sign_in')
+        if res:
+            time=datetime.now().date()
+            if data !=time:
+                User_grade.objects.create(uid_id=user.uid,change_source='每日签到',change_number=50,changed_grade=50+maxchanged_grade,growth_value=50+maxgrowth_value)
     return render(request,'shop/person/points.html',context={
         'user': user,
         'user_grade': user_grade,

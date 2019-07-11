@@ -24,13 +24,13 @@
 						<div class="pointsTitle">
 						   <div class="usable">可用积分<span>{{ user_grade.0.changed_grade }}</span></div>
 {#						   <div class="pointshop"><a href="#"><i><img src="{% static 'shop/images/u5.png' %}" /></i>积分商城</a></div>#}
-						   <div class="signIn"><a href="#"><i class="am-icon-calendar"></i><em>+5</em>每日签到</a></div>
+						   <div class="signIn" ><a href="#" id="Sign_in"><i class="am-icon-calendar"></i><em>+5</em>每日签到</a></div>
 						</div>
 						<div class="pointlist am-tabs" data-am-tabs>
 							<ul class="am-avg-sm-3 am-tabs-nav am-nav am-nav-tabs">
 								<li class="am-active"><a href="#tab1">全部</a></li>
-								<li><a href="#tab2">获得</a></li>
-								<li><a href="#tab3">支出</a></li>
+{#								<li><a href="#tab2">获得</a></li>#}
+{#								<li><a href="#tab3">支出</a></li>#}
 							</ul>
 							<div class="am-tabs-bd">
 								<div class="am-tab-panel am-fade am-in am-active" id="tab1">
@@ -117,6 +117,16 @@
 
 						</div>
 					</div>
+
+    <script>
+        $('#Sign_in').click(function () {
+            console.log('123');
+            $.post('{% url 'goods:points' %}',{'Sign_in':'Sign_in'},function (res) {
+
+             });
+            setTimeout(window.location.href = "{% url 'goods:points' %}", 2000)
+        })
+    </script>
 {% endblock %}
 
 
