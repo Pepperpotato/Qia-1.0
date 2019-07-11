@@ -29,8 +29,8 @@
             <div class="topMessage">
                 <div class="menu-hd">
 
-                    {% if  'username' in request.session or 'email' in request.session or 'phone' in request.session  %}
-                      欢迎
+                    {% if  'username' in request.session or 'email' in request.session or 'phone' in request.session %}
+                        欢迎
                         {% if request.session.username %}
                             {{ request.session.username }}
                         {% elif request.session.email %}
@@ -41,7 +41,7 @@
                         <a href="{% url 'goods:sc' %}" target="_top" class="h">退出</a>
 
                     {% else %}
-                       <a href="{% url 'goods:login' %}" target="_top" class="h">亲，请登录</a>
+                        <a href="{% url 'goods:login' %}" target="_top" class="h">亲，请登录</a>
                         <a href="{% url 'goods:register' %}" target="_top">免费注册</a>
 
                     {% endif %}
@@ -54,7 +54,8 @@
                 <div class="menu-hd"><a href="{% url 'order:home' %}" target="_top" class="h">商城首页</a></div>
             </div>
             <div class="topMessage my-shangcheng">
-                <div class="menu-hd MyShangcheng"><a href="{% url 'goods:index' %}" target="_top"><i class="am-icon-user am-icon-fw"></i>个人中心</a>
+                <div class="menu-hd MyShangcheng"><a href="{% url 'goods:index' %}" target="_top"><i
+                        class="am-icon-user am-icon-fw"></i>个人中心</a>
                 </div>
             </div>
             <div class="topMessage mini-cart">
@@ -345,28 +346,27 @@
                 <ul class="am-thumbnails ">
 
 
-
                     {% for k,v in dic.items %}
-                    {% if k == dl.id %}
-                        {% for it in v %}
-                                    <li>
-                                        <div class="list ">
-                                            <a href="/order/intro/{{ it.gid }}/">
+                        {% if k == dl.id %}
+                            {% for it in v %}
+                                <li>
+                                    <div class="list ">
+                                        <a href="/order/intro/{{ it.gid }}/">
 
-                                                <img src=" /static{{ it.picture }} "/>
-                                                <div class="pro-title ">{{ it.gname }}</div>
-                                                {% for p in price %}
-                                                    {% if p.gid == it.gid%}
-                                                        {% if p.is_show %}
-                                                    <span class="e-price ">￥{{ p.price }}</span>
-                                                            {% endif %}
+                                            <img src=" /static{{ it.picture }} "/>
+                                            <div class="pro-title ">{{ it.gname }}</div>
+                                            {% for p in price %}
+                                                {% if p.gid == it.gid %}
+                                                    {% if p.is_show %}
+                                                        <span class="e-price ">￥{{ p.price }}</span>
                                                     {% endif %}
+                                                {% endif %}
 
-                                                {% endfor %}
-                                            </a>
-                                        </div>
-                                    </li>
-                        {% endfor %}
+                                            {% endfor %}
+                                        </a>
+                                    </div>
+                                </li>
+                            {% endfor %}
                         {% endif %}
                     {% endfor %}
 
