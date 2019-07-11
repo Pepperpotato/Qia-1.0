@@ -70,7 +70,7 @@ def index(request):
         cursor.execute("select (sum(goodmoneycount)-sum((goodcount*stockprice))) as profit from order_twenty o join orderchild_twentyone t on o.id=t.orderid join commodity_categories_two_four c on c.id=t.cid where o.orderstatus>0;")
     columns = [col[0] for col in cursor.description]
     res2 = [dict(zip(columns, row)) for row in cursor.fetchall()]
-    print(res2)
+
 
     return render(request, 'admin/index.html', context={
         'admin_info': admin_info,
@@ -196,7 +196,7 @@ def delgood(request):
         current_id = request.POST.get('gid')
         current_good = Goods.objects.get(pk=int(current_id))
         # current_good.delete()
-        print(current_good.gname)
+
         return JsonResponse({'code': 1, 'data': '已删除'})
 
 
@@ -343,7 +343,7 @@ def delband(request):
         current_id = request.POST.get('bid')
         current_brand = CommodityBrand.objects.get(pk=int(current_id))
         # current_brand.delete()
-        print(current_brand.brandname)
+
         return JsonResponse({'code': 1, 'data': '已删除'})
 
 
@@ -460,7 +460,7 @@ def addattrbute(request):
         return JsonResponse(res, safe=False)
 
     if request.method == 'POST':
-        print(111111)
+
         category = request.POST.get('category')
         brand = request.POST.get('brand')
         goodid = request.POST.get('goodid')
@@ -550,7 +550,7 @@ def delattrbute(request):
         current_id = request.POST.get('aid')
         current_attr = CommodityCategoriesTwo.objects.get(pk=int(current_id))
         # current_attr.delete()
-        print(current_attr.smallclassesattribute)
+
         return JsonResponse({'code': 1, 'data': '已删除'})
 
 
@@ -707,7 +707,7 @@ def orderdetail(request, id):
         cursor.execute("select * from orderchild_twentyone t join goodsone g on t.goodid=g.gid join commodity_categories_two_four c on c.id=t.cid join specification s on s.id=c.specification_id  where t.orderid=%s", [id])
     columns = [col[0] for col in cursor.description]
     buy_what = [dict(zip(columns, row)) for row in cursor.fetchall()]
-    print(buy_what)
+
 
     with connection.cursor() as cursor:
         cursor.execute("select sum(goodmoneycount) as sum1 from orderchild_twentyone t join goodsone g on t.goodid=g.gid where t.orderid=%s", [id])
@@ -1049,7 +1049,7 @@ def choiceorder(request, page=1):
 #     def post(self, request):
 
 def pay(request):
-        print(1111111)
+
         order_id = request.session.get('bianhao')
         # order_id = 1
         # if not order_id:
@@ -1092,7 +1092,7 @@ def test(request):
 
 
 def checkpay(request):
-    print(22222222222)
+
     order_id = request.session.get("bianhao")
     order = OrderTwenty.objects.get(pk=int(order_id))
     alipay = AliPay(
@@ -1134,5 +1134,13 @@ def checkpay(request):
 
 def turn(request):
     if request.is_ajax():
-        print(88888888888888888888888)
+
         return redirect(reverse('goods:order'))
+
+
+def sendorder(request, oid):
+    id = oid
+    current_order = OrderTwenty.objects.get(pk=int(id))
+    current_order.orderstatus = 2
+    current_order.save()
+    return redirect(reverse('admin:orderlist'))

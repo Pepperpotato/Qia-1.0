@@ -2,62 +2,70 @@
 {% load static %}
 
 {% block content %}
-<section class="rt_wrap content mCustomScrollbar">
- <div class="rt_content">
-      <div class="page_title">
-       <h3>订单详情<span class="label label-default">DETAIL</span>
-      </div>
-      <table class="table">
-       <tr>
-        <td>收件人：{{ res.receiver }}</td>
-        <td>联系电话：{{ res.phone_number }}</td>
-        <td>收件地址：{{ res.location }}{{ res.detail_address }}</td>
-{#        <td>付款时间：2016-02-01 13:56</td>#}
-       </tr>
-       <tr>
-        <td>下单时间：{{ res.ordertime }}</td>
-{#        <td>付款时间：2016-02-01 13:56</td>#}
-        <td>确认时间：{{ res.getgoodstime   }}</td>
-        <td>评价时间时间：---</td>
-       </tr>
-       <tr>
-        {% if res.orderstatus == 0 %}
-            <td>订单状态：<a>买家未支付</a></td>
-        {% elif res.orderstatus == 1 %}
-            <td>订单状态：<a>买家已付款，未发货</a></td>
-        {% elif res.orderstatus == 2 %}
-            <td>订单状态：<a>已发货，买家未收货</a></td>
-        {% elif res.orderstatus == 3 %}
-            <td>订单状态：<a>买家已收货，未评价</a></td>
-        {% elif res.orderstatus == 4 %}
-            <td>订单状态：<a>买家已评价，交易完成</a></td>
-        {% endif %}
-        <td colspan="3">订单备注：<mark>{{ res.remarks }}</mark></td>
-        </tr>
-      </table>
-      <table class="table">
-       {% for buy_something in buy_what %}
-       <tr>
-        <td class="center"><img src="{% static buy_something.picture %}" width="50" height="50"/></td>
-        <td>{{ buy_something.gname }}</td>
-        <td class="center">商品货号：{{ buy_something.goodid }}</td>
-        <td class="center"><strong class="rmb_icon">单价：{{ buy_something.goodmoney }}</strong></td>
-        <td class="center">
-         <p>类别:{{ buy_something.smallclassesattribute }}</p>
-         <p>规格:{{ buy_something.specification }}</p>
-        </td>
-        <td class="center"><strong>数量：{{ buy_something.goodcount }}</strong></td>
-        <td class="center"><strong class="rmb_icon">小计：{{ buy_something.goodmoneycount }}</strong></td>
-        <td class="center">{{ buy_something.unit }}</td>
-       </tr>
-       {% endfor %}
+    <section class="rt_wrap content mCustomScrollbar">
+        <div class="rt_content">
+            <div class="page_title">
+                <h3>订单详情<span class="label label-default">DETAIL</span>
+            </div>
+            <table class="table">
+                <tr>
+                    <td>收件人：{{ res.receiver }}</td>
+                    <td>联系电话：{{ res.phone_number }}</td>
+                    <td>收件地址：{{ res.location }}{{ res.detail_address }}</td>
+                    {#        <td>付款时间：2016-02-01 13:56</td>#}
+                </tr>
+                <tr>
+                    <td>下单时间：{{ res.ordertime }}</td>
+                    {#        <td>付款时间：2016-02-01 13:56</td>#}
+                    <td>确认时间：{{ res.getgoodstime }}</td>
+                    <td>评价时间时间：---</td>
+                </tr>
+                <tr>
+                    {% if res.orderstatus == 0 %}
+                        <td>订单状态：<a>买家未支付</a></td>
+                    {% elif res.orderstatus == 1 %}
+                        <td>订单状态：<a>买家已付款，未发货</a></td>
+                    {% elif res.orderstatus == 2 %}
+                        <td>订单状态：<a>已发货，买家未收货</a></td>
+                    {% elif res.orderstatus == 3 %}
+                        <td>订单状态：<a>买家已收货，未评价</a></td>
+                    {% elif res.orderstatus == 4 %}
+                        <td>订单状态：<a>买家已评价，交易完成</a></td>
+                    {% endif %}
+                    <td colspan="3">订单备注：
+                        <mark>{{ res.remarks }}</mark>
+                    </td>
+                </tr>
+            </table>
+            <table class="table">
+                {% for buy_something in buy_what %}
+                    <tr>
+                        <td class="center"><img src="{% static buy_something.picture %}" width="50" height="50"/></td>
+                        <td>{{ buy_something.gname }}</td>
+                        <td class="center">商品货号：{{ buy_something.goodid }}</td>
+                        <td class="center"><strong class="rmb_icon">单价：{{ buy_something.goodmoney }}</strong></td>
+                        <td class="center">
+                            <p>类别:{{ buy_something.smallclassesattribute }}</p>
+                            <p>规格:{{ buy_something.specification }}</p>
+                        </td>
+                        <td class="center"><strong>数量：{{ buy_something.goodcount }}</strong></td>
+                        <td class="center"><strong class="rmb_icon">小计：{{ buy_something.goodmoneycount }}</strong></td>
+                        <td class="center">{{ buy_something.unit }}</td>
+                    </tr>
+                {% endfor %}
 
-      </table>
-      <aside class="mtb" style="text-align:right;">
-       <label>订单总价：￥{{ sum1 }}</label>
-      </aside>
- </div>
-</section>
+            </table>
+            <aside class="mtb" style="text-align:right;">
+                <label>订单总价：￥{{ sum1 }}</label>
+            </aside>
+
+            {% if res.orderstatus == 1 %}
+                <div>
+                    <a href="{% url 'admin:sendorder' res.id %}">货物已打包，确认发货</a>
+                </div>
+            {% endif %}
+        </div>
+    </section>
 {% endblock content %}
 {% block foot %}
 {% endblock foot %}

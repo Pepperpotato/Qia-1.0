@@ -40,6 +40,7 @@ urlpatterns = [
     url(r'^choiceorder/$', views.choiceorder, name='choiceorder'),
     url(r'^delorder/(\d+)/$', views.delorder, name='delorder'),
     url(r'^orderdetail/(\d+)/$', views.orderdetail, name='orderdetail'),
+    url(r'^sendorder/(\d+)/$', views.sendorder, name='sendorder'),
     url(r'^userlist/(\d+)/$', views.userlist, name='userlist1'),
     url(r'^userlist/$', views.userlist, name='userlist'),
     url(r'^deluser/(\d+)/$', views.deluser, name='deluser'),

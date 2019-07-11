@@ -50,6 +50,8 @@
                             <td class="center">买家已收货，未评价</td>
                         {% elif res.orderstatus == 4 %}
                             <td class="center">买家已评价，交易完成</td>
+                        {% else %}
+                            <td class="center">买家申请退货</td>
                         {% endif %}
                         <td class="center">{{ res.express_name }}</td>
                         <td class="center">
@@ -102,7 +104,10 @@
                 </nav>
 
             </div>
+
         </div>
+
+
     </section>
 {% endblock content %}
 {% block foot %}
