@@ -22,8 +22,8 @@
 						</div>
 						<hr/>
 						<div class="pointsTitle">
-						   <div class="usable">可用积分<span>120</span></div>
-						   <div class="pointshop"><a href="#"><i><img src="{% static 'shop/images/u5.png' %}" /></i>积分商城</a></div>
+						   <div class="usable">可用积分<span>{{ user_grade.0.changed_grade }}</span></div>
+{#						   <div class="pointshop"><a href="#"><i><img src="{% static 'shop/images/u5.png' %}" /></i>积分商城</a></div>#}
 						   <div class="signIn"><a href="#"><i class="am-icon-calendar"></i><em>+5</em>每日签到</a></div>
 						</div>
 						<div class="pointlist am-tabs" data-am-tabs>
@@ -44,36 +44,13 @@
 											</tr>
 										</thead>
 										<tbody>
+                                        {% for foo in user_grade %}
 											<tr>
-												<td class="pointType">积分兑换</td>
-												<td class="pointNum">-80</td>
-												<td class="pointTime">2016-03-10&nbsp15:27</td>
+												<td class="pointType">{{ foo.change_source }}</td>
+												<td class="pointNum">{{ foo.change_number }}</td>
+												<td class="pointTime">{{ foo.change_time }}</td>
 											</tr>
-											<tr>
-												<td class="pointType">订单号7745926347132商品评论</td>
-												<td class="pointNum">+2</td>
-												<td class="pointTime">2016-03-12&nbsp09:32</td>
-											</tr>
-											<tr>
-												<td class="pointType">每日签到</td>
-												<td class="pointNum">+5</td>
-												<td class="pointTime">2016-03-12&nbsp07:32</td>
-											</tr>
-											<tr>
-												<td class="pointType">每日签到</td>
-												<td class="pointNum">+5</td>
-												<td class="pointTime">2016-03-11&nbsp12:24</td>
-											</tr>
-											<tr>
-												<td class="pointType">邮箱验证</td>
-												<td class="pointNum">+50</td>
-												<td class="pointTime">2016-03-10&nbsp16:18</td>
-											</tr>
-											<tr>
-												<td class="pointType">手机绑定</td>
-												<td class="pointNum">+100</td>
-												<td class="pointTime">2016-03-10&nbsp15:27</td>
-											</tr>
+											 {% endfor %}
 										</tbody>
 									</table>
 								</div>

@@ -151,7 +151,7 @@ def addgood(request):
         newgood.brandid = brand
         newgood.smallclassesid = category
         newgood.save()
-        return redirect(reverse('admin:productlist'))
+        return redirect(reverse('admin:addgood'))
 
     commodity_brand = CommodityBrand.objects.all()
     commodity_categories = CommodityCategories.objects.filter(parentid__gt=0)
@@ -192,7 +192,7 @@ def delgood(request):
     if request.is_ajax():
         current_id = request.POST.get('gid')
         current_good = Goods.objects.get(pk=int(current_id))
-        current_good.delete()
+        # current_good.delete()
         print(current_good.gname)
         return JsonResponse({'code': 1, 'data': '已删除'})
 
@@ -262,7 +262,7 @@ def delbigcategory(request):
     if request.is_ajax():
         current_id = request.POST.get('bid')
         current_bicategory = CommodityCategories.objects.get(pk=int(current_id))
-        current_bicategory.delete()
+        # current_bicategory.delete()
         return JsonResponse({'code': 1, 'data': '已删除'})
 
 
@@ -304,7 +304,7 @@ def delsmallcategory(request):
     if request.is_ajax():
         current_id = request.POST.get('sid')
         current_smallategory = CommodityCategories.objects.get(pk=int(current_id))
-        current_smallategory.delete()
+        # current_smallategory.delete()
         return JsonResponse({'code': 1, 'data': '已删除'})
 
 
@@ -339,10 +339,9 @@ def delband(request):
     if request.is_ajax():
         current_id = request.POST.get('bid')
         current_brand = CommodityBrand.objects.get(pk=int(current_id))
-        current_brand.delete()
+        # current_brand.delete()
         print(current_brand.brandname)
         return JsonResponse({'code': 1, 'data': '已删除'})
-
 
 
 @csrf_exempt
@@ -485,6 +484,7 @@ def addattrbute(request):
         new_atrr.price = int(price)
         new_atrr.is_show = int(ishow)
         new_atrr.stockprice = int(stockprice)
+        new_atrr.historicalprices = int(stockprice) + 10
         new_atrr.inventory = int(inventory)
         new_atrr.save()
         return redirect(reverse('admin:productlist'))
@@ -492,27 +492,63 @@ def addattrbute(request):
     commodity_categories = CommodityCategories.objects.filter(parentid__gt=0)
     commodity_brand = CommodityBrand.objects.all()
     all_good = Goods.objects.all()
+    all_specification = Specification.objects.all()
     with connection.cursor() as cursor:
         cursor.execute("select f.id,c.categoryname,b.brandname,g.gname,f.is_show,f.smallclassesattribute,s.specification,f.unit,f.price,f.stockprice,f.inventory from commodity_categories_two_four f join commodity_categories_three c on f.smallclassesid=c.id join goodsone g on g.gid=f.gid join commodity_brand_two b on b.id=f.brandid join specification s on f.specification_id=s.id")
     columns = [col[0] for col in cursor.description]
     good_attr = [dict(zip(columns, row)) for row in cursor.fetchall()]
-    print(good_attr)
+
     return render(request, 'admin/add_attrbute.html', context={
         'commodity_brand': commodity_brand,
         'commodity_categories': commodity_categories,
         'all_goods': all_good,
-        'good_attr': good_attr
+        'good_attr': good_attr,
+        'all_specification': all_specification
     })
 
 
 # 修改属性
 def alterattrbute(request):
+    if request.is_ajax():
+        aid = request.POST.get('attrid')
+        categoryid = request.POST.get('categoryid')
+        brandid = request.POST.get('brandid')
+        goodid = request.POST.get('goodid')
+        specificationid = request.POST.get('specificationid')
+        unit = request.POST.get('unit')
+        attr = request.POST.get('attr')
+        price = request.POST.get('price')
+        is_show = request.POST.get('is_show')
+        stockprice = request.POST.get('stockprice')
+        inventory = request.POST.get('inventory')
 
-    return None
+        current_attr = CommodityCategoriesTwo.objects.get(pk=int(aid))
+        current_attr.smallclassesid = categoryid
+        current_attr.brandid = brandid
+        current_attr.gid = goodid
+        current_attr.smallclassesattribute = attr
+        current_attr.specification_id = specificationid
+        current_attr.unit = unit
+        if is_show:
+            current_attr.is_show = int(is_show)
+        if price:
+            current_attr.price = int(price)
+            current_attr.historicalprices = int(price) + 20
+        if stockprice:
+            current_attr.stockprice = int(stockprice)
+        if inventory:
+            current_attr.inventory = int(inventory)
+        current_attr.save()
+        return JsonResponse({'code': 1, 'msg': '修改已保存'})
 
-
+# 删除已有商品
 def delattrbute(request):
-    return None
+    if request.is_ajax():
+        current_id = request.POST.get('aid')
+        current_attr = CommodityCategoriesTwo.objects.get(pk=int(current_id))
+        # current_attr.delete()
+        print(current_attr.smallclassesattribute)
+        return JsonResponse({'code': 1, 'data': '已删除'})
 
 
 
@@ -648,7 +684,7 @@ def orderlist(request, page=1):
 # 删除订单
 def delorder(request, id):
     del_order = OrderTwenty.objects.get(id=id)
-    del_order.delete()
+    # del_order.delete()
     return redirect(reverse('admin:orderlist'))
 
 
@@ -718,7 +754,7 @@ def userlist(request, page=1):
 # 删除用户
 def deluser(request, uid):
     deluser = User.objects.filter(uid=uid)
-    deluser.delete()
+    # deluser.delete()
     return redirect(reverse('admin:userlist'))
 
 
@@ -798,7 +834,7 @@ def expresslist(request):
 
 def delexpress(request, id):
     express = Express_company.objects.filter(id=id)
-    express.delete()
+    # express.delete()
     return redirect(reverse('admin:expresslist'))
 
 
@@ -865,7 +901,7 @@ def sales(request):
 
 def delpayway(request, id):
     payway = Pay_way.objects.filter(id=id)
-    payway.delete()
+    # payway.delete()
     return redirect(reverse('admin:paylist'))
 
 

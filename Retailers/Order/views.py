@@ -42,8 +42,9 @@ def home(request):
             if len(a):
                 for num in a:
                     list.append(num)
-        print(list,'++++++++++++++++++++++++++')
+
         list1=list[-6:]
+
         dic[i.id] = list1
 
     return render(request,'shop/home/home3.html',context={'dlb': dlb,'shopnum':shop ,'xlb': xlb, 'store': store,'dic':dic,'price':price})
