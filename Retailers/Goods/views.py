@@ -1232,13 +1232,23 @@ def pointnew(request):
 def points(request):
     username = request.session.get('username')
     user = User.objects.filter(username=username)[0]
+    if not username:
+        email=request.session.get('email')
+        user=User.objects.filter(email=email)[0]
+        if not email:
+            phone=request.session.get('phone')
+            user=User.objects.filter(phone_number=phone)[0]
+    # print(user.uid,'*'*100)
     user_grade = user.user_grade_set.all()
+    # print(user_grade)
     # print(user_grade)
     # 最新记录
     maxchanged_grade=int(user_grade[len(user_grade)-1].changed_grade)
     maxgrowth_value=int(user_grade[len(user_grade)-1].growth_value)
     # 判断当天是否签到
-    data=user.user_grade_set.filter(change_source='每日签到').order_by('-gid').first().change_time.date()
+    data=user.user_grade_set.filter(change_source='每日签到').order_by('-gid').first()
+    if data:
+        data=data.change_time.date()
     # print(data)
     if request.method == 'POST':
         res = request.POST.get('Sign_in')
