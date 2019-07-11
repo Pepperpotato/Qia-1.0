@@ -2948,9 +2948,30 @@
         return f
     })
 })(window);
-var cid
-function mydelete(){
 
+var mytotal_price
+var mytotal_count
+
+
+function total_all(){
+    mytotal_price=0;
+    mytotal_count=0;
+
+    // $(':checked:not(#J_SelectAllCbx2)').each(function () {
+
+    // if
+    $('#mycart111 :checked').each(function () {
+        $count = $(this).parent().parent().siblings('.td-amount').find('.text_box').val();
+        $price = $(this).parent().parent().siblings('.td-sum').find('em').find('em').text();
+        console.log("oooo",$count,$price)
+        total = parseInt($price)
+        console.log($price)
+        mytotal_count++;
+        mytotal_price+=total;
+        console.log(mytotal_price)
+        $('#J_SelectedItemsCount').text(mytotal_count);
+        $('#J_Total').text(mytotal_price)
+    })
 }
 
 $(document).ready(function () {
@@ -2966,10 +2987,19 @@ $(document).ready(function () {
 
             cid = $('.jilu').eq(parseInt(index)).val()
             price = $('.show_price').children('b').eq(parseInt(index)).text();
+            console.log('!!!!!!!!!!!!!!11',price)
             num = $(this).parent().find('input[class*=text_box]').val()
             total_price = parseInt(price) * parseInt(num)
             $('.total').children('em').eq(parseInt(index)).text(total_price);
             console.log(price, num, total_price, catetory,cid)
+            if ($("input[type='checkbox']").eq(parseInt(index)).is(':checked') ==true){
+                price = $('.show_price').children('b').eq(parseInt(index)).text();
+                mytotal_price= $('#J_Total').text()
+                mytotal_price=parseInt(price)+parseInt(mytotal_price);
+                $('#J_Total').text(mytotal_price)
+                console.log('22222222222222222222++++++++++++++',mytotal_price,parseInt(price))
+            }
+
 
             $.ajax({
 					url:'/order/check_cart',// 跳转到 action
@@ -3006,7 +3036,15 @@ $(document).ready(function () {
             num = $(this).parent().find('input[class*=text_box]').val()
             total_price = parseInt(price) * parseInt(num)
             $('.total').children('em').eq(parseInt(index)).text(total_price);
-            console.log(price, num, total_price, catetory)
+            console.log(index,price, num, total_price, catetory)
+
+            if ($("input[type='checkbox']").eq(parseInt(index)).is(':checked') ==true){
+                price = $('.show_price').children('b').eq(parseInt(index)).text();
+                mytotal_price= $('#J_Total').text()
+                mytotal_price=parseInt(mytotal_price)-parseInt(price);
+                $('#J_Total').text(mytotal_price)
+                console.log('22222222222222222222++++++++++++++',mytotal_price,parseInt(price))
+            }
 
             $.ajax({
 					url:'/order/check_cart',// 跳转到 action
@@ -3029,8 +3067,31 @@ $(document).ready(function () {
 				})
 
         })
-    })
 
+
+        total_all();
+        $('#J_SelectAllCbx2').click(function () {
+             state=$(this).prop('checked');
+             $(':checkbox:not(#check_all)').prop('checked',state);
+             total_all();
+        })
+        var totalchecboxnum = $('#mycart111 .check').length
+        $('#mycart111 .check').click(function () {
+            // console.log($('#mycart111 .check').length)
+            // alert('ok')
+            if ($(this).prop('checked')) {
+                // console.log($("#mycart111 :checked").length)
+                // if($(':checked').length+1==$(':checkbox').length){
+                if (totalchecboxnum == $("#mycart111 :checked").length) {
+                    $('#J_SelectAllCbx2').prop('checked', true);
+                }
+            } else {
+                $('#J_SelectAllCbx2').prop('checked', false);
+            }
+            total_all();
+        })
+
+    })
 
     if (!document.getElementsByClassName) {
         document.getElementsByClassName = function (cls) {
@@ -3071,8 +3132,46 @@ $(document).ready(function () {
 
 })
 
-// 弹出规格选择
+$(function () {
+    $('.mydelete').click(function (ev) {
+    ev.preventDefault()
+     index = $(".mydelete").index($(this))
+        cid = $('.jilu').eq(parseInt(index)).val()
+        console.log(index,cid)
+        $.ajax({
+					url:'/order/delete_cart',// 跳转到 action
+					data:{
+						'cid':cid
+					  },
+					type:'post',
+					dataType:'json',
+				 success:function(data) {
 
+						console.log("------");
+						console.log(data);
+
+
+						 // $('#LikBuy').attr('href','/order/pay/'+commodityid+'/'+parseInt(updatanum)+'/')
+
+				 }
+				})
+})
+
+})
+// function mydelete(){
+//
+//
+// }
+
+
+
+
+$(function(){
+
+})
+
+
+// 弹出规格选择
 $(document).ready(function ($) {
 
     var $ww = $(window).width();

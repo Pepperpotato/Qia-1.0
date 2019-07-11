@@ -13,5 +13,6 @@ urlpatterns = [
     url(r'^express/$',views.express,name='express'),
     url(r'^commit/$',views.commit,name='commit'),
     url(r'^shopcart/$',views.shopcart,name='shopcart'),
-    url(r'^check_cart$', views.check_cart, name='check_cart')
+    url(r'^check_cart$', views.check_cart, name='check_cart'),
+    url(r'^delete_cart$', views.delete_cart, name='delete_cart')
 ]
