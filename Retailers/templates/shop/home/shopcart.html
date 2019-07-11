@@ -130,11 +130,14 @@
                                     {% if shop.cid == commod.id %}
                                     {% for good in goods %}
                                     {% if good.gid == commod.gid %}
-                                        <input type="hidden" class="jilu" value="{{ shop.cid }}">
+
+                                    <input type="hidden" class="jilu" value="{{ shop.cid }}">
 								    <ul class="item-content clearfix">
 									<li class="td td-chk">
 										<div class="cart-checkbox ">
+                                            <input type="hidden" class="cid" value="{{ shop.cid }}">
 											<input class="check" id="J_CheckBox_170037950254" name="items[]" value="170037950254" type="checkbox">
+
 											<label for="J_CheckBox_170037950254"></label>
 										</div>
 									</li>
@@ -247,7 +250,7 @@
 							<strong class="price">¥<em id="J_Total">{{ heji }}</em></strong>
 						</div>
 						<div class="btn-area">
-							<a href="pay.html" id="J_Go" class="submit-btn submit-btn-disabled" aria-label="请注意如果没有选择宝贝，将无法结算">
+							<a href="{% url 'order:order_pay' %}" id="J_Go" class="submit-btn submit-btn-disabled" onclick="jiesuan()" aria-label="请注意如果没有选择宝贝，将无法结算">
 								<span>结&nbsp;算</span></a>
 						</div>
 					</div>

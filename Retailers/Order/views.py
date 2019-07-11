@@ -30,6 +30,11 @@ def home(request):
     else:
         shop = 0
 
+    for lb in dlb:
+        for xl in xlb:
+            if xl.parentid == lb.id:
+                print(xl.categoryname,'33333333')
+
 
     for i in dlb:
         list =[]
@@ -45,7 +50,7 @@ def home(request):
 
         list1=list[-6:]
 
-        dic[i.id] = list1
+        dic[i.id] = list
 
     return render(request,'shop/home/home3.html',context={'dlb': dlb,'shopnum':shop ,'xlb': xlb, 'store': store,'dic':dic,'price':price})
     # return HttpResponse(res)
@@ -289,6 +294,7 @@ def commit(request):
         co = request.POST.get('co')
         ad = request.POST.get('ad')
         ex = request.POST.get('ex')
+        print(ex)
         num = request.POST.get('num')
         re = request.POST.get('re')
         commodity = CommodityCategoriesTwo.objects.get(id=co)
@@ -305,12 +311,69 @@ def commit(request):
         commod.save()
 
         request.session['bianhao']=ord.id
-        request.session['jiage'] = int(num)*int(commodity.price)
+        request.session['jiage'] = int(num)*int(commodity.price)+express.express_price
         data = {
                 'ok':'1',
         }
         return JsonResponse(data)
-    return render(request, 'shop/home/pay.html')
+
+
+def cart_commit(request):
+    if request.method == 'POST':
+        order_id = request.session.get('bianhao')
+
+
+        alipay = AliPay(
+            appid="2016101100659250",  # 应用id
+            app_notify_url=None,  # 默认回调url
+            app_private_key_path=os.path.join(settings.BASE_DIR, 'User/keys/app_private_key.pem'),
+            # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
+            alipay_public_key_path=os.path.join(settings.BASE_DIR, 'User/keys/alipay_public_key.pem'),
+            sign_type="RSA2",  # RSA 或者 RSA2
+            debug=True  # 默认False
+
+        )
+        # 电脑网站支付，需要跳转到https://openapi.alipay.com/gateway.do? + order_string
+        # total_pay = order.total_price + order.transit_price
+        # total_pay = request.session.get('total_price')
+        total_pay = request.session.get('jiage')
+        order_string = alipay.api_alipay_trade_page_pay(
+            out_trade_no=order_id,  # 订单编号
+            total_amount=str(total_pay),
+            subject="辛姐的小吃铺<%s>" % order_id,
+            return_url=None,
+            notify_url=None  # 可选, 不填则使用默认notify url
+        )
+        # 构造用户跳转的支付链接地址
+        pay_url = "https://openapi.alipaydev.com/gateway.do?" + order_string
+
+        user = User.objects.get(username=request.session.get('username'))
+        co = request.POST.get('co')
+        ad = request.POST.get('ad')
+        ex = request.POST.get('ex')
+        num = request.POST.get('num')
+        re = request.POST.get('re')
+        commodity = CommodityCategoriesTwo.objects.get(id=co)
+        express = Express_company.objects.get(express_name=ex)
+        order = OrderTwenty(addressid=ad, uid_id=user.uid, expressbrandid=express.id, remarks=re)
+        order.save()
+        ord = OrderTwenty.objects.last()
+        orderchild = OrderchildTwentyone(orderid=int(ord.id), goodid=int(commodity.gid), goodcount=int(num),
+                                         goodmoney=int(commodity.price), goodmoneycount=int(num) * int(commodity.price),
+                                         cid=int(commodity.id))
+        orderchild.save()
+
+        ordchild = OrderchildTwentyone.objects.last()
+        commod = CommodityCategoriesTwo.objects.get(id=ordchild.cid)
+        commod.inventory = int(commod.inventory) - int(num)
+        commod.save()
+
+        request.session['bianhao'] = ord.id
+        request.session['jiage'] = int(num) * int(commodity.price) + express.express_price
+        data = {
+            'ok': '1',
+        }
+        return JsonResponse(data)
 
 
 def shopcart(request):
@@ -359,3 +422,75 @@ def delete_cart(request):
             'ex_price': '1'
         }
         return JsonResponse(data)
+
+list=[]
+def cart_pay(request):
+    if request.method == 'POST':
+        cid = request.POST.get('cid')
+        list.append(int(cid))
+        print(list)
+        data = {
+            'ex_price': '1'
+        }
+        return JsonResponse(data)
+
+
+def order_pay(request):
+
+    userid = User.objects.get(username=request.session.get('username')).uid
+    if request.session.get('username'):
+        user = User.objects.get(username=request.session.get('username'))
+        shop = ShopcartTwentyfour.objects.filter(uid=user.uid).count()
+    else:
+        shop = 0
+
+    print(list, '+++++++++++++++++++++++++++++++++++')
+    myshop = ShopcartTwentyfour.objects.filter(uid=userid)
+    commod= CommodityCategoriesTwo.objects.all()
+    goods =Goods.objects.all()
+    norm = Specification.objects.all()
+    address = User_address.objects.filter(uid_id=userid)
+    express = Express_company.objects.all()
+    zongjia=0
+    for li in list:
+        for shop in myshop:
+            if li == shop.cid:
+                zongjia+=shop.totalprice
+
+    if request.method == 'POST':
+        username = request.session.get('username')
+        user = User.objects.filter(username=username)[0]
+        uid = User.objects.filter(username=username)[0].uid
+        address = user.user_address_set.all()
+        # print(address)
+        aid = request.GET.get('aid')
+        dell = request.GET.get('del')
+        if aid:
+            # 取消原有默认地址
+            userr = user.user_address_set.filter(default_address=1)[0]
+            userr.default_address = 0
+            userr.save()
+            # 设置新的默认地址
+            userr = user.user_address_set.filter(aid=aid)[0]
+            userr.default_address = 1
+            userr.save()
+        if dell:
+            useraddress = user.user_address_set.filter(pk=dell)
+            useraddress.delete()
+            return HttpResponse(json.dumps({'data': '删除成功'}), content_type='application/json')
+        if request.method == "POST":
+            user_name = request.POST.get('user-name')
+            user_phone = request.POST.get('user-phone')
+            cmbProvince = request.POST.get('cmbProvince')
+            cmbCity = request.POST.get('cmbCity')
+            cmbArea = request.POST.get('cmbArea')
+            detail_address = request.POST.get('user-intro')
+            location = cmbProvince + cmbCity + cmbArea
+            print(user_name, user_phone, cmbProvince, cmbCity, cmbArea)
+            User_address.objects.create(location=location, detail_address=detail_address, receiver=user_name,
+                                        phone_number=user_phone, uid_id=uid)
+
+    return render(request, 'shop/home/cart_pay.html',
+                  context={'shopnum': shop, 'express': express, 'address': address,'list':list,'myshop':myshop,'commod':commod,'goods':goods,'norm':norm,'zongjia':zongjia
+                          })
+

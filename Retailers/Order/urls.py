@@ -12,7 +12,10 @@ urlpatterns = [
     url(r'^addre/$',views.addre,name='addre'),
     url(r'^express/$',views.express,name='express'),
     url(r'^commit/$',views.commit,name='commit'),
+    url(r'^cart_commit/$', views.cart_commit, name='cart_commit'),
     url(r'^shopcart/$',views.shopcart,name='shopcart'),
     url(r'^check_cart$', views.check_cart, name='check_cart'),
-    url(r'^delete_cart$', views.delete_cart, name='delete_cart')
+    url(r'^delete_cart$', views.delete_cart, name='delete_cart'),
+    url(r'^cart_pay/$', views.cart_pay, name='cart_pay'),
+    url(r'^order_pay/$', views.order_pay, name='order_pay')
 ]

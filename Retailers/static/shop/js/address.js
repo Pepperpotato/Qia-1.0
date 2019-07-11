@@ -2967,7 +2967,7 @@ $(document).ready(function () {
             total = countprice + kkdd;
             console.log(num, danjia, countprice)
             $('#countprice').text(countprice)
-            $('.pay-sum').text(total)
+            $('.pay-sum').text(countprice)
             $('#J_ActualFee').text(total)
 
         })
@@ -2986,7 +2986,7 @@ $(document).ready(function () {
             total = countprice + kkdd;
             console.log(num, danjia, countprice, price)
             $('#countprice').text(countprice)
-            $('.pay-sum').text(total)
+            $('.pay-sum').text(countprice)
             $('#J_ActualFee').text(total)
         })
 
@@ -3049,7 +3049,7 @@ $(document).ready(function () {
                     $(this).addClass("selected").siblings("li").removeClass("selected");
                     express_name = $(this).addClass("selected").text()
                     commit_ex = express_name
-                    var price = $('#countprice').text()
+                    var price = $('.pay-sum').text()
                     $.ajax({
                         url: '/order/express/',// 跳转到 action
                         data: {
@@ -3064,8 +3064,11 @@ $(document).ready(function () {
                             kkdd = money
                             $('.kuaidifeiyong').text(money)
                             var price = $('#countprice').text()
+
+
+
                             total = data.ex_price
-                            $('.pay-sum').text(total)
+                            // $('.pay-sum').text(total)
                             $('#J_ActualFee').text(total)
 
 
@@ -3075,6 +3078,8 @@ $(document).ready(function () {
                 }
             })
         })
+
+
     });
 
 
@@ -3113,49 +3118,49 @@ $(document).ready(function ($) {
 });
 
 
-function mycommit() {
-    commit_co = $('#sibiaoid').val()
-    commit_re = $('#liuyan').val()
-    commit_num = $('#shuliang').val()
-    console.log(commit_re, commit_num, commit_ex, commit_ad, commit_co)
-    $.ajax({
-        url: '/order/commit/',// 跳转到 action
-        data: {
-            'co': commit_co,
-            'ad': commit_ad,
-            'ex': commit_ex,
-            'num': commit_num,
-            're': commit_re
-        },
-        type: 'post',
-        dataType: 'json',
-        success: function (data) {
-            console.log(data)
-            if (data.ok = '1') {
-                $.post('/admin/pay/', function (data) {
-                    if (data.errno == "ok") {
-                        // 引导客户到支付界面
-                        window.open(data.pay_url)
-                    }
-                    else {
-                        alert(data.error_msg)
-                    }
-                $.post('/admin/checkpay/', function (data) {
-                    console.log(data)
-                    if (data.errno == "ok") {
-                        alert("支付成功");
-                        location.reload()
-                    }
-                    else {
-                        alert(data.error_msg)
-                    }
-                })
-
-                })
-            }
-        }
-    })
-}
+// function mycommit() {
+//     commit_co = $('#sibiaoid').val()
+//     commit_re = $('#liuyan').val()
+//     commit_num = $('#shuliang').val()
+//     console.log(commit_re, commit_num, commit_ex, commit_ad, commit_co)
+//     $.ajax({
+//         url: '/order/commit/',// 跳转到 action
+//         data: {
+//             'co': commit_co,
+//             'ad': commit_ad,
+//             'ex': commit_ex,
+//             'num': commit_num,
+//             're': commit_re
+//         },
+//         type: 'post',
+//         dataType: 'json',
+//         success: function (data) {
+//             console.log(data)
+//             if (data.ok = '1') {
+//                 $.post('/admin/pay/', function (data) {
+//                     if (data.errno == "ok") {
+//                         // 引导客户到支付界面
+//                         window.open(data.pay_url)
+//                     }
+//                     else {
+//                         alert(data.error_msg)
+//                     }
+//                 $.post('/admin/checkpay/', function (data) {
+//                     console.log(data)
+//                     if (data.errno == "ok") {
+//                         alert("支付成功");
+//                         location.reload()
+//                     }
+//                     else {
+//                         alert(data.error_msg)
+//                     }
+//                 })
+//
+//                 })
+//             }
+//         }
+//     })
+// }
  
  
  

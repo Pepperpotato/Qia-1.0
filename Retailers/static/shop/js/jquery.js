@@ -2952,6 +2952,28 @@
 var mytotal_price
 var mytotal_count
 
+function jiesuan(){
+    $('#mycart111 :checked').each(function () {
+        cid = $(this).siblings('.cid').val();
+        console.log(cid,typeof(cid))
+         $.ajax({
+					url:'/order/cart_pay/',// 跳转到 action
+					data:{
+						'cid':cid
+					  },
+					type:'post',
+					dataType:'json',
+				 success:function(data) {
+
+						console.log("------");
+						console.log(data);
+
+						 // $('#LikBuy').attr('href','/order/pay/'+commodityid+'/'+parseInt(updatanum)+'/')
+
+				 }
+				})
+    })
+}
 
 function total_all(){
     mytotal_price=0;
@@ -2959,7 +2981,7 @@ function total_all(){
 
     // $(':checked:not(#J_SelectAllCbx2)').each(function () {
 
-    // if
+    if ($("input[type='checkbox']").is(':checked') ==true){
     $('#mycart111 :checked').each(function () {
         $count = $(this).parent().parent().siblings('.td-amount').find('.text_box').val();
         $price = $(this).parent().parent().siblings('.td-sum').find('em').find('em').text();
@@ -2971,7 +2993,16 @@ function total_all(){
         console.log(mytotal_price)
         $('#J_SelectedItemsCount').text(mytotal_count);
         $('#J_Total').text(mytotal_price)
-    })
+    })}
+    else{
+
+        mytotal_count=0;
+        mytotal_price=0;
+        console.log(mytotal_price)
+        $('#J_SelectedItemsCount').text(mytotal_count);
+        $('#J_Total').text(mytotal_price)
+    }
+
 }
 
 $(document).ready(function () {
@@ -3158,17 +3189,8 @@ $(function () {
 })
 
 })
-// function mydelete(){
-//
-//
-// }
 
 
-
-
-$(function(){
-
-})
 
 
 // 弹出规格选择

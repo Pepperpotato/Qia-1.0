@@ -159,9 +159,9 @@
 					<div class="clear"></div>
 
 					<!--支付方式-->
-					<div class="logistics">
+					<div >
 						<h3>选择支付方式</h3>
-						<ul class="pay-list">
+						<ul class="pay-list" >
 {#							<li class="pay card"><img src="/static/shop/images/wangyin.jpg" />银联<span></span></li>#}
 {#							<li class="pay qq"><img src="/static/shop/images/weizhifu.jpg" />微信<span></span></li>#}
 							<li class="pay taobao"><img src="/static/shop/images/zhifubao.jpg" />支付宝<span></span></li>
@@ -397,7 +397,7 @@
 							<!--含运费小计 -->
 							<div class="buy-point-discharge ">
 								<p class="price g_price ">
-									合计（含运费） <span>¥</span><em class="pay-sum">{{ total }}</em>
+									合计（不含运费） <span>¥</span><em class="pay-sum">{{ total_price }}</em>
 								</p>
 							</div>
 
@@ -550,6 +550,51 @@
 
 
     </script>
+        <script>
+            function mycommit() {
+    commit_co = $('#sibiaoid').val()
+    commit_re = $('#liuyan').val()
+    commit_num = $('#shuliang').val()
+    console.log(commit_re, commit_num, commit_ex, commit_ad, commit_co)
+    $.ajax({
+        url: '/order/commit/',// 跳转到 action
+        data: {
+            'co': commit_co,
+            'ad': commit_ad,
+            'ex': commit_ex,
+            'num': commit_num,
+            're': commit_re
+        },
+        type: 'post',
+        dataType: 'json',
+        success: function (data) {
+            console.log(data)
+            if (data.ok = '1') {
+                $.post('/admin/pay/', function (data) {
+                    if (data.errno == "ok") {
+                        // 引导客户到支付界面
+                        window.open(data.pay_url)
+                    }
+                    else {
+                        alert(data.error_msg)
+                    }
+                $.post('/admin/checkpay/', function (data) {
+                    console.log(data)
+                    if (data.errno == "ok") {
+                        alert("支付成功");
+                        location.reload()
+                    }
+                    else {
+                        alert(data.error_msg)
+                    }
+                })
+
+                })
+            }
+        }
+    })
+}
+        </script>
     <script type="text/javascript">
         addressInit('cmbProvince', 'cmbCity', 'cmbArea');
     </script>
