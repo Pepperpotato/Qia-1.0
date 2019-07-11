@@ -56,6 +56,7 @@ urlpatterns = [
     url(r"^pay/$", views.pay, name='pay'),
     url(r'^checkpay/$', views.checkpay, name='checkpay'),
     url(r'^test/$', views.test, name='test'),
+    url(r'^turn/$', views.turn, name='turn')
 
 ]
 

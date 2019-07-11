@@ -79,7 +79,7 @@
                 <dl>
                     <dt>订单信息</dt>
                     <dd><a href="{% url 'admin:orderlist' %}">订单列表</a></dd>
-                    <dd><a href="#">订单详情</a></dd>
+{#                    <dd><a href="#">订单详情</a></dd>#}
                 </dl>
             </li>
             <li>
@@ -91,12 +91,12 @@
                     {#    <dd><a href="{% url 'admin:useraccount' %}">用户资金管理</a></dd>#}
                 </dl>
             </li>
-            <li>
-                <dl>
-                    <dt>基础设置</dt>
-                    <dd><a href="{% url 'admin:setting' %}">站点基础设置示例</a></dd>
-                </dl>
-            </li>
+{#            <li>#}
+{#                <dl>#}
+{#                    <dt>基础设置</dt>#}
+{#                    <dd><a href="{% url 'admin:setting' %}">站点基础设置示例</a></dd>#}
+{#                </dl>#}
+{#            </li>#}
             <li>
                 <dl>
                     <dt>配送与支付设置</dt>
@@ -185,7 +185,6 @@
                             <p>
                                 现有用户：{{ user_count }}
                             </p>
-                            <small>关键词 <cite>开源</cite></small>
                         </blockquote>
                     </div>
                     <div class="span4">
@@ -199,9 +198,8 @@
                     <div class="span4">
                         <blockquote>
                             <p>
-                                本月营业额：
+                                本月营业额：￥{{ res2.profit }}
                             </p>
-                            <small>关键词 <cite>开源</cite></small>
                         </blockquote>
                     </div>
                 </div>

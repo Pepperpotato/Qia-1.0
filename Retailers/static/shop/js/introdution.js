@@ -106,3 +106,46 @@ $(document).ready(function () {
     //     }
 // }
 
+function mycommit() {
+    commit_co = $('#sibiaoid').val()
+    commit_re = $('#liuyan').val()
+    commit_num = $('#shuliang').val()
+    console.log(commit_re, commit_num, commit_ex, commit_ad, commit_co)
+    $.ajax({
+        url: '/order/commit/',// 跳转到 action
+        data: {
+            'co': commit_co,
+            'ad': commit_ad,
+            'ex': commit_ex,
+            'num': commit_num,
+            're': commit_re
+        },
+        type: 'post',
+        dataType: 'json',
+        success: function (data) {
+            console.log(data)
+            if (data.ok = '1') {
+                $.post('/admin/pay/', function (data) {
+                    if (data.errno == "ok") {
+                        // 引导客户到支付界面
+                        window.open(data.pay_url)
+                    }
+                    else {
+                        alert(data.error_msg)
+                    }
+                $.post('/admin/checkpay/', function (data) {
+                    console.log(data)
+                    if (data.errno == "ok") {
+                        console.log(data)
+                        alert("支付成功");
+                    }
+                    else {
+                        alert(data.error_msg)
+                    }
+                })
+
+                })
+            }
+        }
+    })
+}

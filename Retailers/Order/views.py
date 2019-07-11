@@ -255,40 +255,6 @@ def express(request):
 
 def commit(request):
     if request.method == 'POST':
-        order_id = request.session.get('bianhao')
-        # order_id = 1
-        # if not order_id:
-        #     return JsonResponse({"errno": 1, "error_msg": "参数不完整"})
-        # try:
-        #     # order = OrderTwenty.objects.get(id=order_id, user=user, pay_method=3, order_status=1)
-        #     order = OrderTwenty.objects.get(id=order_id, paywayid=1, orderstatus=0)
-        # except OrderTwenty.DoesNotExist:
-        #     return JsonResponse({"errno": 2, "error_msg": "无效订单"})
-
-        alipay = AliPay(
-            appid="2016101100659250",  # 应用id
-            app_notify_url=None,  # 默认回调url
-            app_private_key_path=os.path.join(settings.BASE_DIR, 'User/keys/app_private_key.pem'),
-            # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
-            alipay_public_key_path=os.path.join(settings.BASE_DIR, 'User/keys/alipay_public_key.pem'),
-            sign_type="RSA2",  # RSA 或者 RSA2
-            debug=True  # 默认False
-
-        )
-        # 电脑网站支付，需要跳转到https://openapi.alipay.com/gateway.do? + order_string
-        # total_pay = order.total_price + order.transit_price
-        # total_pay = request.session.get('total_price')
-        total_pay = request.session.get('jiage')
-        order_string = alipay.api_alipay_trade_page_pay(
-            out_trade_no=order_id,  # 订单编号
-            total_amount=str(total_pay),
-            subject="辛姐的小吃铺<%s>" % order_id,
-            return_url=None,
-            notify_url=None  # 可选, 不填则使用默认notify url
-        )
-        # 构造用户跳转的支付链接地址
-        pay_url = "https://openapi.alipaydev.com/gateway.do?" + order_string
-
 
         user = User.objects.get(username=request.session.get('username'))
         co = request.POST.get('co')

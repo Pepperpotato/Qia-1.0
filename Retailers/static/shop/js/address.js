@@ -3118,6 +3118,7 @@ $(document).ready(function ($) {
 });
 
 
+
 // function mycommit() {
 //     commit_co = $('#sibiaoid').val()
 //     commit_re = $('#liuyan').val()
@@ -3148,8 +3149,8 @@ $(document).ready(function ($) {
 //                 $.post('/admin/checkpay/', function (data) {
 //                     console.log(data)
 //                     if (data.errno == "ok") {
+//                         console.log(data)
 //                         alert("支付成功");
-//                         location.reload()
 //                     }
 //                     else {
 //                         alert(data.error_msg)
@@ -3161,6 +3162,7 @@ $(document).ready(function ($) {
 //         }
 //     })
 // }
+
  
  
  
