@@ -326,9 +326,10 @@ def shopcart(request):
     norm = Specification.objects.all()
     print(shop)
     heji = ShopcartTwentyfour.objects.filter(uid=user.uid).aggregate(Sum('totalprice'))
-    he=heji['totalprice__sum']
-    print(he)
-    return render(request,'shop/home/shopcart.html',context={'heji':he,'shopnum':shop,'myshop':myshop,'goods':goods,'commodity':commodity,'norm':norm})
+    # he=heji['totalprice__sum']
+    he = 0
+    shuliang = 0
+    return render(request,'shop/home/shopcart.html',context={'shuliang':shuliang,'heji':he,'shopnum':shop,'myshop':myshop,'goods':goods,'commodity':commodity,'norm':norm})
 
 
 def check_cart(request):
@@ -344,5 +345,17 @@ def check_cart(request):
         shop.save()
         data = {
             'ex_price':'1'
+        }
+        return JsonResponse(data)
+
+
+def delete_cart(request):
+    if request.method == 'POST':
+        cid = request.POST.get('cid')
+        commod = ShopcartTwentyfour.objects.get(cid=int(cid))
+        commod.delete()
+
+        data = {
+            'ex_price': '1'
         }
         return JsonResponse(data)
