@@ -2,7 +2,7 @@ import os
 
 from alipay import AliPay
 from django.core.serializers import json
-from django.db.models import Count
+from django.db.models import Count, Sum
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.template import loader
@@ -42,8 +42,8 @@ def home(request):
             if len(a):
                 for num in a:
                     list.append(num)
-        list.sort(reverse=True)
-        list1=list[:6]
+        print(list,'++++++++++++++++++++++++++')
+        list1=list[-6:]
         dic[i.id] = list1
 
     return render(request,'shop/home/home3.html',context={'dlb': dlb,'shopnum':shop ,'xlb': xlb, 'store': store,'dic':dic,'price':price})
@@ -140,6 +140,7 @@ def add_cart(request):
         if shop1:
             shop = ShopcartTwentyfour.objects.get(cid=commodity.id, uid=user.uid)
             shop.goodscount = shop.goodscount + int(a)
+            shop.totalprice = shop.price*int(a)+shop.totalprice
             shop.save()
             num = ShopcartTwentyfour.objects.filter(uid=user.uid).count()
             data = {
@@ -147,7 +148,8 @@ def add_cart(request):
             }
             return JsonResponse(data)
         else:
-            myshopcart = ShopcartTwentyfour(uid=user.uid, goodscount=int(a), cid=commodity.id)
+
+            myshopcart = ShopcartTwentyfour(uid=user.uid, goodscount=int(a), cid=commodity.id,price=commodity.price,totalprice=int(a)*int(commodity.price))
             myshopcart.save()
             num = ShopcartTwentyfour.objects.filter(uid=user.uid).count()
             data = {
@@ -322,11 +324,24 @@ def shopcart(request):
     commodity = CommodityCategoriesTwo.objects.all()
     norm = Specification.objects.all()
     print(shop)
+    heji = ShopcartTwentyfour.objects.filter(uid=user.uid).aggregate(Sum('totalprice'))
+    he=heji['totalprice__sum']
+    print(he)
+    return render(request,'shop/home/shopcart.html',context={'heji':he,'shopnum':shop,'myshop':myshop,'goods':goods,'commodity':commodity,'norm':norm})
 
-    for sho in myshop:
-        for commod in commodity:
-            if sho.cid==commod.id:
-                for good in goods:
-                    if good.gid == commod.gid:
-                        print(sho.id,good.gname,commod.id,')))))))))))))))))))))))))))))')
-    return render(request,'shop/home/shopcart.html',context={'shopnum':shop,'myshop':myshop,'goods':goods,'commodity':commodity,'norm':norm})
+
+def check_cart(request):
+    if request.method == 'POST':
+        cid = request.POST.get('cid')
+        num = request.POST.get('num')
+        total_price = request.POST.get('total_price')
+        print('+++++++++++',cid,num,total_price)
+        user =User.objects.get(username =request.session.get('username') )
+        shop=ShopcartTwentyfour.objects.get(uid=user.uid,cid=int(cid))
+        shop.goodscount=num
+        shop.totalprice=total_price
+        shop.save()
+        data = {
+            'ex_price':'1'
+        }
+        return JsonResponse(data)

@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^addre/$',views.addre,name='addre'),
     url(r'^express/$',views.express,name='express'),
     url(r'^commit/$',views.commit,name='commit'),
-    url(r'^shopcart/$',views.shopcart,name='shopcart')
+    url(r'^shopcart/$',views.shopcart,name='shopcart'),
+    url(r'^check_cart$', views.check_cart, name='check_cart')
 ]
