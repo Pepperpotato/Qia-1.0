@@ -161,7 +161,7 @@ def auth_code_(request):
         phone = request.POST.get('phone')
         res = User.objects.filter(phone_number=phone).exists()
         if res:
-            return
+            return HttpResponse(json.dumps({'data': '手机号已存在'}), content_type='application/json')
         code = str(randint(100000, 999999))
         request.session['code']=code
         send_sms(phone, {'code': code}, **SMSCONFIG)
@@ -179,6 +179,25 @@ def register(request):
                 email = form1.cleaned_data.get('email')
                 password_1 = form1.cleaned_data.get('password_1')
                 password = hashlib.sha1(password_1.encode('utf8')).hexdigest()
+                # 发送激活邮件
+                subject = "辛姐小吃铺激活邮件"  # 邮件标题
+                message = ''  # 邮件正文
+                sender = settings.EMAIL_FROM  # 发件人
+                # print(sender)
+                receiver = [email]  # 收件人
+                serializer = Serializer(settings.SECRET_KEY, 3600)  # 有效期1小时
+                info = {"confirm": '123lll'}
+                token = serializer.dumps(info)
+                html_message = """
+                                           <h1>  恭喜您成为辛姐小吃铺注册会员</h1><br/><h3>请您在1小时内点击以下链接进行账户激活</h3><a href="http://127.0.0.1:8000/user/active/%s">http://127.0.0.1:8000/user/active/%s</a>
+                                """ % (token, token)
+                try:
+                    send_mail(subject, message, settings.EMAIL_HOST_USER, receiver, html_message=html_message,
+                              fail_silently=False)
+                except:
+                    return HttpResponse('发送失败')
+
+
                 # print(email,password)
                 # 写入数据库
                 # User.objects.create(**form1.cleaned_data)
@@ -194,19 +213,8 @@ def register(request):
                 User_address.objects.create(uid_id=uid)
                 # 保存session数据
                 request.session['email']=email
-                # 发送激活邮件
-                subject = "辛姐小吃铺激活邮件"  # 邮件标题
-                message = ''  # 邮件正文
-                sender = settings.EMAIL_FROM  # 发件人
-                # print(sender)
-                receiver = [email]  # 收件人
-                serializer = Serializer(settings.SECRET_KEY, 3600)  # 有效期1小时
-                info = {"confirm": uid}
-                token = serializer.dumps(info)
-                html_message = """
-                           <h1>  恭喜您成为辛姐小吃铺注册会员</h1><br/><h3>请您在1小时内点击以下链接进行账户激活</h3><a href="http://127.0.0.1:8000/user/active/%s">http://127.0.0.1:8000/user/active/%s</a>
-                """ % ( token, token)
-                send_mail(subject, message, settings.EMAIL_HOST_USER, receiver, html_message=html_message)
+
+
                 # 验证成功跳转到首页
                 return HttpResponse('注册成功,请前往邮箱进行账户激活')
         if phone:
@@ -272,7 +280,7 @@ def sc(request):
 def safety(request):
     user=safety=articleyellow=phone=email=None
     username=request.session.get('username')
-    print(username)
+    # print(username)
     if username:
         user=User.objects.filter(username=username)[0]
 
@@ -330,13 +338,13 @@ def index(request):
         user = User.objects.filter(username=username)
         if user:
             user=user[0]
-            print(user.uid)
+            # print(user.uid)
             # print(user.uid)
             # 用户最新积分
             grade = user.user_grade_set.all()
             # print(grade,'*'*100)
             grade = grade[len(grade) - 1].changed_grade
-            # print(grade)
+            # print(grade,'*'*100)
             # 用户账户信息表
             account=user.user_account
             # print(account,'*'*100)
@@ -421,12 +429,12 @@ def index(request):
             columns = [col[0] for col in cursor.description]
             orderchild = [dict(zip(columns, row)) for row in cursor.fetchall()]
             # print(orderchild)
-
             count = 0
             express_price = 0
             dictmoney = {}
+            picture=None
             for money in orderchild:
-                # print(money.get('orderid'))
+                picture=money.get('picture')
                 count += int(money.get('goodmoneycount'))
                 express_price = money.get('express_price')
                 if dictmoney.get(money.get('orderid')):
@@ -452,6 +460,7 @@ def index(request):
             'orderchild': orderchild,
             'express_price': express_price,
             'dictmoney': dictmoney,
+
 
         })
     return render(request, 'shop/person/index.html',context={
@@ -591,7 +600,7 @@ def information(request):
             birthday = birthyear + birthmonth + birthday
             phonee = request.POST.get('user-phone')
             emaill = request.POST.get('user-email')
-            print(username, realname, sex, birthday, phonee, emaill)
+            # print(username, realname, sex, birthday, phonee, emaill)
             if not User.objects.filter(username=username).exists():
                 user.username = username
                 user.save()
@@ -624,7 +633,7 @@ def password(request):
             newpassword1 = request.POST.get('newpassword1')
             newpassword2 = request.POST.get('newpassword2')
             user=User.objects.filter(username=username)[0]
-            print(user.password)
+            # print(user.password)
             if newpassword1==newpassword2 and re.match('\D',newpassword1) and len(newpassword1)>6 and user.password==password:
                 newpassword=hashlib.sha1(newpassword1.encode('utf8')).hexdigest()
                 user.password=newpassword
@@ -887,7 +896,7 @@ def address(request):
         cmbArea=request.POST.get('cmbArea')
         detail_address=request.POST.get('user-intro')
         location=cmbProvince+cmbCity+cmbArea
-        print(user_name,user_phone,cmbProvince,cmbCity,cmbArea)
+        # print(user_name,user_phone,cmbProvince,cmbCity,cmbArea)
         User_address.objects.create(location=location,detail_address=detail_address,receiver=user_name,phone_number=user_phone,uid_id=uid)
 
     return render(request,'shop/person/address.html',context={

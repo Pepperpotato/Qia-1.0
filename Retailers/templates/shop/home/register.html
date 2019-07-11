@@ -155,6 +155,7 @@
                             <div class="am-cf">
                                 <input type="submit" name="" value="注册" class="am-btn am-btn-primary am-btn-sm am-fl"
                                        id="regphone">
+                                <p><span id='result'></span></p>
                             </div>
                         </form>
                         <hr>
@@ -167,7 +168,9 @@
                             if (!phone.match(/^1[3456789]\d{9}$/)) {
                                 alert("对不起手机格式不正确请重新输入！");
                             } else {
-                                $.post("{% url 'goods:auth_code_' %}", $('#form2').serialize())
+                                $.post("{% url 'goods:auth_code_' %}", $('#form2').serialize(), function (ret) {
+                    $('#result').append(ret.data + '<br>');
+                })
                             }
                         });
 
