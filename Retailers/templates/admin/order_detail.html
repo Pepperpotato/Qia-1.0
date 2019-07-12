@@ -61,7 +61,7 @@
 
             {% if res.orderstatus == 1 %}
                 <div>
-                    <a href="{% url 'admin:sendorder' res.id %}">货物已打包，确认发货</a>
+                    <a href="{% url 'admin:sendorder' res.orderid %}">货物已打包，确认发货</a>
                 </div>
             {% endif %}
         </div>

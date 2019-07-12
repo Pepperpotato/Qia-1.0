@@ -701,7 +701,7 @@ def orderdetail(request, id):
         cursor.execute("select * from order_twenty o join user_address a on o.addressid=a.aid join express_company e on e.id=o.expressbrandid join orderchild_twentyone t on o.id=t.orderid where o.id=%s", [id])
     columns = [col[0] for col in cursor.description]
     res = [dict(zip(columns, row)) for row in cursor.fetchall()]
-
+    print(res)
 
     with connection.cursor() as cursor:
         cursor.execute("select * from orderchild_twentyone t join goodsone g on t.goodid=g.gid join commodity_categories_two_four c on c.id=t.cid join specification s on s.id=c.specification_id  where t.orderid=%s", [id])
@@ -1141,6 +1141,7 @@ def turn(request):
 def sendorder(request, oid):
     id = oid
     current_order = OrderTwenty.objects.get(pk=int(id))
+    print(current_order.id)
     current_order.orderstatus = 2
     current_order.save()
     return redirect(reverse('admin:orderlist'))
