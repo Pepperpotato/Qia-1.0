@@ -132,7 +132,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
-
+STATIC_ROOT = os.path.join(BASE_DIR,'mystatic')
 #阿里云注册短信验证码配置
 SMSCONFIG = {
     'ACCESS_KEY_ID':"LTAI87A9iBxVPguw",
